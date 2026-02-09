@@ -1,0 +1,374 @@
+# Standalone Schema for Management Summary — Client Experience (CX) Variant
+# Flattened from the unified management-summary.schema.yaml for the CX domain.
+# This file is the single source of truth for the CX management summary structure.
+# It contains all CX-specific subsections inlined (no variant indirection).
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "management-summary-cx"
+template_description: "Client Experience management summary — Amazon 6-Pager format"
+required: false  # Generated output, not a primary capture document
+
+# ──────────────────────────────────────────────
+# Variant Metadata
+# ──────────────────────────────────────────────
+source_document: "cx-journey-documentation.md"
+agent_id: "client-journey-analyst"
+writing_focus: "Lead with client impact — what clients are experiencing, quantify effort"
+companion_documents:
+  - "friction-points-detail.md"
+  - "client-touchpoints-detail.md"
+comparison_metrics:
+  - { name: "Client Effort Score (CES)", source_path: "ces_score" }
+  - { name: "Total Touchpoints", source_path: "touchpoints.count" }
+  - { name: "Total Friction Points", source_path: "friction_points.count" }
+  - { name: "Moments That Matter", source_path: "moments_that_matter.count" }
+  - { name: "Enhancement Ideas", source_path: "enhancement_ideas.count" }
+  - { name: "Top 5 Friction Points", source_path: "friction_points.top_5" }
+  - { name: "Strategic Priorities", source_path: "strategic_priorities" }
+appendix_sections:
+  - { id: "journey_map", heading: "Client Journey Map", type: "mermaid" }
+  - { id: "touchpoints", heading: "Touchpoint Summary", ref: "client-touchpoints-detail.md" }
+  - { id: "friction", heading: "Friction Point Summary", ref: "friction-points-detail.md" }
+  - { id: "channels", heading: "Channel Analysis", type: "table" }
+
+# ──────────────────────────────────────────────
+# Document Format
+# ──────────────────────────────────────────────
+format:
+  type: "Amazon 6-Pager"
+  reading_time: "20-30 minutes"
+  writing_principles:
+    - "Lead with WHY — first paragraph must hook the reader with business impact"
+    - "Anchor in DATA — every claim needs evidence, not opinions"
+    - "BRUTAL HONESTY — especially in Lessons Learned. No sugar-coating."
+    - "NARRATIVE FLOW — Problem → Context → Solution → Impact"
+    - "CLEAR OWNERSHIP — every action has a name and deadline"
+    - "WRITE INTRODUCTION LAST — after you understand the full picture"
+  anti_patterns:
+    - "Generic descriptions ('This process is designed to...')"
+    - "Passive voice ('It was decided that...')"
+    - "Vague metrics ('Significant improvement expected...')"
+    - "Missing baselines ('Baseline: Not established')"
+    - "Polite criticism ('Some areas could be improved...')"
+    - "Actions without owners ('The team should...')"
+
+# ──────────────────────────────────────────────
+# Sections (CX-specific 6-Pager structure)
+# ──────────────────────────────────────────────
+sections:
+  - id: introduction
+    heading: "1. Introduction"
+    section_number: 1
+    content_type: prose
+    page_budget: "½–1"
+    write_order: "LAST"  # Write after all other sections
+    subsections:
+      - id: the_client_experience_problem
+        heading: "The Client Experience Problem"
+        content_type: prose
+        guidance: "State what clients are experiencing in 2-3 sentences. How much effort? How do they feel? What is the business impact?"
+      - id: background
+        heading: "Background"
+        content_type: prose
+        guidance: "Brief context for readers unfamiliar with the journey."
+      - id: purpose
+        heading: "Purpose of This Document"
+        content_type: prose
+        guidance: "Describe the CX analysis scope and executive decision requested."
+      - id: scope
+        heading: "Scope"
+        content_type: key_value_table
+        guidance: "Journey type, client segment, geographic scope, analysis period."
+      - id: key_definitions
+        heading: "Key Definitions"
+        content_type: key_value_table
+        guidance: "CES, Friction Point, Moment That Matters, Touchpoint."
+    validation:
+      min_words: 100
+      max_words: 500
+
+  - id: goals
+    heading: "2. Goals"
+    section_number: 2
+    content_type: mixed
+    page_budget: "½"
+    subsections:
+      - id: primary_objectives
+        heading: "Primary Objectives"
+        content_type: summary_table
+        summary_table_header: "| Objective | Baseline | Current | Target | Target Date |"
+        guidance: "CES, friction resolved, CSAT, journey completion rate."
+      - id: success_metrics
+        heading: "Success Metrics"
+        content_type: prose
+        guidance: "CES reduction target, friction elimination, channel consolidation, MTM improvement."
+    validation:
+      min_words: 50
+      requires_table: true
+
+  - id: tenets
+    heading: "3. Tenets"
+    section_number: 3
+    content_type: mixed
+    page_budget: "½"
+    subsections:
+      - id: core_principles
+        heading: "Core Principles"
+        content_type: prose
+        guidance: "Client-centric tenets: journey over process, effort over time, moments that matter."
+      - id: constraints
+        heading: "Constraints"
+        content_type: summary_table
+        summary_table_header: "| Constraint | Rationale | Impact on CX |"
+        guidance: "Regulatory, system, and resource constraints affecting CX."
+    validation:
+      min_words: 50
+
+  - id: state_of_business
+    heading: "4. State of the Business"
+    section_number: 4
+    content_type: mixed
+    page_budget: "1"
+    subsections:
+      - id: journey_overview
+        heading: "Journey Overview"
+        content_type: prose
+        guidance: "Narrative overview of the current client journey."
+      - id: key_metrics_summary
+        heading: "Key Metrics Summary"
+        content_type: summary_table
+        summary_table_header: "| Metric | Value | Industry Benchmark | Gap |"
+        guidance: "CES, touchpoints, friction points, channel switches, duration, documents required."
+      - id: ces_breakdown
+        heading: "CES Breakdown"
+        content_type: summary_table
+        summary_table_header: "| Component | Count | Weight | Weighted Score | % of Total |"
+        guidance: "Decomposition of Client Effort Score by component."
+      - id: critical_friction_points
+        heading: "Critical Friction Points (Top 5)"
+        content_type: summary_table
+        summary_table_header: "| Rank | Friction Point | Stage | Severity | CES Impact | Client Emotion |"
+        guidance: "Top 5 friction points ranked by CES impact."
+      - id: moments_that_matter
+        heading: "Moments That Matter"
+        content_type: summary_table
+        summary_table_header: "| Moment | Touchpoint | Current Experience | Risk if Degraded |"
+        guidance: "Critical touchpoints that disproportionately define client perception."
+      - id: channel_analysis
+        heading: "Channel Analysis"
+        content_type: summary_table
+        summary_table_header: "| Channel | Touchpoints | CES Contribution | Client Preference |"
+        guidance: "Breakdown of experience by channel."
+    validation:
+      min_words: 200
+      requires_table: true
+
+  - id: lessons_learned
+    heading: "5. Lessons Learned"
+    section_number: 5
+    content_type: mixed
+    page_budget: "½–1"
+    subsections:
+      - id: what_clients_value
+        heading: "What Clients Value"
+        content_type: prose
+        guidance: "Evidence-based successes from the client perspective."
+      - id: what_frustrates_clients
+        heading: "What Frustrates Clients"
+        content_type: prose
+        guidance: "Brutally honest account of client frustrations with quotes where possible."
+      - id: root_cause_analysis
+        heading: "Root Cause Analysis"
+        content_type: summary_table
+        summary_table_header: "| Friction Issue | Root Cause | Evidence | Client Impact |"
+        guidance: "Root causes of friction, not symptoms."
+      - id: key_insights
+        heading: "Key Insights"
+        content_type: prose
+        guidance: "Actionable CX insights, not observations."
+      - id: competitive_comparison
+        heading: "Competitive Comparison"
+        content_type: summary_table
+        summary_table_header: "| Competitor | Their Approach | Our Gap | Learning |"
+        guidance: "How competitors handle the same journey."
+      - id: experience_degradation_risks
+        heading: "Experience Degradation Risks"
+        content_type: summary_table
+        summary_table_header: "| Risk | Explanation | Alternative |"
+        guidance: "Changes that would worsen CX — must be avoided in transformation."
+    validation:
+      min_words: 150
+      honesty_check: true  # Flag if language is too soft
+
+  - id: strategic_priorities
+    heading: "6. Strategic Priorities"
+    section_number: 6
+    content_type: mixed
+    page_budget: "2–3"
+    subsections:
+      - id: priority_1
+        heading: "Priority 1"
+        content_type: priority_block
+        guidance: "Top CX improvement priority with CES impact estimate."
+      - id: priority_2
+        heading: "Priority 2"
+        content_type: priority_block
+        guidance: "Second CX improvement priority with CES impact estimate."
+      - id: priority_3
+        heading: "Priority 3"
+        content_type: priority_block
+        guidance: "Third CX improvement priority with CES impact estimate."
+      - id: quick_wins
+        heading: "Quick Wins (Immediate CX Impact)"
+        content_type: summary_table
+        summary_table_header: "| Quick Win | Effort | CES Reduction | Owner | Target |"
+        guidance: "Low-effort, high-impact CX improvements."
+      - id: enhancement_ideas_summary
+        heading: "Enhancement Ideas Summary"
+        content_type: summary_table
+        summary_table_header: "| Category | Count | Total CES Reduction Potential |"
+        guidance: "Aggregated view of all enhancement ideas by category."
+      - id: recommendations
+        heading: "Recommendations"
+        content_type: prose
+        guidance: "Immediate, short-term, and long-term CX recommendations."
+      - id: next_steps
+        heading: "Next Steps"
+        content_type: summary_table
+        summary_table_header: "| Step | Responsible | Deadline | Expected CES Impact |"
+        guidance: "Concrete next actions with owners and deadlines."
+    validation:
+      min_priorities: 3
+      requires_ownership: true
+      requires_deadlines: true
+
+  - id: appendix
+    heading: "Appendix"
+    section_number: 7
+    content_type: mixed
+    page_budget: "unlimited"
+    guidance: "Supporting evidence for the main document. No page limit. No new conclusions."
+    subsections:
+      - id: client_journey_map
+        heading: "A.1 Client Journey Map"
+        content_type: mermaid
+        guidance: "Visual client journey diagram in Mermaid syntax."
+      - id: complete_touchpoint_register
+        heading: "A.2 Complete Touchpoint Register"
+        content_type: summary_table
+        guidance: "All touchpoints with stage, channel, client actions, and CES contribution."
+      - id: complete_friction_point_register
+        heading: "A.3 Complete Friction Point Register"
+        content_type: summary_table
+        guidance: "All friction points with stage, severity, CES impact, and enhancement ideas."
+      - id: enhancement_ideas_catalog
+        heading: "A.4 Enhancement Ideas Catalog"
+        content_type: summary_table
+        guidance: "All enhancement ideas with target friction, CES reduction, complexity, and priority."
+      - id: ces_calculation_methodology
+        heading: "A.5 CES Calculation Methodology"
+        content_type: prose
+        guidance: "Explanation of CES calculation methodology and component weights."
+      - id: industry_benchmarks
+        heading: "A.6 Industry Benchmarks"
+        content_type: summary_table
+        guidance: "Industry benchmark comparison for CX metrics."
+      - id: client_feedback_summary
+        heading: "A.7 Client Feedback Summary"
+        content_type: prose
+        guidance: "Summary of client feedback and quotes."
+      - id: source_documents
+        heading: "A.8 Source Documents"
+        content_type: summary_table
+        guidance: "List of source documents with type, date, and relevance."
+      - id: contributors
+        heading: "A.9 Contributors"
+        content_type: summary_table
+        guidance: "List of contributors with role, contribution, and date."
+
+# ──────────────────────────────────────────────
+# Priority Block Template
+# ──────────────────────────────────────────────
+priority_block:
+  fields:
+    - name: title
+      required: true
+    - name: objective
+      required: true
+    - name: why_now
+      required: true
+      guidance: "Create urgency. Why can't this wait?"
+    - name: actions
+      type: table
+      required: true
+      table_header: "| # | Action | Owner | Deadline | Dependencies |"
+    - name: success_criteria
+      required: true
+    - name: consequences
+      required: true
+      guidance: "Be specific about what happens if we DON'T do this."
+
+# ──────────────────────────────────────────────
+# Auto-Transformation Rules (applied in extraction)
+# ──────────────────────────────────────────────
+auto_transform:
+  weak_to_strong:
+    - pattern: "could be improved"
+      transform: "fails X% at step Y (derive from metrics)"
+    - pattern: "Baseline: Not established"
+      transform: "Baseline: UNKNOWN ⚠️ — Gap requiring action"
+    - pattern: "Some challenges exist"
+      transform: "We have N critical gaps: [list from source]"
+    - pattern: "should consider"
+      transform: "[Role] will deliver [thing] by [date] — or Owner: TBD"
+    - pattern: "room for improvement"
+      transform: "We are X% below target. Impact: €Y (derive from metrics)"
+    - pattern: "Generally compliant"
+      transform: "N of M requirements met. K gaps require remediation."
+
+# ──────────────────────────────────────────────
+# Change Detection Thresholds
+# ──────────────────────────────────────────────
+change_detection:
+  critical_threshold_pct: 20   # Metrics changed >20% → CRITICAL
+  material_threshold_pct: 10   # Metrics changed 10-20% → MATERIAL
+  # Below 10% → MINOR
+  critical_triggers:
+    - "New high-priority items added"
+    - "Removed items that were in priorities"
+    - "Changed strategic recommendations"
+    - "Compliance gaps changed"
+  material_triggers:
+    - "New items added (not high priority)"
+    - "Moderate changes to analysis sections"
+    - "Updated benchmarks or targets"
+
+# ──────────────────────────────────────────────
+# Completeness Rules
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "introduction.word_count >= 100"
+    - "state_of_business.word_count >= 200"
+    - "strategic_priorities.priority_count >= 3"
+    - "lessons_learned.word_count >= 150"
+  recommended:
+    - "goals.has_table == true"
+    - "state_of_business.has_table == true"
+    - "strategic_priorities.has_ownership == true"
+
+# ──────────────────────────────────────────────
+# Document Metadata (frontmatter for output)
+# ──────────────────────────────────────────────
+output_frontmatter:
+  - document_type: "Management Summary (Amazon 6-Pager)"
+  - process_name: "{current_process_name}"
+  - process_id: "{current_process_id}"
+  - variant: "cx"
+  - agent_type: "{agent_id}"
+  - generated_date: "{date}"
+  - source_document: "{source_document}"
+  - version: "{version}"
+  - status: "draft|final"
+  - stepsCompleted: "[]"

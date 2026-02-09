@@ -1,0 +1,771 @@
+# Schema for AS-IS Process Documentation
+# Merged schema v3.0 — single source of truth for this document type.
+# Inherits shared defaults from _defaults.yaml.
+#
+# ARCHITECTURE: This replaces the former 2-layer split (master document-schema.yaml
+# + per-doc companion). All section definitions, validation rules, field types,
+# sync config, and cross-references for AS-IS live here.
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "as-is-process-documentation"
+template_file: "as-is-process-documentation.md"
+template_description: "Current state process documentation with exceptions, controls, pain points, and system dependencies"
+required: true
+
+# ──────────────────────────────────────────────
+# Sections
+# ──────────────────────────────────────────────
+sections:
+  # ── Executive Summary ──
+  - id: executive_summary
+    heading: "Executive Summary"
+    section_number: 0  # Unnumbered preamble
+    content_type: prose
+    sync_enabled: false
+    validation:
+      min_words: 100
+      max_words: 300
+    guidance: |
+      High-level overview for stakeholders.
+      MUST include: process purpose, scope, key findings summary.
+      FORBIDDEN: technical jargon, implementation details.
+
+  # ── Section 1: Process Overview ──
+  - id: process_overview
+    heading: "1. Process Overview"
+    section_number: 1
+    content_type: mixed  # prose + tables
+    sync_enabled: false
+    subsections:
+      - id: process_identification
+        heading: "1.1 Process Identification"
+        content_type: key_value_table
+        guidance: |
+          Key-value table with: Process Name, Process ID, Process Category,
+          Scope (one sentence boundary statement), and Process Owner (name + role).
+          Use the official name as known by the business, not an abbreviated label.
+      - id: purpose_and_trigger
+        heading: "1.2 Purpose and Trigger"
+        content_type: prose
+        guidance: |
+          Two short paragraphs. First: the business purpose — why does this process
+          exist and what outcome does it deliver? Second: the trigger event — what
+          specific action or event causes a new instance of this process to start
+          (e.g., "Customer submits an application via the web portal").
+      - id: operational_characteristics
+        heading: "1.3 Operational Characteristics"
+        content_type: prose
+        guidance: |
+          State the process frequency (e.g., "~120 cases/day, Mon-Fri") and
+          volume (e.g., "~2,500 cases/month with 15% seasonal peak in Q4").
+          Include average end-to-end cycle time and any known peak/trough patterns.
+      - id: key_stakeholders
+        heading: "1.4 Key Stakeholders"
+        content_type: prose
+        guidance: |
+          List internal and external stakeholders with their relationship to the
+          process. Include: process owner, performing teams, approvers, customers/
+          clients, regulators, and upstream/downstream process owners.
+      - id: service_levels
+        heading: "1.5 Service Levels & Performance Benchmarks"
+        content_type: item_list
+        item_prefix: "SLA"
+        guidance: |
+          One row per SLA or KPI target. Include both the contractual/policy
+          target and actual measured performance where available. Flag any SLA
+          that is regulatory-driven (Regulatory? = Yes). If actual performance
+          data is unavailable, leave the cell blank and log a PGAP in Section 8.
+        item_fields:
+          - name: sla_id
+            required: true
+          - name: metric
+            required: true
+          - name: current_sla
+            required: true
+          - name: actual_performance
+            required: false
+          - name: source
+            required: false
+          - name: regulatory
+            type: boolean
+            required: false
+        summary_table_header: "| SLA# | Metric | Current SLA | Actual Performance | Source | Regulatory? |"
+      - id: cost_resource
+        heading: "1.6 Cost & Resource Allocation"
+        content_type: key_value_table
+        guidance: |
+          Populate: FTE Allocation (e.g., "3.5 FTE across 2 teams"), Cost per
+          Transaction, Annual Operating Cost, and Resource Utilization (%).
+          Use estimates with source attribution when exact figures are unavailable.
+          Add free-text notes below the table for context (e.g., "Cost excludes
+          IT infrastructure shared with other processes").
+      - id: process_variants
+        heading: "1.7 Process Variants"
+        content_type: item_list
+        guidance: |
+          Document only if the process has genuinely different execution paths
+          (e.g., retail vs. corporate onboarding, domestic vs. international).
+          Each variant row should state how it diverges from the main path and
+          which steps are shared. If the process is single-path, state "No
+          variants identified" rather than leaving the table empty.
+        item_fields:
+          - name: variant_name
+            required: true
+          - name: scope
+            required: true
+          - name: key_differences
+            required: true
+          - name: shared_steps
+            required: false
+        summary_table_header: "| Variant | Scope | Key Differences | Shared Steps |"
+    validation:
+      min_words: 150
+      max_words: 500
+
+  # ── Section 2: Process Steps ──
+  - id: process_steps
+    heading: "2. Process Steps"
+    section_number: 2
+    content_type: item_list
+    item_prefix: "PS"
+    sync_enabled: false
+    subsections:
+      - id: process_step_summary
+        heading: "2.1 Process Step Summary"
+        content_type: summary_table
+        summary_table_header: "| PS# | Step Name | Owner | System(s) | Duration | Wait Time | Rationale |"
+        guidance: |
+          One row per process step, in execution order. Every step MUST have a
+          unique PS# ID. Duration = active work time for that step. Wait Time =
+          idle/queue time before the next step begins. Rationale column: brief
+          note on why this step exists (e.g., "Regulatory requirement", "Risk
+          mitigation", "Client communication").
+      - id: process_flow_diagrams
+        heading: "2.2 Process Flow Diagrams"
+        content_type: diagrams
+        diagram_types:
+          - "2.2.1 High-Level Process Flow (L1)"
+          - "2.2.2 Detailed Process Flow (L2)"
+          - "2.2.3 Swim Lane Diagram"
+        guidance: |
+          Provide Mermaid diagrams at three levels. L1: 5-8 major phases as a
+          simple top-down flow. L2: all PS# steps with decision diamonds and
+          exception branches (dotted lines). Swim Lane: left-to-right with one
+          lane per role/team showing handoffs. Node IDs must match PS# IDs.
+          Use green for happy path, orange for exception paths, red for failure.
+      - id: step_details
+        heading: "2.3 Step Details"
+        content_type: detail_entries
+        guidance: |
+          One detailed block per PS# step using the item_template. Every step
+          MUST specify performer and system(s). "Manual — no system" is valid
+          but must be explicit. Input/output describe what enters and leaves
+          the step. Include business rules that apply at this step by BR# ref.
+      - id: handoff_points
+        heading: "2.4 Handoff Points"
+        content_type: item_list
+        item_prefix: "HO"
+        guidance: |
+          Document every point where work transfers between roles, teams, or
+          departments. Handoffs are prime sources of delay and error. Trigger:
+          what causes the handoff (e.g., "Step PS-ONB-003 complete"). Method:
+          how work is passed (email, system queue, physical folder, verbal).
+          Avg Wait: typical elapsed time between handoff and pickup by receiver.
+        item_fields:
+          - name: handoff_id
+            required: true
+          - name: from_role
+            required: true
+          - name: to_role
+            required: true
+          - name: trigger
+            required: true
+          - name: method
+            required: false
+          - name: avg_wait
+            required: false
+        summary_table_header: "| HO# | From (Role/Team) | To (Role/Team) | Trigger | Method | Avg Wait |"
+      - id: business_rules
+        heading: "2.5 Business Rules"
+        content_type: item_list
+        item_prefix: "BR"
+        guidance: |
+          Capture the "if/then" logic that governs how work is routed or what
+          action to take. Condition: the testable circumstance (e.g., "Transaction
+          amount > $10,000"). Action: what happens when the condition is true
+          (e.g., "Escalate to senior approver"). Source: policy or regulation
+          the rule derives from (e.g., "AML Policy v3.2, Section 4.1").
+        item_fields:
+          - name: rule_id
+            required: true
+          - name: rule
+            required: true
+          - name: condition
+            required: true
+          - name: action
+            required: true
+          - name: source
+            required: false
+        summary_table_header: "| BR# | Rule | Condition | Action | Source |"
+      - id: decision_points
+        heading: "2.6 Decision Points"
+        content_type: item_list
+        item_prefix: "DP"
+        guidance: |
+          Document binary or multi-path choices in the process flow. Each must
+          reference the PS# step where the decision occurs. Criteria: the
+          specific test applied (e.g., "All KYC documents verified and valid?").
+          Yes/No Path: state which PS# or outcome each branch leads to.
+          Decision points should align with the diamond nodes in Section 2.2.
+        item_fields:
+          - name: decision_id
+            required: true
+          - name: decision
+            required: true
+          - name: at_step
+            type: reference
+            prefix: "PS"
+            required: true
+          - name: criteria
+            required: true
+          - name: yes_path
+            required: true
+          - name: no_path
+            required: true
+        summary_table_header: "| DP# | Decision | At Step | Criteria | Yes Path | No Path |"
+    item_template: |
+      ### {{id}}: {{name}}
+      **Performer:** {{owner}}
+      **System(s):** {{systems}}
+      **Input:** {{input}}
+      **Output:** {{output}}
+      **Business Rules:** {{business_rules}}
+      **Duration:** {{duration}}
+      **Wait Time:** {{wait_time}}
+      **Channel:** {{channel}}
+      **Document Count:** {{document_count}}
+      **Interaction Count:** {{interaction_count}}
+      {{description}}
+    item_fields:
+      - name: id
+        required: true
+      - name: name
+        required: true
+      - name: owner
+        required: true
+      - name: systems
+        required: true
+      - name: description
+        required: true
+      - name: input
+        required: false
+      - name: output
+        required: false
+      - name: business_rules
+        required: false
+      - name: duration
+        required: false
+      - name: wait_time
+        required: false
+      - name: channel
+        required: false
+      - name: document_count
+        required: false
+      - name: interaction_count
+        required: false
+    validation:
+      min_count: 3
+      max_count: 50
+
+  # ── Section 3: Exception Paths and Variations ──
+  - id: exceptions
+    heading: "3. Exception Paths and Variations"
+    section_number: 3
+    content_type: item_list
+    item_prefix: "EX"
+    detail_document: "exceptions-detail.md"
+    sync_enabled: true
+    summary_table_header: "| EX# | Exception | Trigger | Affected Steps | Frequency | Impact | Handling Owner |"
+    item_template: |
+      ### {{id}}: {{title}}
+      **Trigger:** {{trigger}}
+      **Frequency:** {{frequency}}
+      **Handling:** {{handling}}
+      **Affected Steps:** {{affected_steps}}
+    item_fields:
+      - name: title
+        required: true
+      - name: trigger
+        required: true
+      - name: frequency
+        type: enum
+        values: [Common, Occasional, Rare]
+        required: true
+      - name: handling
+        required: true
+      - name: affected_steps
+        type: reference_list
+        prefix: "PS"
+        required: false
+    guidance: |
+      Document deviations from the happy path — what goes wrong and how it is
+      handled today.
+      MUST include: summary table with frequency and impact, reference to
+      affected PS# steps, and a brief description of current handling.
+      Frequency values: Common (>20% of cases), Occasional (5-20%), Rare (<5%).
+      Focus on exceptions observed in practice, not theoretical edge cases.
+      Each exception should clearly state its trigger condition.
+      Detail analysis (root cause, workaround cost, improvement ideas) belongs
+      in the companion exceptions-detail.md, not here.
+      FORBIDDEN: proposed fixes (that belongs in target-state or pain-points),
+      exceptions that are actually normal process variants (use Section 1.7).
+    validation:
+      min_count: 0
+
+  # ── Section 4: Control Points and Compliance ──
+  - id: control_points
+    heading: "4. Control Points and Compliance"
+    section_number: 4
+    content_type: item_list
+    item_prefix: "CP"
+    detail_document: "control-points-detail.md"
+    sync_enabled: true
+    summary_table_header: "| CP# | Control Name | Type | Regulation | Process Step | Effectiveness | Risk Level |"
+    item_template: |
+      ### {{id}}: {{title}}
+      **Type:** {{control_type}}
+      **At Step:** {{at_step}}
+      **Description:** {{description}}
+      **Evidence:** {{evidence}}
+    item_fields:
+      - name: title
+        required: true
+      - name: control_type
+        type: enum
+        values: [Preventive, Detective, Corrective]
+        required: true
+      - name: at_step
+        type: reference
+        prefix: "PS"
+        required: true
+      - name: description
+        required: true
+      - name: evidence
+        required: false
+    guidance: |
+      Map every checkpoint where work is verified, approved, or audited.
+      MUST include: summary table, control type (Preventive/Detective/Corrective),
+      the specific PS# step where the control executes, and what regulation or
+      policy it supports.
+      Preventive = stops errors before they happen (e.g., input validation).
+      Detective = catches errors after the fact (e.g., reconciliation report).
+      Corrective = fixes errors once found (e.g., exception handling workflow).
+      Evidence: state what artifact proves the control executed (e.g., sign-off
+      log, system audit trail, approval email).
+      Detail analysis (effectiveness rating, gap assessment, remediation) belongs
+      in the companion control-points-detail.md.
+      FORBIDDEN: inventing controls that don't currently exist (document only
+      what IS, not what SHOULD BE).
+    validation:
+      min_count: 1
+
+  # ── Section 5: System Dependencies ──
+  - id: systems
+    heading: "5. System Dependencies"
+    section_number: 5
+    content_type: item_list
+    item_prefix: "SYS"
+    sync_enabled: false
+    subsections:
+      - id: system_summary
+        heading: "5.1 System Summary"
+        content_type: summary_table
+        summary_table_header: "| SYS# | System Name | Purpose | Integration Points |"
+        guidance: |
+          One row per system, application, or tool used in this process. Purpose
+          should be a brief statement of what role the system plays (e.g., "Primary
+          CRM for client record management"). Integration Points: count or list
+          of connections to other systems in this process.
+      - id: integration_matrix
+        heading: "5.2 Integration Matrix"
+        content_type: item_list
+        item_prefix: "INT"
+        guidance: |
+          One row per data flow between two systems. Method: API, file transfer
+          (SFTP/batch), manual re-key, email, or shared database. Frequency:
+          real-time, hourly, daily, on-demand, etc. Data Exchanged: what moves
+          (e.g., "Client profile fields, KYC status flag"). Error Handling:
+          what happens when the integration fails (e.g., "Queue and retry after
+          30 min" or "Manual fallback via email").
+        item_fields:
+          - name: integration_id
+            required: true
+          - name: source_system
+            required: true
+          - name: target_system
+            required: true
+          - name: method
+            required: true
+          - name: frequency
+            required: false
+          - name: data_exchanged
+            required: false
+          - name: error_handling
+            required: false
+        summary_table_header: "| INT# | Source System | Target System | Method | Frequency | Data Exchanged | Error Handling |"
+      - id: system_interaction_diagram
+        heading: "5.3 System Interaction Diagram"
+        content_type: diagram
+        guidance: |
+          Mermaid diagram showing systems as nodes and integrations as edges.
+          Label edges with the integration method and key data exchanged.
+          External systems should be visually distinct (e.g., dashed border).
+          Node IDs should match SYS# IDs from the summary table.
+      - id: data_document_inventory
+        heading: "5.4 Data & Document Inventory"
+        content_type: item_list
+        item_prefix: "DOC"
+        guidance: |
+          List every form, report, spreadsheet, data file, or document artifact
+          created, consumed, or stored by this process. Source: which system or
+          role produces it. Format: PDF, Excel, email, paper, system record, etc.
+          Retention: how long it must be kept (e.g., "7 years per GDPR Art. 17").
+          Flag any artifact with a regulatory retention requirement.
+        item_fields:
+          - name: doc_id
+            required: true
+          - name: artifact_name
+            required: true
+          - name: source
+            required: false
+          - name: format
+            required: false
+          - name: retention
+            required: false
+          - name: regulatory_req
+            required: false
+        summary_table_header: "| DOC# | Document/Data Artifact | Source | Format | Retention | Regulatory Req |"
+    item_template: |
+      ### {{id}}: {{name}}
+      **Type:** {{system_type}}
+      **Used In Steps:** {{used_in_steps}}
+      **Purpose:** {{purpose}}
+      **Integration Points:** {{integrations}}
+    item_fields:
+      - name: name
+        required: true
+      - name: system_type
+        type: enum
+        values: [Core Banking, CRM, Document Management, Communication, External, Other]
+        required: true
+      - name: used_in_steps
+        type: reference_list
+        prefix: "PS"
+        required: true
+      - name: purpose
+        required: true
+      - name: integrations
+        required: false
+    validation:
+      min_count: 1
+
+  # ── Section 6: Organizational Mapping ──
+  - id: organizational_mapping
+    heading: "6. Organizational Mapping"
+    section_number: 6
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: raci_matrix
+        heading: "6.1 RACI Matrix"
+        content_type: matrix
+        guidance: |
+          Table with PS# steps as rows and roles/teams as columns. Each cell
+          contains R (Responsible — does the work), A (Accountable — approves),
+          C (Consulted — provides input), or I (Informed — notified of outcome).
+          Every step must have exactly one A. Minimize multi-R assignments;
+          they often signal unclear ownership.
+      - id: team_responsibilities
+        heading: "6.2 Team Responsibilities"
+        content_type: prose
+        guidance: |
+          Brief paragraph per team or role describing their overall responsibility
+          in this process, headcount involved, and reporting line. Note any
+          shared-service or outsourced roles. Highlight any single-person
+          dependencies (key-person risk).
+
+  # ── Section 7: Existing Documentation References ──
+  - id: existing_documentation
+    heading: "7. Existing Documentation References"
+    section_number: 7
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: related_documents
+        heading: "7.1 Related Documents"
+        content_type: prose
+        guidance: |
+          List existing documentation that was consulted or that governs this
+          process: SOPs, policy manuals, training guides, process maps, audit
+          reports. For each, state document title, owner, last-updated date,
+          and where it is stored. Note any that are outdated or conflicting.
+      - id: kpis
+        heading: "7.2 KPIs and Metrics"
+        content_type: prose
+        guidance: |
+          List KPIs and operational metrics currently tracked for this process.
+          For each: metric name, definition, measurement frequency, current
+          target, and where data is sourced from. Distinguish between metrics
+          that are actively monitored vs. available but not reviewed.
+      - id: dtps
+        heading: "7.3 DTPs (Detailed Task Procedures)"
+        content_type: prose
+        guidance: |
+          Reference any detailed task procedures or work instructions that
+          support individual process steps. For each DTP: title, the PS# step(s)
+          it supports, version, and storage location. Note any DTPs that are
+          missing or known to be out of date.
+
+  # ── Section 8: Process Gaps and Issues ──
+  - id: process_gaps
+    heading: "8. Process Gaps and Issues"
+    section_number: 8
+    content_type: item_list
+    item_prefix: "PGAP"
+    sync_enabled: false
+    subsections:
+      - id: identified_gaps
+        heading: "8.1 Identified Gaps"
+        content_type: item_list
+        item_prefix: "PGAP"
+        summary_table_header: "| PGAP# | Gap Description | Category | Section Affected | Severity | Impact on Analysis | Resolution Owner | Status |"
+        guidance: |
+          One row per gap found during documentation. Category: Documentation Gap
+          (missing/outdated docs), Knowledge Gap (SME unavailable), Data Gap
+          (metrics not tracked), System Gap (no access to verify), Compliance Gap
+          (regulation unclear). Severity: CRITICAL = blocks analysis, HIGH =
+          degrades confidence significantly, MEDIUM = manageable, LOW = nice to
+          resolve. Every gap must have a status (open/resolved/deferred).
+      - id: documentation_assessment
+        heading: "8.2 Documentation Assessment"
+        content_type: summary_table
+        summary_table_header: "| DOC# | Document | Status | Last Updated | Issue | Impact |"
+        guidance: |
+          Assess the quality/currency of each source document referenced in
+          Section 7. Status: Current, Outdated, Missing, Draft. Issue: what is
+          wrong (e.g., "Last updated 2019, does not reflect system migration").
+          Impact: how this affects the reliability of this AS-IS documentation.
+      - id: inconsistencies
+        heading: "8.3 Inconsistencies"
+        content_type: summary_table
+        summary_table_header: "| PGAP# | Inconsistency | Sources | Impact | Resolution |"
+        guidance: |
+          Document contradictions found between sources (e.g., "SOP says 2-day
+          SLA but SME states 5 days in practice"). Sources: identify the
+          conflicting inputs. Resolution: how the inconsistency was or will be
+          resolved (e.g., "Confirmed with process owner — actual is 5 days,
+          SOP is outdated").
+      - id: gap_confidence_impact
+        heading: "8.4 Gap-to-Confidence Impact"
+        content_type: summary_table
+        summary_table_header: "| PGAP# | Affected Section | Current Confidence | Confidence if Resolved |"
+        guidance: |
+          For each open PGAP#, estimate how it affects section-level confidence
+          and what confidence would improve to if resolved. This helps prioritize
+          gap resolution by showing which gaps have the highest return on effort.
+          Use the confidence scale: HIGH (>=90%), MEDIUM (>=70%), LOW (>=40%),
+          STUB (<40%).
+    item_fields:
+      - name: gap_id
+        required: true
+      - name: description
+        required: true
+      - name: category
+        type: enum
+        values: [Documentation Gap, Knowledge Gap, Data Gap, System Gap, Compliance Gap]
+        required: true
+      - name: section_affected
+        required: true
+      - name: severity
+        type: enum
+        values: [CRITICAL, HIGH, MEDIUM, LOW]
+        required: true
+      - name: impact_on_analysis
+        required: false
+      - name: resolution_owner
+        required: false
+      - name: status
+        type: enum
+        values: [open, resolved, deferred]
+        required: true
+
+  # ── Section 9: Pain Points and Improvement Opportunities ──
+  - id: pain_points
+    heading: "9. Pain Points and Improvement Opportunities"
+    section_number: 9
+    content_type: item_list
+    item_prefix: "PP"
+    detail_document: "pain-points-detail.md"
+    sync_enabled: true
+    summary_table_header: "| PP# | Pain Point | Category | Affected Steps | Impact | Frequency | Priority | Quick Win? |"
+    item_template: |
+      ### {{id}}: {{title}}
+      **Impact:** {{impact}}
+      **Frequency:** {{frequency}}
+      **Root Cause:** {{root_cause}}
+      **Affected Steps:** {{affected_steps}}
+    item_fields:
+      - name: title
+        required: true
+      - name: impact
+        type: enum
+        values: [High, Medium, Low]
+        required: true
+      - name: frequency
+        type: enum
+        values: [Always, Often, Sometimes, Rarely]
+        required: true
+      - name: root_cause
+        required: false
+      - name: affected_steps
+        type: reference_list
+        prefix: "PS"
+        required: false
+    validation:
+      expected_range: [3, 10]
+
+# ──────────────────────────────────────────────
+# Completeness Rules (validation gates)
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "executive_summary.word_count >= 100"
+    - "process_steps.count >= 3"
+    - "control_points.count >= 1"
+    - "systems.count >= 1"
+  recommended:
+    - "pain_points.count >= 3"
+    - "exceptions.count >= 1"
+    - "process_overview.word_count >= 150"
+
+# ──────────────────────────────────────────────
+# Cross-Reference Validation
+# ──────────────────────────────────────────────
+cross_references:
+  intra_document:
+    - description: "All pain point affected_steps must reference valid PS#"
+      source: "pain_points.affected_steps"
+      target: "process_steps"
+    - description: "All control points must reference valid PS#"
+      source: "control_points.at_step"
+      target: "process_steps"
+    - description: "All exception affected_steps must reference valid PS#"
+      source: "exceptions.affected_steps"
+      target: "process_steps"
+    - description: "All systems used_in_steps must reference valid PS#"
+      source: "systems.used_in_steps"
+      target: "process_steps"
+    - description: "All decision points at_step must reference valid PS#"
+      source: "decision_points.at_step"
+      target: "process_steps"
+
+  # Required cross-reference prefixes per section (for review workflow)
+  required_references_by_section:
+    2:  # Process Steps
+      - "PS#"
+      - "SYS#"
+    3:  # Exceptions
+      - "EX#"
+      - "PS#"
+    4:  # Control Points
+      - "CP#"
+      - "PS#"
+    5:  # System Dependencies
+      - "SYS#"
+      - "INT#"
+      - "DOC#"
+    8:  # Process Gaps
+      - "PGAP#"
+    9:  # Pain Points
+      - "PP#"
+      - "PS#"
+
+# ──────────────────────────────────────────────
+# ID Patterns (document-specific subset)
+# ──────────────────────────────────────────────
+id_patterns:
+  process_step: "PS-[A-Z]{2,4}-\\d{3}"
+  pain_point: "PP-[A-Z]{2,4}-\\d{3}"
+  exception: "EX-[A-Z]{2,4}-\\d{3}"
+  control_point: "CP-[A-Z]{2,4}-\\d{3}"
+  system: "SYS-[A-Z]{2,4}-\\d{3}"
+  business_rule: "BR-[A-Z]{2,4}-\\d{3}"
+  decision_point: "DP-[A-Z]{2,4}-\\d{3}"
+  document: "DOC-[A-Z]{2,4}-\\d{3}"
+  handoff_point: "HO-[A-Z]{2,4}-\\d{3}"
+  service_level: "SLA-[A-Z]{2,4}-\\d{3}"
+  process_gap: "PGAP-[A-Z]{2,4}-\\d{3}"
+  integration_point: "INT-[A-Z]{2,4}-\\d{3}"
+
+# ──────────────────────────────────────────────
+# Companion Documents
+# ──────────────────────────────────────────────
+companion_documents:
+  - name: "Exception Details"
+    file: "exceptions-detail.md"
+    sync_section: 3
+    relationship: "detail"
+
+  - name: "Pain Point Details"
+    file: "pain-points-detail.md"
+    sync_section: 9
+    relationship: "detail"
+
+  - name: "Control Point Details"
+    file: "control-points-detail.md"
+    sync_section: 4
+    relationship: "detail"
+
+  - name: "Client Touchpoint Details"
+    file: "client-touchpoints-detail.md"
+    relationship: "detail"
+
+# ──────────────────────────────────────────────
+# Related Specialist Documents
+# ──────────────────────────────────────────────
+related_documents:
+  - name: "Compliance Control Assessment"
+    file: "compliance-control-assessment.md"
+    relationship: "downstream"
+    uses: ["CP#", "REG#"]
+
+  - name: "CX Journey Documentation"
+    file: "cx-journey-documentation.md"
+    relationship: "downstream"
+    uses: ["PS#"]
+
+  - name: "Innovation Analysis"
+    file: "innovation-analysis-documentation.md"
+    relationship: "downstream"
+    uses: ["PP#", "SYS#"]
+
+  - name: "SIPOC Analysis"
+    file: "sipoc-analysis.md"
+    relationship: "downstream"
+    uses: ["PS#"]
+
+  - name: "DILO Observation"
+    file: "dilo-observation.md"
+    relationship: "downstream"
+    uses: ["PS#"]
+
+  - name: "Target State Documentation"
+    file: "target-state-documentation.md"
+    relationship: "downstream"
+    uses: ["PS#", "CP#", "PP#", "EX#"]
+
+  - name: "Gap Resolution Log"
+    file: "gap-resolution-log.md"
+    relationship: "downstream"
+    uses: ["PGAP#"]

@@ -1,0 +1,280 @@
+meta:
+  process_id: "005"
+  process_name: "KYC"
+  description: "KYC process documentation — All segments"
+  schema_version: "1.0"
+  created: "2026-02-09T05:08:00Z"
+  last_updated: "2026-02-09T06:45:00Z"
+
+documents:
+  as_is:
+    path: "./as-is-documentation.md"
+    overall_status: in_progress
+    sections:
+      executive_summary:
+        status: draft
+        word_count: 195
+        min_words: 100
+        confidence: 88
+      process_overview:
+        status: draft
+        word_count: 450
+        min_words: 150
+        confidence: 65
+        subsections:
+          process_identification:
+            status: approved
+            confidence: 92
+          purpose_and_trigger:
+            status: approved
+            confidence: 90
+          operational_characteristics:
+            status: draft
+            confidence: 68
+          key_stakeholders:
+            status: draft
+            confidence: 85
+          service_levels:
+            status: draft
+            confidence: 55
+          cost_resource:
+            status: draft
+            confidence: 10
+          process_variants:
+            status: draft
+            confidence: 80
+      process_steps:
+        status: draft
+        count: 10
+        min_count: 3
+        confidence: 88
+        subsections:
+          process_step_summary:
+            status: draft
+            confidence: 90
+          process_flow_diagrams:
+            status: draft
+            confidence: 85
+          step_details:
+            status: draft
+            confidence: 90
+          handoff_points:
+            status: draft
+            confidence: 75
+          business_rules:
+            status: draft
+            confidence: 85
+          decision_points:
+            status: draft
+            confidence: 85
+      exceptions:
+        status: draft
+        count: 0
+        confidence: 0
+      control_points:
+        status: draft
+        count: 5
+        confidence: 78
+      systems:
+        status: draft
+        count: 6
+        min_count: 1
+        confidence: 85
+        subsections:
+          system_summary:
+            status: draft
+            confidence: 90
+          integration_matrix:
+            status: draft
+            confidence: 70
+          system_interaction_diagram:
+            status: draft
+            confidence: 85
+          data_document_inventory:
+            status: draft
+            confidence: 85
+      organizational_mapping:
+        status: draft
+        confidence: 45
+        subsections:
+          raci_matrix:
+            status: draft
+            confidence: 55
+          team_responsibilities:
+            status: draft
+            confidence: 45
+      existing_documentation:
+        status: draft
+        confidence: 40
+        subsections:
+          related_documents:
+            status: draft
+            confidence: 60
+          kpis:
+            status: reviewed
+            confidence: 45
+          dtps:
+            status: draft
+            confidence: 65
+      process_gaps:
+        status: draft
+        count: 9
+        confidence: 75
+        subsections:
+          identified_gaps:
+            status: draft
+            confidence: 80
+          documentation_assessment:
+            status: draft
+            confidence: 75
+          inconsistencies:
+            status: draft
+            confidence: 80
+          gap_confidence_impact:
+            status: draft
+            confidence: 70
+      pain_points:
+        status: draft
+        count: 10
+        expected_range: [3, 15]
+        confidence: 83
+
+  sipoc:
+    path: "./sipoc-analysis.md"
+    overall_status: draft
+    sections:
+      sipoc_overview:
+        status: reviewed
+        confidence: 85
+      suppliers:
+        status: draft
+        count: 5
+        confidence: 70
+      inputs:
+        status: draft
+        count: 8
+        confidence: 70
+      process_mapping:
+        status: draft
+        confidence: 75
+      outputs:
+        status: draft
+        count: 8
+        confidence: 70
+      customers:
+        status: draft
+        count: 5
+        confidence: 65
+      interface_boundary:
+        status: draft
+        confidence: 62
+      cross_reference:
+        status: draft
+        confidence: 40
+
+  cx_journey:
+    path: "./cx-journey-documentation.md"
+    overall_status: draft
+    sections:
+      journey_overview:
+        status: draft
+        confidence: 50
+      touchpoints:
+        count: 0
+      friction_points:
+        count: 0
+
+  transformation:
+    path: "./transformation.md"
+    overall_status: not_started
+    sections:
+      recommendations:
+        count: 0
+
+  innovation:
+    path: "./innovation.md"
+    overall_status: not_started
+    sections:
+      opportunities:
+        count: 0
+
+  architecture:
+    path: "./architecture.md"
+    overall_status: not_started
+
+  dilo_relationship_manager:
+    path: "./dilo-observation-relationship-manager.md"
+    overall_status: draft
+    sections:
+      role_profile:
+        status: draft
+        confidence: 70
+      timeline:
+        status: draft
+        confidence: 65
+        activity_count: 29
+      interruptions:
+        status: draft
+        count: 3
+        confidence: 45
+      workarounds:
+        status: draft
+        count: 3
+        confidence: 50
+      undocumented_steps:
+        status: draft
+        count: 4
+        confidence: 45
+      system_usage:
+        status: draft
+        confidence: 60
+        shadow_systems: 2
+      discrepancies:
+        status: draft
+        count: 6
+        confidence: 65
+      findings_recommendations:
+        status: draft
+        confidence: 65
+        recommendation_count: 5
+        proposed_pain_points: 3
+
+agent_sessions:
+  pda:
+    last_run: "2026-02-09T05:13:00Z"
+    status: active
+  companion:
+    last_run: "2026-02-09T05:08:00Z"
+    status: waiting
+  transformation:
+    last_run: null
+    status: waiting
+  cx_journey:
+    last_run: null
+    status: waiting
+  control:
+    last_run: null
+    status: waiting
+  innovation:
+    last_run: null
+    status: waiting
+  it_architect:
+    last_run: null
+    status: waiting
+  qa:
+    last_run: null
+    status: waiting
+
+milestones:
+  as_is_started: true
+  as_is_complete: false
+  specialists_engaged: false
+  qa_validated: false
+  process_complete: false
+
+validation:
+  last_validated: "2026-02-09T05:13:00Z"
+  score: 66
+  errors: 0
+  warnings: 2
+  discrepancies: 5

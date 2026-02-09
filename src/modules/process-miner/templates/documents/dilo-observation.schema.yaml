@@ -1,0 +1,780 @@
+# Schema for DILO Observation
+# Merged schema v3.0 — single source of truth for this document type.
+# Inherits shared defaults from _defaults.yaml.
+#
+# ARCHITECTURE: This replaces the former 2-layer split (master document-schema.yaml
+# + per-doc companion). All section definitions, validation rules, field types,
+# sync config, and cross-references for DILO live here.
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "dilo-observation"
+template_file: "dilo-observation.md"
+template_description: "Day In the Life Of — role-based process observation capturing actual vs documented behavior, workarounds, and time waste"
+required: false
+
+# Extra incomplete markers beyond _defaults.yaml standard set.
+# DILO uses [EXPECTED and [PREFILLED to mark AI-predicted content awaiting observation.
+incomplete_markers_extra:
+  - "[EXPECTED"
+  - "[PREFILLED"
+
+# ──────────────────────────────────────────────
+# Document Info
+# ──────────────────────────────────────────────
+document_info:
+  parent_documents:
+    - "as-is-process-documentation.md"
+  prerequisites:
+    - "AS-IS process documentation at ≥60% completion"
+    - "At least 5 PS# items documented"
+    - "RACI matrix populated (Section 6 of AS-IS)"
+  per_role: true
+  file_pattern: "dilo-observation-{role_slug}.md"
+
+# ──────────────────────────────────────────────
+# Sections
+# ──────────────────────────────────────────────
+sections:
+  # ── Section 1: Role Profile ──
+  - id: role_profile
+    heading: "1. Role Profile"
+    section_number: 1
+    content_type: context
+    sync_enabled: false
+    guidance: |
+      Context about the observed role — what it should do vs what DILO reveals.
+      MUST include: role identification table, AS-IS expected responsibilities
+      mapped to PS# steps, and actual time allocation from observation.
+      FORBIDDEN: opinions about role performance, individual performance evaluations.
+    subsections:
+      - id: role_identification
+        heading: "1.1 Role Identification"
+        content_type: key_value_table
+        guidance: |
+          Key-value table with: Role Title, Department, Reports To, Team Size,
+          Observation Subject (name + experience level), and Day Type (typical/
+          atypical). Use the official HR role title. Experience level helps
+          contextualize whether observed behavior reflects standard practice or
+          individual adaptation.
+      - id: role_in_process
+        heading: "1.2 Role in Process (from AS-IS)"
+        content_type: summary_table
+        guidance: |
+          Table mapping each PS# step this role owns per the AS-IS documentation,
+          with expected durations and RACI designation. Include the total expected
+          time on this process as stated in the AS-IS or RACI matrix (Section 6
+          of AS-IS). This sets the baseline for comparison with actual observation.
+      - id: role_in_practice
+        heading: "1.3 Role in Practice (from DILO)"
+        content_type: mixed
+        guidance: |
+          State actual observed time on this process and the gap vs expected.
+          List other processes this person worked on during observation and
+          whether they interfered with the primary process. Interference means
+          the other work caused delays, context switches, or quality issues
+          for the documented process.
+
+  # ── Section 2: Timeline Observation ──
+  - id: timeline
+    heading: "2. Timeline Observation"
+    section_number: 2
+    content_type: detail_entries
+    item_prefix: "ACT"
+    sync_enabled: false
+    summary_table_header: "| ACT# | Time Start | Time End | Duration | Activity | Category | PS# Link | System | Value Class |"
+    entry_template: true
+    mode: chronological
+    guidance: |
+      The core DILO artifact — a chronological log of what actually happened.
+      MUST include: Gantt diagram overview, activity timeline table with every
+      observed activity, time distribution by value class, and variance analysis
+      per PS# step. Every activity MUST have a unique ACT# ID.
+      Value classification is mandatory: 🟢 Value-Add, 🟡 Necessary Non-Value-Add,
+      🔴 Waste, ⚪ Non-Process.
+      FORBIDDEN: rounding times to look better, omitting non-process activities,
+      classifying all admin as "waste" without justification.
+    subsections:
+      - id: day_overview
+        heading: "2.1 Day Overview"
+        content_type: diagram
+        guidance: |
+          Mermaid Gantt chart showing the full observation period with activities
+          as time blocks. Use color coding to match value classification. This
+          provides the at-a-glance visual summary of how the day was actually spent.
+      - id: activity_timeline
+        heading: "2.2 Activity Timeline"
+        content_type: summary_table
+        guidance: |
+          Chronological table with one row per observed activity. Every activity
+          MUST have ACT# ID, start/end times, duration, category, PS# link (if
+          applicable), system used, and value class. Activities not linked to any
+          PS# should state "N/A — not in AS-IS".
+      - id: time_distribution
+        heading: "2.3 Time Distribution"
+        content_type: summary_table
+        guidance: |
+          Summary table breaking total observed time into Value-Add, Necessary
+          Non-Value-Add, Waste, and Non-Process categories with time, percentage
+          of day, and activity counts. Totals must sum to 100%.
+      - id: time_by_step
+        heading: "2.4 Time by Process Step"
+        content_type: summary_table
+        guidance: |
+          Compare AS-IS expected duration per PS# step vs DILO actual duration.
+          Calculate variance as a percentage. For any variance >50%, provide a
+          brief reason (e.g., "workaround adds 15 min", "system slow during
+          peak hours"). Steps not observed should be flagged.
+    validation:
+      min_count: 3
+
+  # ── Section 3: Interruptions & Context Switching ──
+  - id: interruptions
+    heading: "3. Interruptions & Context Switching"
+    section_number: 3
+    content_type: detail_entries
+    item_prefix: "INT"
+    sync_enabled: false
+    summary_table_header: "| INT# | Time | Source | Type | Duration | Impact | Avoidable? | Related ACT# |"
+    entry_template: true
+    guidance: |
+      What derails the work? Interruptions destroy flow and are often invisible
+      in process documentation.
+      MUST include: interruption log with unique INT# IDs, interruption analysis
+      metrics, and context switching cost analysis.
+      Each interruption must reference the ACT# it disrupted.
+      "Avoidable?" is a judgment call — mark Yes if the interruption could
+      reasonably be prevented by process or system changes.
+      FORBIDDEN: blaming individuals for interruptions, underreporting
+      interruptions to minimize findings.
+    subsections:
+      - id: interruption_log
+        heading: "3.1 Interruption Log"
+        content_type: summary_table
+        guidance: |
+          One row per interruption with INT# ID, time, source (who/what), type
+          (from standard list: Phone Call, Email/Chat, Walk-up, System Alert,
+          Meeting, Escalation, Question from Colleague), duration, impact
+          description, avoidable flag, and related ACT#. Include ALL
+          interruptions, even brief ones (<1 min).
+      - id: interruption_analysis
+        heading: "3.2 Interruption Analysis"
+        content_type: key_value_table
+        guidance: |
+          Summary metrics: total count, total time lost, average recovery time,
+          most frequent source, most disruptive type, and avoidable percentage.
+          Recovery time = time to regain full focus after the interruption ends,
+          not just the interruption duration itself.
+      - id: context_switching_map
+        heading: "3.3 Context Switching Map"
+        content_type: summary_table
+        guidance: |
+          Count switches between processes, between systems, and interrupt-return
+          cycles. For each switch type: count, average recovery time, and total
+          time lost. Context switches without interruptions (e.g., toggling
+          between two systems for one task) count as system switches. Provide
+          a narrative analysis of the overall switching pattern.
+
+  # ── Section 4: Workarounds & Shadow Processes ──
+  - id: workarounds
+    heading: "4. Workarounds & Shadow Processes"
+    section_number: 4
+    content_type: detail_entries
+    item_prefix: "WA"
+    sync_enabled: false
+    summary_table_header: "| WA# | Workaround | Why Needed | Official Step | System | Frequency | Risk | Related PP# |"
+    entry_template: true
+    guidance: |
+      The gold mine. What do people ACTUALLY do that differs from the documented
+      process? Workarounds reveal system/process failures.
+      MUST include: workaround registry table, detailed entries with unique WA#
+      IDs, and shadow process map.
+      For each workaround: what SHOULD happen vs what ACTUALLY happens, why,
+      frequency, risk level, and whether management knows.
+      Non-judgmental tone is critical — workarounds are symptoms, not misconduct.
+      FORBIDDEN: recommending disciplinary action, minimizing compliance risks,
+      omitting workarounds because they are "minor".
+    subsections:
+      - id: workaround_registry
+        heading: "4.1 Workaround Registry"
+        content_type: summary_table
+        guidance: |
+          Summary table with WA# ID, name, reason, official PS# step being
+          bypassed, system involved, frequency, risk level (High/Medium/Low),
+          and related PP#. This is the quick-reference view — detail follows.
+      - id: workaround_details
+        heading: "4.2 Workaround Details"
+        content_type: detail_entries
+        guidance: |
+          One detailed block per WA# using the entry template. Every workaround
+          MUST specify: what should happen, what actually happens, why, frequency,
+          time added, risk level, whether known to management, root cause,
+          compliance risk assessment, systems involved, related pain points and
+          exceptions, and a recommendation for resolution.
+      - id: shadow_process_map
+        heading: "4.3 Shadow Process Map"
+        content_type: summary_table
+        guidance: |
+          Activities that happen but aren't in ANY documented process. These are
+          not workarounds to existing steps — they are entirely undocumented
+          workflows. For each: who does it, why, whether it is documented anywhere,
+          and whether it should be formalized in the TO-BE state.
+
+  # ── Section 5: Undocumented Steps ──
+  - id: undocumented_steps
+    heading: "5. Undocumented Steps"
+    section_number: 5
+    content_type: detail_entries
+    item_prefix: "UD"
+    sync_enabled: false
+    summary_table_header: "| UD# | Step Description | Between PS# | Duration | Frequency | Should Document? | Category |"
+    entry_template: true
+    guidance: |
+      Steps the person performs that don't appear in the AS-IS process
+      documentation. Either the AS-IS is incomplete or these are informal additions.
+      MUST include: registry table and detailed entries with unique UD# IDs.
+      Each entry must reference which PS# steps it falls between.
+      Categories: Missing from AS-IS (should have been documented), Informal
+      Addition (added by practitioners), Workaround Step (part of a WA#),
+      Cross-Process (belongs to another process), Administrative (overhead
+      not captured in AS-IS).
+      FORBIDDEN: inventing undocumented steps not actually observed.
+    subsections:
+      - id: undocumented_step_registry
+        heading: "5.1 Undocumented Step Registry"
+        content_type: summary_table
+        guidance: |
+          Summary table with UD# ID, description, between which PS# steps it
+          occurs, duration, frequency, whether it should be formally documented,
+          and category from the standard list. This is the quick-reference view.
+      - id: undocumented_step_details
+        heading: "5.2 Undocumented Step Details"
+        content_type: detail_entries
+        guidance: |
+          One detailed block per UD# entry. MUST include: why it happens, what
+          the impact would be if skipped, the system used (if any), whether it
+          should exist in the TO-BE process, and category classification.
+          For "Missing from AS-IS" items, note whether other team members also
+          perform this step (indicating a systemic gap vs individual practice).
+
+  # ── Section 6: System Usage Observation ──
+  - id: system_usage
+    heading: "6. System Usage Observation"
+    section_number: 6
+    content_type: analysis
+    sync_enabled: false
+    guidance: |
+      What systems are actually used, how, and what friction does the role
+      experience with them?
+      MUST include: system usage log, friction points table, and comparison
+      of actual vs documented system usage per PS# step.
+      SYS# references must match the AS-IS Section 5 system IDs.
+      FORBIDDEN: speculating about system capabilities not observed,
+      recommending specific vendor solutions.
+    subsections:
+      - id: system_usage_log
+        heading: "6.1 System Usage Log"
+        content_type: summary_table
+        guidance: |
+          One row per system used during observation with SYS# reference, total
+          time spent, activity count, login issues observed, performance issues
+          observed, and workarounds employed. Include personal tools (spreadsheets,
+          notes apps) even if they are not "official" systems.
+      - id: system_friction_points
+        heading: "6.2 System Friction Points"
+        content_type: summary_table
+        guidance: |
+          Table capturing every friction event: slow load times, confusing UI,
+          data re-entry between systems, missing integrations, error messages.
+          Include SYS# reference, friction description, frequency of occurrence,
+          time wasted per occurrence, and any workaround used to mitigate.
+      - id: system_comparison
+        heading: "6.3 Actual vs Documented System Usage"
+        content_type: summary_table
+        guidance: |
+          Per PS# step, compare AS-IS stated system vs actually observed system.
+          Flag mismatches and explain why different (e.g., "Uses personal
+          spreadsheet because CRM export is unreliable"). Match = Yes/No.
+          Mismatches often reveal shadow IT or system inadequacy.
+
+  # ── Section 7: AS-IS Discrepancy Analysis ──
+  - id: discrepancy_analysis
+    heading: "7. AS-IS Discrepancy Analysis"
+    section_number: 7
+    content_type: analysis
+    item_prefix: "DIS"
+    sync_enabled: false
+    summary_table_header: "| DIS# | Category | AS-IS States | DILO Observed | Severity | Resolution |"
+    guidance: |
+      The systematic comparison between what the AS-IS documents and what DILO
+      observed. This is the primary analytical output of the DILO.
+      MUST include: discrepancy summary table with unique DIS# IDs, statistics
+      on discrepancy types, and impact assessment on AS-IS confidence scores.
+      Categories: Missing Step, Wrong Duration, Wrong System, Wrong Owner,
+      Wrong Sequence, Missing Exception, Hidden Workaround, Missing Pain Point.
+      Every discrepancy must state what the AS-IS says AND what DILO observed.
+      FORBIDDEN: discrepancies based on a single atypical event without flagging
+      day type, changing AS-IS confidence scores without evidence.
+    subsections:
+      - id: discrepancy_summary
+        heading: "7.1 Discrepancy Summary"
+        content_type: summary_table
+        guidance: |
+          Table with DIS# ID, category (from standard list), what AS-IS states,
+          what DILO observed, severity (Critical/High/Medium/Low), and recommended
+          resolution action. Severity: Critical = compliance or customer risk,
+          High = significant process deviation, Medium = notable difference,
+          Low = minor variance.
+      - id: discrepancy_statistics
+        heading: "7.2 Discrepancy Statistics"
+        content_type: key_value_table
+        guidance: |
+          Counts of: steps not observed in DILO, steps observed but not in AS-IS,
+          duration variances >50%, system mismatches, owner mismatches, new pain
+          points discovered, new exceptions discovered, and workarounds with
+          compliance risk. These statistics quantify the gap between documentation
+          and reality.
+      - id: confidence_impact
+        heading: "7.3 Impact on AS-IS Confidence"
+        content_type: summary_table
+        guidance: |
+          Per AS-IS section, state the previous confidence level and the post-DILO
+          revised confidence with a brief reason. Only lower confidence when DILO
+          provides counter-evidence; raise confidence when DILO confirms the AS-IS.
+          Use the standard scale: HIGH (>=90%), MEDIUM (>=70%), LOW (>=40%),
+          STUB (<40%).
+
+  # ── Section 8: Findings & Recommendations ──
+  - id: findings
+    heading: "8. Findings & Recommendations"
+    section_number: 8
+    content_type: recommendations
+    sync_enabled: false
+    guidance: |
+      Synthesis of all DILO observations into actionable findings.
+      MUST include: top findings narrative, items to add to the AS-IS, items
+      to correct in the AS-IS, and Lean 8-wastes (TIMWOODS) classification.
+      Top findings should be ranked by impact. Each finding must reference
+      supporting DILO evidence (WA#, UD#, DIS#, ACT#, etc.).
+      FORBIDDEN: recommending organizational changes beyond process scope,
+      findings not supported by observed evidence.
+    subsections:
+      - id: top_findings
+        heading: "8.1 Top Findings"
+        content_type: prose
+        guidance: |
+          Narrative listing the most significant discoveries, ranked by business
+          impact. Each finding must reference supporting evidence (WA#, UD#, DIS#,
+          ACT#). Group findings by theme where possible (e.g., system-related,
+          handoff-related, knowledge-related).
+      - id: items_to_add
+        heading: "8.2 Items to Add to AS-IS"
+        content_type: summary_table
+        guidance: |
+          Table of new items discovered during DILO that should be added to the
+          AS-IS documentation. Include type (Pain Point, Exception, Step, System,
+          etc.), proposed ID following AS-IS patterns, description, and DILO
+          source reference (ACT#, WA#, UD#, etc.).
+      - id: items_to_correct
+        heading: "8.3 Items to Correct in AS-IS"
+        content_type: summary_table
+        guidance: |
+          Table of existing AS-IS items that need correction based on DILO
+          observations. Include existing ID, field to correct, current value in
+          AS-IS, corrected value from DILO, and DILO source reference.
+      - id: lean_waste_classification
+        heading: "8.4 Lean Waste Classification"
+        content_type: summary_table
+        guidance: |
+          Map all observed waste to the 8 Lean waste types (TIMWOODS): Transport,
+          Inventory, Motion, Waiting, Overprocessing, Overproduction, Defects,
+          Skills. For each type: count of observed instances, total time, and
+          elimination potential (High/Medium/Low/None). Not every waste type
+          will have observations — leave count as 0 where not applicable.
+
+# ──────────────────────────────────────────────
+# Completeness Rules (validation gates)
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "timeline.count >= 3"
+    - "role_profile.populated == true"
+  recommended:
+    - "workarounds.count >= 0"
+    - "discrepancy_analysis.populated == true"
+    - "findings.word_count >= 50"
+
+# ──────────────────────────────────────────────
+# Section Prompts (continue-session integration)
+# ──────────────────────────────────────────────
+section_prompts:
+  1:
+    title: "Role Profile"
+    prompts:
+      - "Let's confirm your role details. What's your official title and department?"
+      - "How long have you been in this role?"
+      - "On a typical day, roughly how much of your time goes to this process vs other work?"
+    enrichment_fields:
+      - department
+      - reports_to
+      - team_size
+      - subject_experience
+      - actual_process_time
+
+  2:
+    title: "Timeline Observation"
+    mode: chronological
+    frame: |
+      Let's walk through your typical day working on {{process_name}}.
+      I'll show you what the documentation says should happen, and you
+      tell me what ACTUALLY happens. There are no wrong answers —
+      workarounds and shortcuts are the most valuable things you can share.
+    per_item: |
+      According to the docs, at about {{expected_time}} you should be doing
+      **{{expected_activity}}** in **{{expected_system}}**.
+      What actually happens at this point in your day?
+    prompts:
+      - "Walk me through how your day typically starts with this process."
+      - "What's the first thing you actually do? Is it what the docs say?"
+      - "How long does that really take? The docs say {{expected_duration}}."
+      - "What system do you actually use for this? The docs say {{expected_system}}."
+    deviation_probe:
+      - "Interesting — why do you do it differently?"
+      - "How often does it go this way vs the documented way?"
+      - "What would happen if you did it the documented way?"
+    interruption_probe: |
+      Were there any interruptions during this? Phone calls,
+      questions from colleagues, system issues?
+    wrap_up:
+      - "What's the most frustrating part of your day?"
+      - "If you could change ONE thing, what would it be?"
+      - "Is there anything you do that you think nobody knows about?"
+      - "What would a new person struggle with most on day one?"
+    enrichment_fields:
+      - activity_timeline_table
+      - time_by_step_table
+      - value_add_pct
+      - waste_pct
+
+  3:
+    title: "Interruptions & Context Switching"
+    prompts:
+      - "How often do you get interrupted during this process?"
+      - "What's the most common type of interruption?"
+      - "How long does it typically take to get back on track after an interruption?"
+      - "Are there certain times of day when interruptions are worse?"
+      - "How many different systems do you typically have open at once?"
+    enrichment_fields:
+      - interruption_log_table
+      - total_interruption_time
+      - avg_recovery_time
+      - most_frequent_source
+
+  4:
+    title: "Workarounds & Shadow Processes"
+    tone: non_judgmental
+    prompts:
+      - "Are there any steps where you do something different from what the process docs say?"
+      - "Tell me more about that. When did you start doing it this way?"
+      - "Does everyone on the team do this, or just you?"
+      - "Does your manager know about this workaround?"
+      - "What would happen if you couldn't do this workaround anymore?"
+      - "Are there any 'tricks of the trade' you've learned that aren't written down?"
+    enrichment_fields:
+      - workaround_registry_table
+      - shadow_process_table
+      - compliance_risk
+
+  5:
+    title: "Undocumented Steps"
+    prompts:
+      - "Are there any steps you perform regularly that aren't in the process documentation?"
+      - "I don't see that in the process documentation. Is this something everyone does?"
+      - "What would happen if this step was skipped?"
+      - "Should this step be formally documented?"
+    enrichment_fields:
+      - undocumented_steps_table
+
+  6:
+    title: "System Usage Observation"
+    prompts:
+      - "Which systems do you actually use for this process? In what order?"
+      - "Are there any systems that are slow, unreliable, or frustrating?"
+      - "Do you ever use personal tools (spreadsheets, notes) instead of the official systems?"
+      - "Are there systems you're supposed to use but don't? Why not?"
+    enrichment_fields:
+      - system_usage_table
+      - system_friction_table
+      - system_comparison_table
+
+  7:
+    title: "AS-IS Discrepancy Analysis"
+    prompts:
+      - "Looking at the differences between the documentation and what you described — does this summary look right?"
+      - "Are there any other differences I missed?"
+      - "Which of these discrepancies causes the most problems?"
+    enrichment_fields:
+      - discrepancy_summary_table
+      - confidence_impact_table
+
+  8:
+    title: "Findings & Recommendations"
+    prompts:
+      - "Based on everything we discussed, what are the top things that need to change?"
+      - "Which of these findings would have the biggest impact if addressed?"
+      - "Is there anything else about your day that we didn't cover?"
+    enrichment_fields:
+      - top_findings
+      - items_to_add
+      - items_to_correct
+
+# ──────────────────────────────────────────────
+# Entry Field Structures
+# ──────────────────────────────────────────────
+activity_entry_fields:
+  overview:
+    - activity_id
+    - time_start
+    - time_end
+    - duration
+    - activity
+    - category
+    - ps_link
+    - system
+    - value_class
+  sections:
+    - description
+    - deviation_from_asis
+    - actual_vs_expected
+
+workaround_entry_fields:
+  overview:
+    - workaround_id
+    - name
+    - official_step
+    - should_happen
+    - actually_happens
+    - reason
+    - frequency
+    - time_added
+    - risk_level
+    - known_to_management
+  sections:
+    - description
+    - root_cause
+    - compliance_risk
+    - systems_involved
+    - related_pain_points
+    - related_exceptions
+    - recommendation
+
+undocumented_step_entry_fields:
+  overview:
+    - step_id
+    - description
+    - between_steps
+    - duration
+    - frequency
+    - category
+    - system
+    - should_document
+    - should_exist_tobe
+  sections:
+    - reason
+    - impact_if_skipped
+
+interruption_entry_fields:
+  overview:
+    - interruption_id
+    - time
+    - source
+    - type
+    - duration
+    - impact
+    - avoidable
+    - related_activity
+
+discrepancy_entry_fields:
+  overview:
+    - discrepancy_id
+    - category
+    - asis_states
+    - dilo_observed
+    - severity
+    - resolution
+
+# ──────────────────────────────────────────────
+# Cross-Reference Validation
+# ──────────────────────────────────────────────
+cross_references:
+  intra_document:
+    - description: "All INT# related_activity must reference valid ACT#"
+      source: "interruptions.related_activity"
+      target: "activities"
+    - description: "All WA# official_step must reference valid PS#"
+      source: "workarounds.official_step"
+      target: "as-is-process-documentation.process_steps"
+    - description: "All UD# between_steps must reference valid PS#"
+      source: "undocumented_steps.between_steps"
+      target: "as-is-process-documentation.process_steps"
+
+  inter_document:
+    - description: "All ACT# ps_link must reference valid PS# in AS-IS"
+      source: "activities.ps_link"
+      target: "as-is-process-documentation.process_steps"
+    - description: "All WA# related_pain_points must reference valid PP# in AS-IS"
+      source: "workarounds.related_pain_points"
+      target: "pain-points-detail.pain_points"
+    - description: "All WA# related_exceptions must reference valid EX# in AS-IS"
+      source: "workarounds.related_exceptions"
+      target: "exceptions-detail.exceptions"
+    - description: "All system references must match valid SYS# in AS-IS"
+      source: "*.system"
+      target: "as-is-process-documentation.systems"
+
+  required_references_by_section:
+    2:  # Timeline
+      - "ACT#"
+      - "PS#"
+    3:  # Interruptions
+      - "INT#"
+      - "ACT#"
+    4:  # Workarounds
+      - "WA#"
+      - "PS#"
+    5:  # Undocumented Steps
+      - "UD#"
+      - "PS#"
+    7:  # Discrepancy Analysis
+      - "DIS#"
+      - "PS#"
+
+# ──────────────────────────────────────────────
+# ID Patterns (document-specific subset)
+# ──────────────────────────────────────────────
+id_patterns:
+  activity: "ACT-[A-Z]{2,4}-\\d{3}"
+  interruption: "INT-[A-Z]{2,4}-\\d{3}"
+  workaround: "WA-[A-Z]{2,4}-\\d{3}"
+  undocumented_step: "UD-[A-Z]{2,4}-\\d{3}"
+  discrepancy: "DIS-[A-Z]{2,4}-\\d{3}"
+  # Cross-referenced from AS-IS
+  process_step: "PS-[A-Z]{2,4}-\\d{3}"
+  pain_point: "PP-[A-Z]{2,4}-\\d{3}"
+  exception: "EX-[A-Z]{2,4}-\\d{3}"
+  control_point: "CP-[A-Z]{2,4}-\\d{3}"
+  system: "SYS-[A-Z]{2,4}-\\d{3}"
+
+# ──────────────────────────────────────────────
+# Companion Documents
+# ──────────────────────────────────────────────
+companion_documents:
+  - name: "AS-IS Process Documentation"
+    file: "as-is-process-documentation.md"
+    relationship: "parent"
+
+  - name: "SIPOC Analysis"
+    file: "sipoc-analysis.md"
+    relationship: "sibling"
+
+  - name: "Pain Points Detail"
+    file: "pain-points-detail.md"
+    relationship: "sibling"
+
+  - name: "Exceptions Detail"
+    file: "exceptions-detail.md"
+    relationship: "sibling"
+
+# ──────────────────────────────────────────────
+# Value Classifications
+# ──────────────────────────────────────────────
+value_classifications:
+  - class: "Value-Add"
+    symbol: "🟢"
+    description: "Directly contributes to process output"
+  - class: "Necessary Non-Value-Add"
+    symbol: "🟡"
+    description: "Required but doesn't add value (compliance, admin)"
+  - class: "Waste"
+    symbol: "🔴"
+    description: "Could be eliminated (waiting, rework, workarounds)"
+  - class: "Non-Process"
+    symbol: "⚪"
+    description: "Other work not related to this process"
+
+# ──────────────────────────────────────────────
+# Interruption Type Classifications
+# ──────────────────────────────────────────────
+interruption_types:
+  - "Phone Call"
+  - "Email/Chat"
+  - "Walk-up"
+  - "System Alert"
+  - "Meeting"
+  - "Escalation"
+  - "Question from Colleague"
+
+# ──────────────────────────────────────────────
+# Workaround Risk Levels
+# ──────────────────────────────────────────────
+workaround_risk_levels:
+  - level: "High"
+    description: "Compliance risk, data integrity risk, or customer impact"
+  - level: "Medium"
+    description: "Process deviation with moderate impact"
+  - level: "Low"
+    description: "Minor deviation, no significant risk"
+
+# ──────────────────────────────────────────────
+# Undocumented Step Categories
+# ──────────────────────────────────────────────
+undocumented_step_categories:
+  - "Missing from AS-IS"
+  - "Informal Addition"
+  - "Workaround Step"
+  - "Cross-Process"
+  - "Administrative"
+
+# ──────────────────────────────────────────────
+# Discrepancy Categories
+# ──────────────────────────────────────────────
+discrepancy_categories:
+  - "Missing Step"
+  - "Wrong Duration"
+  - "Wrong System"
+  - "Wrong Owner"
+  - "Wrong Sequence"
+  - "Missing Exception"
+  - "Hidden Workaround"
+  - "Missing Pain Point"
+
+# ──────────────────────────────────────────────
+# Lean 8 Wastes (TIMWOODS)
+# ──────────────────────────────────────────────
+lean_wastes:
+  - type: "Transport"
+    description: "Unnecessary movement of information"
+  - type: "Inventory"
+    description: "Work piling up"
+  - type: "Motion"
+    description: "Unnecessary actions"
+  - type: "Waiting"
+    description: "Idle time"
+  - type: "Overprocessing"
+    description: "Doing more than needed"
+  - type: "Overproduction"
+    description: "Producing before needed"
+  - type: "Defects"
+    description: "Errors, rework"
+  - type: "Skills"
+    description: "Underutilized talent"
+
+# ──────────────────────────────────────────────
+# DILO Metadata Fields
+# ──────────────────────────────────────────────
+dilo_metadata:
+  - observation_method
+  - observer_name
+  - consent_obtained
+  - day_type
+  - representativeness

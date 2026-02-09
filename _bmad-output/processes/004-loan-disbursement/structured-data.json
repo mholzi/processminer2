@@ -1,0 +1,483 @@
+{
+  "$schema": "process-miner-structured-data-v1",
+  "schema_version": "1.0.0",
+  "template_id": "as-is-process-documentation",
+  "session": {
+    "started": "2026-02-06T11:00:00Z",
+    "last_updated": "2026-02-06T11:15:00Z",
+    "contributor": {
+      "name": "Markus",
+      "role": "CEO"
+    },
+    "process": {
+      "id": "004",
+      "name": "Loan Disbursement"
+    },
+    "client_groups": "All segments",
+    "checkpoint": {
+      "step": 2,
+      "last_item_id": "PS-LD-010"
+    }
+  },
+  "metadata": {
+    "purpose": "Release of approved loan funds to borrowers across all business segments",
+    "trigger": "Final credit approval received with signed loan agreement and all CPs satisfied",
+    "frequency": "Daily — approximately 45-60 disbursements per day",
+    "volume": "45-60 per day across segments"
+  },
+  "process_steps": [
+    {
+      "id": "PS-LD-001",
+      "name": "Receive Approved Loan Package",
+      "owner": "Disbursement Officer",
+      "systems": ["SYS-LD-001"],
+      "description": "Receives the approved loan package from Credit Committee or automated approval engine. Verifies all approval conditions are met. Checks that loan agreement is signed and all conditions precedent (CPs) are satisfied. Legal reviews loan documentation before disbursement proceeds.",
+      "input": "Approved credit memo, signed loan agreement, CP checklist",
+      "output": "Verified loan package ready for setup",
+      "business_rules": ["BR-LD-001"],
+      "duration": "15-20 minutes",
+      "wait_time": "0-2 hours",
+      "channel": "Internal (system queue)",
+      "document_count": 3,
+      "interaction_count": 1
+    },
+    {
+      "id": "PS-LD-002",
+      "name": "Validate Customer & Account Details",
+      "owner": "Disbursement Officer",
+      "systems": ["SYS-LD-002", "SYS-LD-003"],
+      "description": "Confirms borrower identity, validates destination account details, checks KYC status is current, and verifies no sanctions hits. Cross-checks customer data between LoanIQ and T24.",
+      "input": "Customer ID, account details from loan agreement",
+      "output": "Validated customer record, confirmed destination account",
+      "business_rules": ["BR-LD-001", "BR-LD-002"],
+      "duration": "10-15 minutes",
+      "wait_time": null,
+      "channel": "Internal (system)",
+      "document_count": null,
+      "interaction_count": null
+    },
+    {
+      "id": "PS-LD-003",
+      "name": "Set Up Loan in Core Banking",
+      "owner": "Disbursement Officer",
+      "systems": ["SYS-LD-002", "SYS-LD-001"],
+      "description": "Creates the loan account in T24, enters repayment schedule, interest rate, fees, and tenor. Links to the customer's main account. Sets up automated debit orders for repayments.",
+      "input": "Approved loan terms, repayment schedule",
+      "output": "Active loan account in T24, repayment schedule configured",
+      "business_rules": [],
+      "duration": "20-30 minutes",
+      "wait_time": null,
+      "channel": "Internal (system)",
+      "document_count": null,
+      "interaction_count": null
+    },
+    {
+      "id": "PS-LD-004",
+      "name": "Four-Eyes Verification",
+      "owner": "Senior Disbursement Officer / Team Lead",
+      "systems": ["SYS-LD-002", "SYS-LD-001"],
+      "description": "Independent review of loan setup. Verifies all fields match the approved credit memo: amount, rate, tenor, fees, repayment schedule, destination account. Checks for any override flags.",
+      "input": "Loan setup in T24, original credit memo",
+      "output": "Verified and approved loan setup",
+      "business_rules": [],
+      "duration": "10-15 minutes",
+      "wait_time": "Variable (bottleneck during peak hours)",
+      "channel": "Internal (system)",
+      "document_count": null,
+      "interaction_count": 1
+    },
+    {
+      "id": "PS-LD-005",
+      "name": "Generate Disbursement Instructions",
+      "owner": "Disbursement Officer",
+      "systems": ["SYS-LD-002"],
+      "description": "Generates the payment instruction based on disbursement type: internal transfer, RTGS, EFT, or SWIFT. Applies correct value dating. For syndicated loans, generates multiple payment instructions.",
+      "input": "Verified loan account, destination account details",
+      "output": "Payment instruction ready for release",
+      "business_rules": ["BR-LD-003", "BR-LD-004", "BR-LD-005"],
+      "duration": "5-10 minutes",
+      "wait_time": null,
+      "channel": "Internal (system)",
+      "document_count": 1,
+      "interaction_count": 1
+    },
+    {
+      "id": "PS-LD-006",
+      "name": "Compliance Hold Check",
+      "owner": "Compliance Officer (automated + manual)",
+      "systems": ["SYS-LD-004"],
+      "description": "Automated screening of payment against sanctions lists, PEP databases, and adverse media. Transactions above threshold ($500K) require manual compliance officer review.",
+      "input": "Payment instruction, customer details",
+      "output": "Compliance clearance or hold flag",
+      "business_rules": ["BR-LD-006"],
+      "duration": "2-5 minutes (automated), up to 4 hours (manual)",
+      "wait_time": null,
+      "channel": "Internal (system + manual escalation)",
+      "document_count": null,
+      "interaction_count": null
+    },
+    {
+      "id": "PS-LD-007",
+      "name": "Treasury Funding Confirmation",
+      "owner": "Treasury Desk",
+      "systems": ["SYS-LD-005", "SYS-LD-002"],
+      "description": "Confirms that funds are available in the lending pool. For large disbursements (>$5M), treasury may need to arrange funding. Confirms FX rate if disbursement is in foreign currency.",
+      "input": "Disbursement amount, currency, value date",
+      "output": "Funding confirmation, FX rate lock (if applicable)",
+      "business_rules": [],
+      "duration": "5-15 minutes (standard), up to 1 day (large/FX)",
+      "wait_time": null,
+      "channel": "Phone/Email (manual)",
+      "document_count": null,
+      "interaction_count": 1
+    },
+    {
+      "id": "PS-LD-008",
+      "name": "Authorize & Release Payment",
+      "owner": "Head of Disbursements / Authorized Signatory",
+      "systems": ["SYS-LD-002"],
+      "description": "Final authorization of the payment. For amounts >$5M, dual authorization required. Releases the payment instruction to the payment gateway/SWIFT network.",
+      "input": "Compliance-cleared, treasury-confirmed payment instruction",
+      "output": "Released payment",
+      "business_rules": ["BR-LD-007"],
+      "duration": "5-10 minutes",
+      "wait_time": null,
+      "channel": "Internal (system)",
+      "document_count": 1,
+      "interaction_count": 1
+    },
+    {
+      "id": "PS-LD-009",
+      "name": "Payment Execution & Confirmation",
+      "owner": "Payment Operations (automated)",
+      "systems": ["SYS-LD-006", "SYS-LD-007"],
+      "description": "Payment is executed through the appropriate channel. System sends MT103 (SWIFT) or local clearing instruction. Waits for confirmation/acknowledgment from receiving bank.",
+      "input": "Released payment instruction",
+      "output": "Payment confirmation, transaction reference number",
+      "business_rules": [],
+      "duration": "Immediate to 30 min (domestic), 1-4 hrs (international)",
+      "wait_time": null,
+      "channel": "SWIFT / Local Clearing",
+      "document_count": 1,
+      "interaction_count": 0
+    },
+    {
+      "id": "PS-LD-010",
+      "name": "Post-Disbursement Processing",
+      "owner": "Disbursement Officer",
+      "systems": ["SYS-LD-002", "SYS-LD-001", "SYS-LD-008"],
+      "description": "Updates loan status to Active/Disbursed. Archives all documentation in DMS. Sends disbursement confirmation to borrower via email/portal. Updates CRM with disbursement details. Generates fee invoices if applicable.",
+      "input": "Payment confirmation",
+      "output": "Updated loan records, archived documents, customer notification",
+      "business_rules": [],
+      "duration": "15-20 minutes",
+      "wait_time": null,
+      "channel": "Internal (system) + Email/Portal",
+      "document_count": null,
+      "interaction_count": 1
+    }
+  ],
+  "process_exceptions": [
+    {
+      "id": "EX-LD-001",
+      "title": "Partial Disbursement",
+      "trigger": "Construction/project finance tranche drawdown",
+      "frequency": "Occasional",
+      "handling": "Each tranche requires separate CP verification and drawdown request",
+      "affected_steps": ["PS-LD-001", "PS-LD-005"]
+    },
+    {
+      "id": "EX-LD-002",
+      "title": "Rejected Payment",
+      "trigger": "Incorrect account details",
+      "frequency": "Occasional",
+      "handling": "Investigation, correction, and re-submission. Average resolution: 1 business day",
+      "affected_steps": ["PS-LD-009"]
+    },
+    {
+      "id": "EX-LD-003",
+      "title": "Compliance Hold",
+      "trigger": "Sanctions/AML screening flag",
+      "frequency": "Common",
+      "handling": "Compliance officer investigation before release. Average false positive resolution: 2 hours",
+      "affected_steps": ["PS-LD-006"]
+    },
+    {
+      "id": "EX-LD-004",
+      "title": "Insufficient Funding Pool",
+      "trigger": "Large disbursement, lending pool depleted",
+      "frequency": "Rare",
+      "handling": "Overnight funding arrangement by treasury",
+      "affected_steps": ["PS-LD-007"]
+    }
+  ],
+  "pain_points": [
+    {
+      "id": "PP-LD-001",
+      "title": "Manual re-keying LoanIQ to T24",
+      "impact": "High",
+      "frequency": "Always",
+      "root_cause": "No automated interface between loan origination and core banking",
+      "affected_steps": ["PS-LD-003"]
+    },
+    {
+      "id": "PP-LD-002",
+      "title": "Four-eyes verification bottleneck",
+      "impact": "High",
+      "frequency": "Often",
+      "root_cause": "Only 2 authorized verifiers, causing delays during peak hours (11am-2pm)",
+      "affected_steps": ["PS-LD-004"]
+    },
+    {
+      "id": "PP-LD-003",
+      "title": "No automated treasury notification",
+      "impact": "Medium",
+      "frequency": "Often",
+      "root_cause": "Manual phone/email communication to treasury for funding confirmation",
+      "affected_steps": ["PS-LD-007"]
+    },
+    {
+      "id": "PP-LD-004",
+      "title": "Manual document archiving",
+      "impact": "Medium",
+      "frequency": "Always",
+      "root_cause": "Physical scanning and uploading to OpenText, 10+ minutes per disbursement",
+      "affected_steps": ["PS-LD-010"]
+    },
+    {
+      "id": "PP-LD-005",
+      "title": "Compliance false positives (~15%)",
+      "impact": "High",
+      "frequency": "Often",
+      "root_cause": "Fircosoft screening rules produce ~15% false positive rate, each taking ~2 hours to resolve",
+      "affected_steps": ["PS-LD-006"]
+    }
+  ],
+  "controls": [
+    {
+      "id": "CP-LD-001",
+      "title": "Conditions Precedent Check",
+      "control_type": "Preventive",
+      "at_step": "PS-LD-001",
+      "description": "All CPs must be satisfied before disbursement. Checklist sign-off required.",
+      "evidence": "CP checklist sign-off"
+    },
+    {
+      "id": "CP-LD-002",
+      "title": "KYC/Sanctions Screening",
+      "control_type": "Preventive",
+      "at_step": "PS-LD-002",
+      "description": "Current KYC and clean sanctions screen mandatory. Regulatory requirement under AML/CFT Act.",
+      "evidence": "KYC record, sanctions screening result"
+    },
+    {
+      "id": "CP-LD-003",
+      "title": "Four-Eyes Verification",
+      "control_type": "Detective",
+      "at_step": "PS-LD-004",
+      "description": "Independent verification of loan setup. Maker-checker principle enforced by system through user ID checks.",
+      "evidence": "System audit log (maker/checker IDs)"
+    },
+    {
+      "id": "CP-LD-004",
+      "title": "Compliance Screening",
+      "control_type": "Detective",
+      "at_step": "PS-LD-006",
+      "description": "Automated + manual AML/sanctions check. Regulatory requirement.",
+      "evidence": "Fircosoft screening report"
+    },
+    {
+      "id": "CP-LD-005",
+      "title": "Dual Authorization",
+      "control_type": "Preventive",
+      "at_step": "PS-LD-008",
+      "description": "Required for disbursements >$5M. Digital signatures with audit trail.",
+      "evidence": "Digital signature log, authorization record"
+    }
+  ],
+  "systems": [
+    {
+      "id": "SYS-LD-001",
+      "name": "LoanIQ",
+      "system_type": "Core Banking",
+      "used_in_steps": ["PS-LD-001", "PS-LD-003", "PS-LD-004", "PS-LD-010"],
+      "purpose": "Loan management & origination",
+      "integrations": ["T24 (manual re-key)"]
+    },
+    {
+      "id": "SYS-LD-002",
+      "name": "T24 (Temenos)",
+      "system_type": "Core Banking",
+      "used_in_steps": ["PS-LD-002", "PS-LD-003", "PS-LD-004", "PS-LD-005", "PS-LD-007", "PS-LD-008", "PS-LD-010"],
+      "purpose": "Core banking & account management",
+      "integrations": ["LoanIQ", "Payment Gateway", "Murex", "Fircosoft", "OpenText"]
+    },
+    {
+      "id": "SYS-LD-003",
+      "name": "Salesforce CRM",
+      "system_type": "CRM",
+      "used_in_steps": ["PS-LD-002"],
+      "purpose": "Customer relationship management",
+      "integrations": ["T24"]
+    },
+    {
+      "id": "SYS-LD-004",
+      "name": "Fircosoft",
+      "system_type": "Other",
+      "used_in_steps": ["PS-LD-006"],
+      "purpose": "Compliance & sanctions screening",
+      "integrations": ["T24"]
+    },
+    {
+      "id": "SYS-LD-005",
+      "name": "Murex",
+      "system_type": "Other",
+      "used_in_steps": ["PS-LD-007"],
+      "purpose": "Treasury management & FX",
+      "integrations": ["T24"]
+    },
+    {
+      "id": "SYS-LD-006",
+      "name": "SWIFT Network",
+      "system_type": "External",
+      "used_in_steps": ["PS-LD-009"],
+      "purpose": "International payments",
+      "integrations": ["Payment Gateway"]
+    },
+    {
+      "id": "SYS-LD-007",
+      "name": "Local Clearing House",
+      "system_type": "External",
+      "used_in_steps": ["PS-LD-009"],
+      "purpose": "Domestic payments (EFT/RTGS)",
+      "integrations": ["Payment Gateway"]
+    },
+    {
+      "id": "SYS-LD-008",
+      "name": "OpenText",
+      "system_type": "Document Management",
+      "used_in_steps": ["PS-LD-010"],
+      "purpose": "Document management & archiving",
+      "integrations": ["T24"]
+    },
+    {
+      "id": "SYS-LD-009",
+      "name": "Email/Portal",
+      "system_type": "Communication",
+      "used_in_steps": ["PS-LD-010"],
+      "purpose": "Customer notifications",
+      "integrations": ["T24"]
+    }
+  ],
+  "discrepancies": [
+    {
+      "id": "DISC-001",
+      "scope": "intra-document",
+      "type": "inconsistent",
+      "source_document": "as_is",
+      "source_section": "process_steps",
+      "target_document": "as_is",
+      "target_section": "systems",
+      "description": "PS-LD-006 references 'AML System' as a separate system, but Systems table does not list it independently — confirmed as Fircosoft module",
+      "status": "resolved",
+      "resolved_in_step": 6,
+      "found_in_step": 2,
+      "resolved_in_step": null,
+      "deferred_reason": null
+    },
+    {
+      "id": "DISC-002",
+      "scope": "intra-document",
+      "type": "inconsistent",
+      "source_document": "as_is",
+      "source_section": "process_steps",
+      "target_document": "as_is",
+      "target_section": "systems",
+      "description": "PS-LD-005 and PS-LD-008 reference 'Payment Gateway' — added as SYS-LD-010",
+      "status": "resolved",
+      "resolved_in_step": 6,
+      "found_in_step": 2,
+      "resolved_in_step": null,
+      "deferred_reason": null
+    },
+    {
+      "id": "DISC-003",
+      "scope": "intra-document",
+      "type": "missing",
+      "source_document": "as_is",
+      "source_section": "organizational_mapping",
+      "target_document": null,
+      "target_section": null,
+      "description": "Section 6 (Organizational Mapping) — RACI matrix and team responsibilities auto-filled from process step data",
+      "status": "resolved",
+      "resolved_in_step": 6,
+      "found_in_step": 2,
+      "resolved_in_step": null,
+      "deferred_reason": null
+    },
+    {
+      "id": "DISC-004",
+      "scope": "intra-document",
+      "type": "missing",
+      "source_document": "as_is",
+      "source_section": "process_overview",
+      "target_document": null,
+      "target_section": null,
+      "description": "Section 1.6 Cost & Resource Allocation has no data — all fields marked [To be expanded]",
+      "status": "deferred",
+      "deferred_reason": "Requires finance team input — cost per transaction, FTE allocation, and annual operating cost not available from process documentation",
+      "found_in_step": 2,
+      "resolved_in_step": null,
+      "deferred_reason": null
+    },
+    {
+      "id": "DISC-005",
+      "scope": "intra-document",
+      "type": "missing",
+      "source_document": "as_is",
+      "source_section": "control_points",
+      "target_document": null,
+      "target_section": null,
+      "description": "All 5 control points — effectiveness assessments populated based on process data and pain points",
+      "status": "resolved",
+      "resolved_in_step": 6,
+      "found_in_step": 2,
+      "resolved_in_step": null,
+      "deferred_reason": null
+    },
+    {
+      "id": "DISC-006",
+      "scope": "intra-document",
+      "type": "missing",
+      "source_document": "as_is",
+      "source_section": "existing_documentation",
+      "target_document": null,
+      "target_section": null,
+      "description": "Section 7 (Existing Documentation References) has minimal content — KPIs and DTPs not documented",
+      "status": "deferred",
+      "deferred_reason": "Requires operations/quality team input — KPI definitions and DTP references not available from current source material",
+      "found_in_step": 2,
+      "resolved_in_step": null,
+      "deferred_reason": null
+    },
+    {
+      "id": "DISC-007",
+      "scope": "intra-document",
+      "type": "inconsistent",
+      "source_document": "as_is",
+      "source_section": "process_steps",
+      "target_document": "as_is",
+      "target_section": "systems",
+      "description": "PS-LD-010 — SYS-LD-003 (Salesforce CRM) added to system list",
+      "status": "resolved",
+      "resolved_in_step": 6,
+      "found_in_step": 5,
+      "resolved_in_step": null,
+      "deferred_reason": null
+    }
+  ],
+  "validation": {
+    "status": "DRAFT",
+    "completed_at": null
+  }
+}

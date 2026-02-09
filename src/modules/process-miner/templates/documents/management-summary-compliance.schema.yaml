@@ -1,0 +1,382 @@
+# Standalone Schema for Management Summary — Compliance & Controls
+# Flattened from the unified management-summary.schema.yaml (v3.0) for the
+# COMPLIANCE variant. This file is self-contained: no variants block, no
+# subsection_overrides indirection. Every section and subsection is resolved
+# and ready for direct consumption by the generate-outputs workflow.
+#
+# Source variant: variants.compliance
+# Template file:  management-summary-compliance.md
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "management-summary-compliance"
+template_description: "Compliance & Controls management summary — Amazon 6-Pager format"
+required: false  # Generated output, not a primary capture document
+
+# ──────────────────────────────────────────────
+# Variant Metadata
+# ──────────────────────────────────────────────
+source_document: "compliance-control-assessment.md"
+agent_id: "control-analyst"
+writing_focus: "Lead with risk exposure — quantify compliance risk, no ambiguity"
+companion_documents:
+  - "control-points-detail.md"
+comparison_metrics:
+  - { name: "Total Control Points", source_path: "control_points.count" }
+  - { name: "Regulatory Controls", source_path: "regulatory_controls.count" }
+  - { name: "Compliance Coverage %", source_path: "compliance_coverage" }
+  - { name: "Open Audit Findings", source_path: "open_audit_findings.count" }
+  - { name: "Control Effectiveness", source_path: "control_effectiveness" }
+  - { name: "Critical Gaps", source_path: "critical_gaps.count" }
+  - { name: "Strategic Priorities", source_path: "strategic_priorities" }
+appendix_sections:
+  - { id: "control_matrix", heading: "Control Matrix", type: "table" }
+  - { id: "regulatory_map", heading: "Regulatory Mapping", type: "table" }
+  - { id: "gap_register", heading: "Compliance Gap Register", type: "table" }
+  - { id: "audit_findings", heading: "Audit Finding Status", type: "table" }
+
+# ──────────────────────────────────────────────
+# Document Format
+# ──────────────────────────────────────────────
+format:
+  type: "Amazon 6-Pager"
+  reading_time: "20-30 minutes"
+  writing_principles:
+    - "Lead with WHY — first paragraph must hook the reader with business impact"
+    - "Anchor in DATA — every claim needs evidence, not opinions"
+    - "BRUTAL HONESTY — especially in Lessons Learned. No sugar-coating."
+    - "NARRATIVE FLOW — Problem → Context → Solution → Impact"
+    - "CLEAR OWNERSHIP — every action has a name and deadline"
+    - "WRITE INTRODUCTION LAST — after you understand the full picture"
+  anti_patterns:
+    - "Generic descriptions ('This process is designed to...')"
+    - "Passive voice ('It was decided that...')"
+    - "Vague metrics ('Significant improvement expected...')"
+    - "Missing baselines ('Baseline: Not established')"
+    - "Polite criticism ('Some areas could be improved...')"
+    - "Actions without owners ('The team should...')"
+
+# ──────────────────────────────────────────────
+# Sections (Compliance-resolved 6-Pager structure)
+# ──────────────────────────────────────────────
+sections:
+  - id: introduction
+    heading: "1. Introduction"
+    section_number: 1
+    content_type: prose
+    page_budget: "½–1"
+    write_order: "LAST"  # Write after all other sections
+    subsections:
+      - id: compliance_risk_summary
+        heading: "Compliance Risk Summary"
+        content_type: prose
+        guidance: "State compliance exposure in 2-3 sentences. How many gaps? Which regulations? Potential consequences?"
+      - id: background
+        heading: "Background"
+        content_type: prose
+        guidance: "Brief context for readers unfamiliar with the compliance landscape."
+      - id: purpose
+        heading: "Purpose of This Document"
+        content_type: prose
+        guidance: "Describe the compliance assessment scope and executive decision requested."
+      - id: scope
+        heading: "Scope"
+        content_type: key_value_table
+        guidance: "Process category, regulatory jurisdictions, applicable regulations, assessment period."
+      - id: key_definitions
+        heading: "Key Definitions"
+        content_type: key_value_table
+        guidance: "Control Point, Regulatory Control, Internal Control, Control Effectiveness, Compliance Gap."
+    validation:
+      min_words: 100
+      max_words: 500
+
+  - id: goals
+    heading: "2. Goals"
+    section_number: 2
+    content_type: mixed
+    page_budget: "½"
+    subsections:
+      - id: primary_objectives
+        heading: "Primary Objectives"
+        content_type: summary_table
+        summary_table_header: "| Objective | Baseline | Current | Target | Target Date |"
+        guidance: "Coverage, effectiveness, open findings, automation rate."
+      - id: success_metrics
+        heading: "Success Metrics"
+        content_type: prose
+        guidance: "Zero critical gaps, effectiveness target, audit readiness, regulatory change mapping."
+    validation:
+      min_words: 50
+      requires_table: true
+
+  - id: tenets
+    heading: "3. Tenets"
+    section_number: 3
+    content_type: mixed
+    page_budget: "½"
+    subsections:
+      - id: core_principles
+        heading: "Core Principles"
+        content_type: prose
+        guidance: "Compliance tenets: traceability, effectiveness over existence, risk-based, segregation of duties."
+      - id: constraints
+        heading: "Constraints"
+        content_type: summary_table
+        summary_table_header: "| Constraint | Rationale | Impact |"
+        guidance: "Regulatory mandates, audit requirements, system limitations."
+    validation:
+      min_words: 50
+
+  - id: state_of_business
+    heading: "4. State of the Business"
+    section_number: 4
+    content_type: mixed
+    page_budget: "1"
+    subsections:
+      - id: compliance_overview
+        heading: "Compliance Overview"
+        content_type: prose
+        guidance: "Narrative overview of current compliance posture."
+      - id: key_metrics_summary
+        heading: "Key Metrics Summary"
+        content_type: summary_table
+        summary_table_header: "| Metric | Value | Status | Risk Level |"
+        guidance: "Total controls, regulatory/internal split, automated/manual split, overall effectiveness."
+      - id: regulatory_framework_coverage
+        heading: "Regulatory Framework Coverage"
+        content_type: summary_table
+        summary_table_header: "| Regulation | Requirements | Controls Mapped | Coverage | Gaps |"
+        guidance: "Per-regulation compliance coverage with gap counts."
+      - id: control_effectiveness_distribution
+        heading: "Control Effectiveness Distribution"
+        content_type: summary_table
+        summary_table_header: "| Rating | Count | Percentage | Action Required |"
+        guidance: "Distribution of controls across effectiveness ratings."
+      - id: critical_compliance_gaps
+        heading: "Critical Compliance Gaps (Top 5)"
+        content_type: summary_table
+        summary_table_header: "| Rank | Gap | Regulation | Risk Exposure | Remediation Status |"
+        guidance: "Top 5 compliance gaps ranked by risk exposure."
+      - id: audit_findings_status
+        heading: "Audit Findings Status"
+        content_type: summary_table
+        summary_table_header: "| Category | Open | In Progress | Closed | Overdue |"
+        guidance: "Status of audit findings by severity."
+      - id: control_type_distribution
+        heading: "Control Type Distribution"
+        content_type: summary_table
+        summary_table_header: "| Control Type | Count | Effectiveness | Automation Potential |"
+        guidance: "Preventive, detective, corrective control breakdown."
+    validation:
+      min_words: 200
+      requires_table: true
+
+  - id: lessons_learned
+    heading: "5. Lessons Learned"
+    section_number: 5
+    content_type: mixed
+    page_budget: "½–1"
+    subsections:
+      - id: whats_working
+        heading: "What's Working"
+        content_type: prose
+        guidance: "Specific control successes with evidence."
+      - id: whats_not_working
+        heading: "What's Not Working"
+        content_type: prose
+        guidance: "Brutally honest account of control failures."
+      - id: root_cause_analysis
+        heading: "Root Cause Analysis"
+        content_type: summary_table
+        summary_table_header: "| Control Issue | Root Cause | Evidence | Risk Implication |"
+        guidance: "Root causes of control failures, not symptoms."
+      - id: key_insights
+        heading: "Key Insights"
+        content_type: prose
+        guidance: "Actionable compliance insights."
+      - id: regulatory_change_horizon
+        heading: "Regulatory Change Horizon"
+        content_type: summary_table
+        summary_table_header: "| Upcoming Regulation | Effective Date | Impact Assessment | Readiness |"
+        guidance: "Emerging regulations and readiness assessment."
+      - id: control_optimization_opportunities
+        heading: "Control Optimization Opportunities"
+        content_type: summary_table
+        summary_table_header: "| Control | Current State | Optimization | Benefit |"
+        guidance: "Controls that can be improved or automated."
+    validation:
+      min_words: 150
+      honesty_check: true  # Flag if language is too soft
+
+  - id: strategic_priorities
+    heading: "6. Strategic Priorities"
+    section_number: 6
+    content_type: mixed
+    page_budget: "2–3"
+    subsections:
+      - id: priority_1
+        heading: "Priority 1"
+        content_type: priority_block
+        guidance: "Top compliance remediation priority with risk addressed."
+      - id: priority_2
+        heading: "Priority 2"
+        content_type: priority_block
+        guidance: "Second compliance remediation priority with risk addressed."
+      - id: priority_3
+        heading: "Priority 3"
+        content_type: priority_block
+        guidance: "Third compliance remediation priority with risk addressed."
+      - id: quick_wins
+        heading: "Quick Wins (Immediate Risk Reduction)"
+        content_type: summary_table
+        summary_table_header: "| Quick Win | Effort | Risk Reduction | Owner | Target |"
+        guidance: "Low-effort compliance improvements with immediate risk reduction."
+      - id: remediation_summary
+        heading: "Remediation Summary"
+        content_type: summary_table
+        summary_table_header: "| Category | Items | Investment Required | Risk Reduction |"
+        guidance: "Aggregated view of remediation effort by category."
+      - id: recommendations
+        heading: "Recommendations"
+        content_type: prose
+        guidance: "Immediate, short-term, and long-term compliance recommendations."
+      - id: next_steps
+        heading: "Next Steps"
+        content_type: summary_table
+        summary_table_header: "| Step | Responsible | Deadline | Regulatory Driver |"
+        guidance: "Concrete next actions with owners, deadlines, and regulatory drivers."
+    validation:
+      min_priorities: 3
+      requires_ownership: true
+      requires_deadlines: true
+
+  - id: appendix
+    heading: "Appendix"
+    section_number: 7
+    content_type: mixed
+    page_budget: "unlimited"
+    guidance: "Supporting evidence for the main document. No page limit. No new conclusions."
+    subsections:
+      - id: regulatory_framework_mapping
+        heading: "A.1 Regulatory Framework Mapping"
+        content_type: summary_table
+        guidance: "Regulation-to-control mapping with requirement counts."
+      - id: complete_control_point_inventory
+        heading: "A.2 Complete Control Point Inventory"
+        content_type: summary_table
+        guidance: "All control points with type, regulation, effectiveness, and evidence."
+      - id: compliance_gap_register
+        heading: "A.3 Compliance Gap Register"
+        content_type: summary_table
+        guidance: "All compliance gaps with requirement, regulation, current/required state, and risk."
+      - id: audit_finding_details
+        heading: "A.4 Audit Finding Details"
+        content_type: summary_table
+        guidance: "All audit findings with severity, root cause, remediation, and status."
+      - id: control_testing_results
+        heading: "A.5 Control Testing Results"
+        content_type: summary_table
+        guidance: "Control testing results with test date, result, evidence, and next test."
+      - id: regulatory_change_tracker
+        heading: "A.6 Regulatory Change Tracker"
+        content_type: summary_table
+        guidance: "Regulatory changes with effective date, impact, and required actions."
+      - id: risk_compliance_matrix
+        heading: "A.7 Risk & Compliance Matrix"
+        content_type: matrix
+        guidance: "Risk and compliance assessment matrix."
+      - id: source_documents
+        heading: "A.8 Source Documents"
+        content_type: summary_table
+        guidance: "List of source documents with type, date, and relevance."
+      - id: contributors
+        heading: "A.9 Contributors"
+        content_type: summary_table
+        guidance: "List of contributors with role, contribution, and date."
+
+# ──────────────────────────────────────────────
+# Priority Block Template
+# ──────────────────────────────────────────────
+priority_block:
+  fields:
+    - name: title
+      required: true
+    - name: objective
+      required: true
+    - name: why_now
+      required: true
+      guidance: "Create urgency. Why can't this wait?"
+    - name: actions
+      type: table
+      required: true
+      table_header: "| # | Action | Owner | Deadline | Dependencies |"
+    - name: success_criteria
+      required: true
+    - name: consequences
+      required: true
+      guidance: "Be specific about what happens if we DON'T do this."
+
+# ──────────────────────────────────────────────
+# Auto-Transformation Rules (applied in extraction)
+# ──────────────────────────────────────────────
+auto_transform:
+  weak_to_strong:
+    - pattern: "could be improved"
+      transform: "fails X% at step Y (derive from metrics)"
+    - pattern: "Baseline: Not established"
+      transform: "Baseline: UNKNOWN ⚠️ — Gap requiring action"
+    - pattern: "Some challenges exist"
+      transform: "We have N critical gaps: [list from source]"
+    - pattern: "should consider"
+      transform: "[Role] will deliver [thing] by [date] — or Owner: TBD"
+    - pattern: "room for improvement"
+      transform: "We are X% below target. Impact: €Y (derive from metrics)"
+    - pattern: "Generally compliant"
+      transform: "N of M requirements met. K gaps require remediation."
+
+# ──────────────────────────────────────────────
+# Change Detection Thresholds
+# ──────────────────────────────────────────────
+change_detection:
+  critical_threshold_pct: 20   # Metrics changed >20% → CRITICAL
+  material_threshold_pct: 10   # Metrics changed 10-20% → MATERIAL
+  # Below 10% → MINOR
+  critical_triggers:
+    - "New high-priority items added"
+    - "Removed items that were in priorities"
+    - "Changed strategic recommendations"
+    - "Compliance gaps changed"
+  material_triggers:
+    - "New items added (not high priority)"
+    - "Moderate changes to analysis sections"
+    - "Updated benchmarks or targets"
+
+# ──────────────────────────────────────────────
+# Completeness Rules
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "introduction.word_count >= 100"
+    - "state_of_business.word_count >= 200"
+    - "strategic_priorities.priority_count >= 3"
+    - "lessons_learned.word_count >= 150"
+  recommended:
+    - "goals.has_table == true"
+    - "state_of_business.has_table == true"
+    - "strategic_priorities.has_ownership == true"
+
+# ──────────────────────────────────────────────
+# Document Metadata (frontmatter for output)
+# ──────────────────────────────────────────────
+output_frontmatter:
+  - document_type: "Management Summary (Amazon 6-Pager)"
+  - process_name: "{current_process_name}"
+  - process_id: "{current_process_id}"
+  - variant: "compliance"
+  - agent_type: "{agent_id}"
+  - generated_date: "{date}"
+  - source_document: "{source_document}"
+  - version: "{version}"
+  - status: "draft|final"
+  - stepsCompleted: "[]"

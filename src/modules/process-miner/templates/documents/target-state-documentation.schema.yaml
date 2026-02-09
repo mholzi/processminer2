@@ -1,0 +1,732 @@
+# Schema for Target State Documentation
+# Merged schema v3.0 — single source of truth for this document type.
+# Inherits shared defaults from _defaults.yaml.
+#
+# ARCHITECTURE: This replaces the former 2-layer split (master document-schema.yaml
+# + per-doc companion). All section definitions, validation rules, field types,
+# sync config, and cross-references for Target State (TO-BE) live here.
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "target-state-documentation"
+template_file: "target-state-documentation.md"
+template_description: "TO-BE process transformation design with full AS-IS traceability, validation results, and implementation considerations"
+required: false
+
+# ──────────────────────────────────────────────
+# Sections
+# ──────────────────────────────────────────────
+sections:
+  # ── Section 1: Transformation Overview ──
+  - id: transformation_overview
+    heading: "1. Transformation Overview"
+    section_number: 1
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: transformation_identification
+        heading: "1.1 Transformation Identification"
+        content_type: key_value_table
+        guidance: "Key-value table capturing process name, IDs, transformation type, and target go-live date."
+      - id: transformation_objectives
+        heading: "1.2 Transformation Objectives"
+        content_type: prose
+        guidance: "Narrative describing the strategic objectives driving the transformation."
+      - id: scope_definition
+        heading: "1.3 Scope Definition"
+        content_type: prose
+        guidance: "In-scope and out-of-scope boundaries for the transformation effort."
+      - id: constraints_and_dependencies
+        heading: "1.4 Constraints and Dependencies"
+        content_type: prose
+        guidance: "Known constraints (regulatory, technical, resource) and external dependencies."
+      - id: key_stakeholders
+        heading: "1.5 Key Stakeholders"
+        content_type: prose
+        guidance: "List of key stakeholders and their roles in the transformation."
+
+  # ── Section 2: AS-IS to TO-BE Reconciliation ──
+  - id: asis_tobe_reconciliation
+    heading: "2. AS-IS to TO-BE Reconciliation"
+    section_number: 2
+    content_type: mixed
+    item_prefix: "TS"
+    sync_enabled: false
+    summary_table_header: "| AS-IS Ref | AS-IS Step Name | Change Type | TO-BE Ref | TO-BE Step Name | Rationale |"
+    subsections:
+      - id: process_step_reconciliation
+        heading: "2.1 Process Step Reconciliation"
+        content_type: summary_table
+        guidance: "Master traceability table mapping every AS-IS step to its TO-BE disposition with change type and rationale."
+      - id: reconciliation_statistics
+        heading: "2.2 Reconciliation Statistics"
+        content_type: summary_table
+        guidance: "Breakdown of change types (Unchanged, Modified, Eliminated, etc.) with counts and percentages."
+      - id: exception_reconciliation
+        heading: "2.3 Exception Reconciliation"
+        content_type: summary_table
+        guidance: "Table mapping AS-IS exceptions to their TO-BE disposition and handling approach."
+      - id: pain_point_resolution
+        heading: "2.4 Pain Point Resolution"
+        content_type: summary_table
+        guidance: "Table tracking AS-IS pain points and their resolution status in the TO-BE design."
+
+  # ── Section 3: TO-BE Process Design ──
+  - id: tobe_process_design
+    heading: "3. TO-BE Process Design"
+    section_number: 3
+    content_type: mixed
+    item_prefix: "TS"
+    sync_enabled: false
+    summary_table_header: "| TS# | Step Name | Owner | System(s) | Automation | Rationale |"
+    subsections:
+      - id: process_overview
+        heading: "3.1 Process Overview"
+        content_type: prose
+        guidance: "High-level narrative describing the target state process structure and design rationale."
+      - id: tobe_process_flow
+        heading: "3.2 TO-BE Process Flow"
+        content_type: diagram
+        guidance: "Mermaid diagram illustrating the target state process flow."
+      - id: target_state_process_steps
+        heading: "3.3 Target State Process Steps"
+        content_type: summary_table
+        guidance: "Summary table of all TO-BE process steps with owner, systems, automation level, and rationale."
+      - id: process_step_details
+        heading: "3.4 Process Step Details"
+        content_type: item_list
+        guidance: "Detailed per-step breakdown including inputs, outputs, AS-IS reference, change type, description, rationale, and controls."
+      - id: process_improvements_summary
+        heading: "3.5 Process Improvements Summary"
+        content_type: prose
+        guidance: "Narrative summarizing key process improvements achieved in the TO-BE design."
+
+  # ── Section 4: Control Design ──
+  - id: control_design
+    heading: "4. Control Design"
+    section_number: 4
+    content_type: mixed
+    item_prefix: "TC"
+    sync_enabled: false
+    summary_table_header: "| AS-IS Ref | Control Name | Disposition | TO-BE Ref | TO-BE Control | Change Rationale |"
+    subsections:
+      - id: control_transformation_summary
+        heading: "4.1 Control Transformation Summary"
+        content_type: prose
+        guidance: "High-level narrative on how controls evolve from AS-IS to TO-BE."
+      - id: control_reconciliation
+        heading: "4.2 Control Reconciliation"
+        content_type: summary_table
+        guidance: "Mapping of AS-IS controls to TO-BE controls with disposition and change rationale."
+      - id: control_gap_closures
+        heading: "4.3 Control Gap Closures"
+        content_type: summary_table
+        guidance: "Table of AS-IS control gaps and how each is resolved in the TO-BE design."
+      - id: new_controls_introduced
+        heading: "4.4 New Controls Introduced"
+        content_type: summary_table
+        guidance: "Table of net-new controls added in the TO-BE design with regulation, process step, and rationale."
+      - id: sod_verification
+        heading: "4.5 Segregation of Duties (SOD) Verification"
+        content_type: summary_table
+        guidance: "Table verifying SOD requirements are maintained in the TO-BE design."
+      - id: audit_trail_requirements
+        heading: "4.6 Audit Trail Requirements"
+        content_type: prose
+        guidance: "Narrative describing audit trail requirements for the TO-BE process."
+      - id: regulatory_coverage_tobe
+        heading: "4.7 Regulatory Coverage (TO-BE)"
+        content_type: summary_table
+        guidance: "Table mapping regulations to TO-BE controls with coverage and gap status."
+
+  # ── Section 5: Client Experience Design ──
+  - id: cx_design
+    heading: "5. Client Experience Design"
+    section_number: 5
+    content_type: mixed
+    item_prefix: "TJ"
+    sync_enabled: false
+    summary_table_header: "| AS-IS Ref | Touchpoint | Disposition | TO-BE Ref | TO-BE Touchpoint | CES Impact |"
+    subsections:
+      - id: cx_transformation_summary
+        heading: "5.1 CX Transformation Summary"
+        content_type: prose
+        guidance: "High-level narrative on client experience improvements in the TO-BE design."
+      - id: ces_comparison
+        heading: "5.2 CES Comparison"
+        content_type: summary_table
+        guidance: "Side-by-side CES metric comparison (AS-IS vs TO-BE) showing reduction and improvement percentages."
+      - id: journey_touchpoint_reconciliation
+        heading: "5.3 Journey Touchpoint Reconciliation"
+        content_type: summary_table
+        guidance: "Mapping of AS-IS journey touchpoints to TO-BE touchpoints with CES impact."
+      - id: friction_point_resolution
+        heading: "5.4 Friction Point Resolution"
+        content_type: summary_table
+        guidance: "Table of AS-IS friction points with resolution approach and CES reduction achieved."
+      - id: moments_that_matter_tobe
+        heading: "5.5 Moments That Matter (TO-BE)"
+        content_type: summary_table
+        guidance: "Table of moments that matter with TO-BE touchpoints, enhancements, and expected impact."
+      - id: channel_strategy_tobe
+        heading: "5.6 Channel Strategy (TO-BE)"
+        content_type: prose
+        guidance: "Narrative describing the TO-BE channel strategy and client interaction model."
+
+  # ── Section 6: Innovation Integration ──
+  - id: innovation_integration
+    heading: "6. Innovation Integration"
+    section_number: 6
+    content_type: mixed
+    item_prefix: "II"
+    sync_enabled: false
+    summary_table_header: "| II# | Innovation | Priority | Feasibility Score | Integration Point | Implementation Notes |"
+    subsections:
+      - id: innovation_integration_summary
+        heading: "6.1 Innovation Integration Summary"
+        content_type: prose
+        guidance: "Narrative overview of how innovations from the backlog are incorporated into the TO-BE state."
+      - id: integrated_innovations
+        heading: "6.2 Integrated Innovations"
+        content_type: summary_table
+        guidance: "Table of innovations included in the TO-BE design with priority, feasibility, and integration details."
+      - id: must_have_verification
+        heading: "6.3 MUST HAVE Verification"
+        content_type: summary_table
+        guidance: "Verification table confirming all MUST HAVE priority innovations are included."
+      - id: deferred_innovations
+        heading: "6.4 Deferred Innovations"
+        content_type: summary_table
+        guidance: "Table of innovations not included in the TO-BE design with deferral rationale."
+      - id: innovation_enabled_capabilities
+        heading: "6.5 Innovation-Enabled Capabilities"
+        content_type: prose
+        guidance: "Narrative describing new capabilities enabled by innovation integration."
+
+  # ── Section 7: Transformation Decisions ──
+  - id: transformation_decisions
+    heading: "7. Transformation Decisions"
+    section_number: 7
+    content_type: mixed
+    item_prefix: "TD"
+    detail_document: "transformation-decisions-detail.md"
+    sync_enabled: true
+    summary_table_header: "| TD# | Decision | Category | Alternatives Considered | Rationale | Impact |"
+    subsections:
+      - id: decision_summary
+        heading: "7.1 Decision Summary"
+        content_type: prose
+        guidance: "Narrative overview of key decisions made during TO-BE design."
+      - id: transformation_decisions_log
+        heading: "7.2 Transformation Decisions Log"
+        content_type: summary_table
+        guidance: "Table of all transformation decisions with category, alternatives, rationale, and impact."
+      - id: tradeoffs_documented
+        heading: "7.3 Trade-offs Documented"
+        content_type: summary_table
+        guidance: "Table of trade-offs considered with options, final decision, and rationale."
+
+  # ── Section 8: Validation Summary ──
+  - id: validation_summary
+    heading: "8. Validation Summary"
+    section_number: 8
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: validation_matrix
+        heading: "8.1 Validation Matrix"
+        content_type: summary_table
+        guidance: "Table showing validation results per specialist area with items checked, passed, failed, and gaps raised."
+      - id: overall_validation_status
+        heading: "8.2 Overall Validation Status"
+        content_type: prose
+        guidance: "Overall validation status and summary narrative."
+      - id: critical_findings
+        heading: "8.3 Critical Findings"
+        content_type: prose
+        guidance: "Narrative detailing critical findings from validation that require immediate attention."
+      - id: validation_iterations
+        heading: "8.4 Validation Iterations"
+        content_type: summary_table
+        guidance: "Table tracking validation iterations with dates, gaps identified, gaps resolved, and status."
+
+  # ── Section 9: Validation Detail — Control ──
+  - id: validation_control
+    heading: "9. Validation Detail: Control"
+    section_number: 9
+    content_type: mixed
+    item_prefix: "VG"
+    sync_enabled: false
+    summary_table_header: "| VG# | Gap Description | Severity | Resolution Required |"
+    subsections:
+      - id: control_validation_summary
+        heading: "9.1 Control Validation Summary"
+        content_type: prose
+        guidance: "Narrative summary of control validation findings from the Control Analyst."
+      - id: control_gap_verification
+        heading: "9.2 Control Gap Verification"
+        content_type: summary_table
+        guidance: "Table verifying AS-IS control gaps are resolved in the TO-BE design."
+      - id: sod_verification_results
+        heading: "9.3 SOD Verification Results"
+        content_type: prose
+        guidance: "Narrative describing SOD verification results and any concerns."
+      - id: regulatory_compliance_verification
+        heading: "9.4 Regulatory Compliance Verification"
+        content_type: prose
+        guidance: "Narrative describing regulatory compliance verification results."
+      - id: control_analyst_feedback
+        heading: "9.5 Control Analyst Feedback"
+        content_type: prose
+        guidance: "Direct feedback and recommendations from the Control Analyst."
+      - id: control_validation_gaps_raised
+        heading: "9.6 Control Validation Gaps Raised"
+        content_type: summary_table
+        guidance: "Table of validation gaps raised by the Control Analyst with severity and resolution required."
+
+  # ── Section 10: Validation Detail — Client Experience ──
+  - id: validation_cx
+    heading: "10. Validation Detail: Client Experience"
+    section_number: 10
+    content_type: mixed
+    item_prefix: "VG"
+    sync_enabled: false
+    summary_table_header: "| VG# | Gap Description | Severity | Resolution Required |"
+    subsections:
+      - id: cx_validation_summary
+        heading: "10.1 CX Validation Summary"
+        content_type: prose
+        guidance: "Narrative summary of client experience validation findings."
+      - id: ces_target_verification
+        heading: "10.2 CES Target Verification"
+        content_type: summary_table
+        guidance: "Table verifying CES targets are met comparing AS-IS, TO-BE target, and TO-BE actual."
+      - id: friction_resolution_verification
+        heading: "10.3 Friction Resolution Verification"
+        content_type: summary_table
+        guidance: "Table verifying claimed friction point resolutions with verification status."
+      - id: moments_that_matter_protection
+        heading: "10.4 Moments That Matter Protection"
+        content_type: prose
+        guidance: "Narrative verifying that moments that matter are preserved or enhanced in the TO-BE design."
+      - id: exception_handling_review
+        heading: "10.5 Exception Handling Review"
+        content_type: prose
+        guidance: "Narrative reviewing exception handling in the TO-BE design from a CX perspective."
+      - id: cx_analyst_feedback
+        heading: "10.6 CX Analyst Feedback"
+        content_type: prose
+        guidance: "Direct feedback and recommendations from the Client Journey Analyst."
+      - id: cx_validation_gaps_raised
+        heading: "10.7 CX Validation Gaps Raised"
+        content_type: summary_table
+        guidance: "Table of validation gaps raised by the CX Analyst with severity and resolution required."
+
+  # ── Section 11: Validation Detail — Innovation ──
+  - id: validation_innovation
+    heading: "11. Validation Detail: Innovation"
+    section_number: 11
+    content_type: mixed
+    item_prefix: "VG"
+    sync_enabled: false
+    summary_table_header: "| VG# | Gap Description | Severity | Resolution Required |"
+    subsections:
+      - id: innovation_validation_summary
+        heading: "11.1 Innovation Validation Summary"
+        content_type: prose
+        guidance: "Narrative summary of innovation validation findings."
+      - id: must_have_inclusion_verification
+        heading: "11.2 MUST HAVE Inclusion Verification"
+        content_type: summary_table
+        guidance: "Table verifying all MUST HAVE innovations are included with implementation details."
+      - id: feasibility_alignment_check
+        heading: "11.3 Feasibility Alignment Check"
+        content_type: prose
+        guidance: "Narrative assessing whether innovation integration aligns with feasibility scores."
+      - id: future_proofing_assessment
+        heading: "11.4 Future-Proofing Assessment"
+        content_type: prose
+        guidance: "Narrative assessing the TO-BE design's readiness for future innovation adoption."
+      - id: innovation_analyst_feedback
+        heading: "11.5 Innovation Analyst Feedback"
+        content_type: prose
+        guidance: "Direct feedback and recommendations from the Innovation Analyst."
+      - id: innovation_validation_gaps_raised
+        heading: "11.6 Innovation Validation Gaps Raised"
+        content_type: summary_table
+        guidance: "Table of validation gaps raised by the Innovation Analyst with severity and resolution required."
+
+  # ── Section 12: Validation Detail — Process ──
+  - id: validation_process
+    heading: "12. Validation Detail: Process"
+    section_number: 12
+    content_type: mixed
+    item_prefix: "VG"
+    sync_enabled: false
+    summary_table_header: "| VG# | Gap Description | Severity | Resolution Required |"
+    subsections:
+      - id: process_validation_summary
+        heading: "12.1 Process Validation Summary"
+        content_type: prose
+        guidance: "Narrative summary of process documentation validation findings."
+      - id: traceability_verification
+        heading: "12.2 Traceability Verification"
+        content_type: summary_table
+        guidance: "Table of traceability checks (steps, exceptions, pain points, references) with status and notes."
+      - id: completeness_check
+        heading: "12.3 Completeness Check"
+        content_type: prose
+        guidance: "Narrative assessing documentation completeness across all sections."
+      - id: documentation_alignment
+        heading: "12.4 Documentation Alignment"
+        content_type: prose
+        guidance: "Narrative assessing alignment between TO-BE documentation and source AS-IS documents."
+      - id: pda_feedback
+        heading: "12.5 PDA Feedback"
+        content_type: prose
+        guidance: "Direct feedback and recommendations from the Process Documentation Analyst."
+      - id: process_validation_gaps_raised
+        heading: "12.6 Process Validation Gaps Raised"
+        content_type: summary_table
+        guidance: "Table of validation gaps raised by the PDA with severity and resolution required."
+
+  # ── Section 13: Gap Resolution Log ──
+  - id: gap_resolution
+    heading: "13. Gap Resolution Log"
+    section_number: 13
+    content_type: mixed
+    item_prefix: "VG"
+    detail_document: "gap-resolution-log.md"
+    sync_enabled: true
+    summary_table_header: "| VG# | Source | Gap Description | Severity | Resolution | Status | Iteration |"
+    subsections:
+      - id: gap_resolution_summary
+        heading: "13.1 Gap Resolution Summary"
+        content_type: summary_table
+        guidance: "Summary table showing total gaps raised, resolved, open, and deferred."
+      - id: gap_resolution_table
+        heading: "13.2 Gap Resolution Table"
+        content_type: summary_table
+        guidance: "Full gap resolution table with source, description, severity, resolution, status, and iteration."
+      - id: open_gaps
+        heading: "13.3 Open Gaps (Requiring Resolution)"
+        content_type: prose
+        guidance: "Detailed narrative on open gaps that still require resolution before approval."
+      - id: deferred_gaps
+        heading: "13.4 Deferred Gaps (Accepted)"
+        content_type: summary_table
+        guidance: "Table of gaps accepted as deferred with deferral rationale, risk acceptance, and mitigation."
+
+  # ── Section 14: Impact Analysis ──
+  - id: impact_analysis
+    heading: "14. Impact Analysis"
+    section_number: 14
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: impact_summary
+        heading: "14.1 Impact Summary"
+        content_type: prose
+        guidance: "High-level narrative summarizing the overall impact of the transformation."
+      - id: role_impact
+        heading: "14.2 Role Impact"
+        content_type: summary_table
+        guidance: "Table mapping roles to current vs TO-BE responsibilities with change impact and training needs."
+      - id: system_impact
+        heading: "14.3 System Impact"
+        content_type: summary_table
+        guidance: "Table mapping systems to current vs TO-BE usage with change type and integration impact."
+      - id: organizational_impact
+        heading: "14.4 Organizational Impact"
+        content_type: prose
+        guidance: "Narrative describing broader organizational impact of the transformation."
+      - id: training_requirements
+        heading: "14.5 Training Requirements"
+        content_type: prose
+        guidance: "Narrative describing training requirements to support the transformation."
+
+  # ── Section 15: Implementation Considerations ──
+  - id: implementation_considerations
+    heading: "15. Implementation Considerations"
+    section_number: 15
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: implementation_overview
+        heading: "15.1 Implementation Overview"
+        content_type: prose
+        guidance: "High-level narrative on the implementation approach and key considerations."
+      - id: technical_dependencies
+        heading: "15.2 Technical Dependencies"
+        content_type: summary_table
+        guidance: "Table of technical dependencies with type, owner, status, and risk if delayed."
+      - id: implementation_sequencing
+        heading: "15.3 Implementation Sequencing"
+        content_type: prose
+        guidance: "Narrative describing recommended implementation sequence and phasing."
+      - id: integration_requirements
+        heading: "15.4 Integration Requirements"
+        content_type: prose
+        guidance: "Narrative describing system integration requirements for the TO-BE process."
+      - id: data_migration_considerations
+        heading: "15.5 Data Migration Considerations"
+        content_type: prose
+        guidance: "Narrative describing data migration needs and approach."
+      - id: testing_requirements
+        heading: "15.6 Testing Requirements"
+        content_type: prose
+        guidance: "Narrative describing testing requirements for the TO-BE process."
+      - id: rollback_considerations
+        heading: "15.7 Rollback Considerations"
+        content_type: prose
+        guidance: "Narrative describing rollback strategy if implementation encounters issues."
+      - id: it_handover_notes
+        heading: "15.8 IT Handover Notes"
+        content_type: prose
+        guidance: "Technical and operational notes for IT handover and implementation planning."
+
+  # ── Section 16: Metrics & Success Criteria ──
+  - id: metrics_success
+    heading: "16. Metrics & Success Criteria"
+    section_number: 16
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: success_metrics
+        heading: "16.1 Success Metrics"
+        content_type: summary_table
+        guidance: "Table of success metrics with AS-IS baseline, TO-BE target, measurement method, and frequency."
+      - id: key_performance_indicators
+        heading: "16.2 Key Performance Indicators"
+        content_type: prose
+        guidance: "Narrative describing key performance indicators for measuring transformation success."
+      - id: post_implementation_review_criteria
+        heading: "16.3 Post-Implementation Review Criteria"
+        content_type: prose
+        guidance: "Narrative describing criteria for post-implementation review."
+      - id: continuous_improvement_hooks
+        heading: "16.4 Continuous Improvement Hooks"
+        content_type: prose
+        guidance: "Narrative describing continuous improvement mechanisms built into the TO-BE design."
+
+# ──────────────────────────────────────────────
+# Completeness Rules (validation gates)
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "asis_tobe_reconciliation.populated == true"
+    - "tobe_process_design.count >= 1"
+    - "transformation_decisions.count >= 1"
+  recommended:
+    - "control_design.populated == true"
+    - "cx_design.populated == true"
+    - "validation_summary.word_count >= 50"
+    - "impact_analysis.populated == true"
+
+# ──────────────────────────────────────────────
+# Cross-Reference Validation
+# ──────────────────────────────────────────────
+cross_references:
+  inter_document:
+    - description: "All AS-IS Ref in reconciliation must reference valid PS# in AS-IS"
+      source: "asis_tobe_reconciliation.asis_ref"
+      target: "as-is-process-documentation.process_steps"
+    - description: "All control design AS-IS Ref must reference valid CP# in AS-IS"
+      source: "control_design.asis_ref"
+      target: "as-is-process-documentation.control_points"
+    - description: "All CX design AS-IS Ref must reference valid JT# in CX Journey"
+      source: "cx_design.asis_ref"
+      target: "cx-journey-documentation.touchpoints"
+    - description: "All innovation references must match valid II# in Innovation Analysis"
+      source: "innovation_integration.innovation_id"
+      target: "innovation-analysis-documentation.innovation_backlog"
+
+  required_references_by_section:
+    2:  # AS-IS to TO-BE Reconciliation
+      - "PS#"
+      - "TS#"
+    3:  # TO-BE Process Design
+      - "TS#"
+    4:  # Control Design
+      - "CP#"
+      - "TC#"
+    5:  # Client Experience Design
+      - "JT#"
+      - "TJ#"
+      - "FP#"
+    6:  # Innovation Integration
+      - "II#"
+    7:  # Transformation Decisions
+      - "TD#"
+    9:  # Control Validation
+      - "VG#"
+      - "CP#"
+      - "TC#"
+    10: # CX Validation
+      - "VG#"
+      - "FP#"
+    11: # Innovation Validation
+      - "VG#"
+      - "II#"
+    12: # Process Validation
+      - "VG#"
+      - "TS#"
+    13: # Gap Resolution
+      - "VG#"
+
+# ──────────────────────────────────────────────
+# ID Patterns (document-specific subset)
+# ──────────────────────────────────────────────
+id_patterns:
+  target_step: "TS-[A-Z]{2,4}-\\d{3}"
+  target_control: "TC-[A-Z]{2,4}-\\d{3}"
+  target_journey: "TJ-[A-Z]{2,4}-\\d{3}"
+  transformation_decision: "TD-[A-Z]{2,4}-\\d{3}"
+  validation_gap: "VG-[A-Z]{2,4}-\\d{3}"
+
+# ──────────────────────────────────────────────
+# Companion Documents
+# ──────────────────────────────────────────────
+companion_documents:
+  - name: "Transformation Decisions Detail"
+    file: "transformation-decisions-detail.md"
+    sync_section: 7
+    relationship: "detail"
+
+  - name: "Gap Resolution Log"
+    file: "gap-resolution-log.md"
+    sync_section: 13
+    relationship: "detail"
+
+  - name: "AS-IS Process Documentation"
+    file: "as-is-process-documentation.md"
+    relationship: "source"
+
+  - name: "CX Journey Documentation"
+    file: "cx-journey-documentation.md"
+    relationship: "source"
+
+  - name: "Compliance Control Assessment"
+    file: "compliance-control-assessment.md"
+    relationship: "source"
+
+  - name: "Innovation Analysis Documentation"
+    file: "innovation-analysis-documentation.md"
+    relationship: "source"
+
+# ──────────────────────────────────────────────
+# Traceability Configuration
+# ──────────────────────────────────────────────
+traceability:
+  change_types:
+    - "Unchanged"
+    - "Modified"
+    - "Eliminated"
+    - "Automated"
+    - "Consolidated"
+    - "New"
+
+  required_mappings:
+    process_steps:
+      source_prefix: "PS"
+      target_prefix: "TS"
+    controls:
+      source_prefix: "CP"
+      target_prefix: "TC"
+    touchpoints:
+      source_prefix: "JT"
+      target_prefix: "TJ"
+    exceptions:
+      source_prefix: "EX"
+      target_prefix: null  # Exceptions may be eliminated
+    pain_points:
+      source_prefix: "PP"
+      target_prefix: null  # Pain points should be resolved
+
+# ──────────────────────────────────────────────
+# Validation Configuration
+# ──────────────────────────────────────────────
+validation:
+  specialists:
+    - id: "control"
+      name: "Control Analyst"
+      section: 9
+      focus_areas:
+        - "Control gap closure"
+        - "SOD preservation"
+        - "Regulatory compliance"
+        - "Audit trail"
+
+    - id: "cx"
+      name: "Client Journey Analyst"
+      section: 10
+      focus_areas:
+        - "CES reduction"
+        - "Friction resolution"
+        - "Moments that matter"
+        - "Exception handling"
+
+    - id: "innovation"
+      name: "Innovation Analyst"
+      section: 11
+      focus_areas:
+        - "MUST HAVE inclusion"
+        - "Feasibility alignment"
+        - "Future-proofing"
+
+    - id: "process"
+      name: "Process Documentation Analyst"
+      section: 12
+      focus_areas:
+        - "Traceability completeness"
+        - "Reference consistency"
+        - "Documentation alignment"
+
+  gap_severity_levels:
+    - level: "Critical"
+      description: "Blocks transformation approval, must be resolved"
+      resolution_required: true
+
+    - level: "High"
+      description: "Significant issue, should be resolved before approval"
+      resolution_required: true
+
+    - level: "Medium"
+      description: "Notable concern, resolution recommended"
+      resolution_required: false
+
+    - level: "Low"
+      description: "Minor issue, can be deferred with justification"
+      resolution_required: false
+
+# ──────────────────────────────────────────────
+# Metrics Configuration
+# ──────────────────────────────────────────────
+metrics:
+  transformation_metrics:
+    - name: "Process Steps"
+      asis_field: "asis_total_steps"
+      tobe_field: "tobe_total_steps"
+      improvement_direction: "reduction"
+
+    - name: "Control Gaps"
+      asis_field: "asis_control_gaps"
+      tobe_field: "tobe_control_gaps"
+      improvement_direction: "reduction"
+      target: 0  # All gaps should be closed
+
+    - name: "Pain Points"
+      asis_field: "asis_pain_points"
+      tobe_field: "tobe_pain_points"
+      improvement_direction: "reduction"
+
+    - name: "Client Effort Score"
+      asis_field: "asis_ces_score"
+      tobe_field: "tobe_ces_score"
+      improvement_direction: "reduction"
+      target_reduction: 0.30  # 30% reduction standard
+
+    - name: "Automation Level"
+      asis_field: "asis_automation_pct"
+      tobe_field: "tobe_automation_pct"
+      improvement_direction: "increase"

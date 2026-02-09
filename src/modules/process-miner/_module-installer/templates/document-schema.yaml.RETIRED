@@ -1,0 +1,712 @@
+# ProcessMiner Document Schema
+# Single source of truth for document structure, validation, and generation
+#
+# ARCHITECTURE NOTE: This schema is part of a three-layer document architecture
+# that extends BMAD 6.0 Core:
+#   Layer 1: Template MD files — rendering blueprints with Handlebars conditionals
+#   Layer 2: Per-document .schema.yaml — companion validation (confidence, sync, cross-refs)
+#   Layer 3: This master schema — section registry, field types, completeness rules
+# This extension supports cross-referenced entity validation, confidence scoring,
+# and parent-detail document synchronization required for compliance-focused
+# process documentation. Not present in BMAD 6.0 Core.
+
+schema_version: "1.1"
+
+# Reference ID prefixes
+reference_prefixes:
+  PS: "Process Step"
+  PP: "Pain Point"
+  EX: "Exception"
+  CP: "Control Point"
+  SYS: "System"
+  TP: "Touchpoint"
+  FP: "Friction Point"
+  INN: "Innovation Opportunity"
+  REC: "Recommendation"
+  # SIPOC IDs (Tier 2 — document-local)
+  SUP: "Supplier"
+  INP: "Input"
+  OUT: "Output"
+  CUS: "Customer"
+  IF: "Interface Issue"
+  BD: "Boundary Discrepancy"
+  # DILO IDs (Tier 2 — document-local)
+  ACT: "Activity"
+  INT: "Interruption"
+  WA: "Workaround"
+  UD: "Undocumented Step"
+  DIS: "Discrepancy"
+
+documents:
+  as_is:
+    name: "AS-IS Process Documentation"
+    template: "templates/documents/as-is.template.md"
+    required: true
+
+    sections:
+      - id: executive_summary
+        heading: "## 1. Executive Summary"
+        content_type: prose
+        validation:
+          min_words: 100
+          max_words: 300
+        guidance: |
+          High-level overview for stakeholders.
+          MUST include: process purpose, scope, key findings.
+          FORBIDDEN: technical jargon, implementation details.
+
+      - id: process_overview
+        heading: "## 2. Process Overview"
+        content_type: prose
+        validation:
+          min_words: 150
+          max_words: 500
+        guidance: |
+          Describe the process context, triggers, and outcomes.
+          Include: process owner, frequency, typical duration.
+
+      - id: process_steps
+        heading: "## 3. Process Steps"
+        content_type: item_list
+        item_prefix: "PS"
+        item_template: |
+          ### {{prefix}}{{number}}: {{title}}
+          **Actor:** {{actor}}
+          **System:** {{system}}
+          **Description:** {{description}}
+          **Inputs:** {{inputs}}
+          **Outputs:** {{outputs}}
+        item_fields:
+          - name: title
+            required: true
+          - name: actor
+            required: true
+          - name: system
+            required: false
+          - name: description
+            required: true
+          - name: inputs
+            required: false
+          - name: outputs
+            required: false
+        validation:
+          min_count: 3
+          max_count: 50
+
+      - id: pain_points
+        heading: "## 4. Pain Points"
+        content_type: item_list
+        item_prefix: "PP"
+        item_template: |
+          ### {{prefix}}{{number}}: {{title}}
+          **Impact:** {{impact}}
+          **Frequency:** {{frequency}}
+          **Root Cause:** {{root_cause}}
+          **Affected Steps:** {{affected_steps}}
+        item_fields:
+          - name: title
+            required: true
+          - name: impact
+            type: enum
+            values: [High, Medium, Low]
+            required: true
+          - name: frequency
+            type: enum
+            values: [Always, Often, Sometimes, Rarely]
+            required: true
+          - name: root_cause
+            required: false
+          - name: affected_steps
+            type: reference_list
+            prefix: "PS"
+            required: false
+        validation:
+          expected_range: [3, 10]
+
+      - id: exceptions
+        heading: "## 5. Exceptions"
+        content_type: item_list
+        item_prefix: "EX"
+        item_template: |
+          ### {{prefix}}{{number}}: {{title}}
+          **Trigger:** {{trigger}}
+          **Frequency:** {{frequency}}
+          **Handling:** {{handling}}
+          **Affected Steps:** {{affected_steps}}
+        item_fields:
+          - name: title
+            required: true
+          - name: trigger
+            required: true
+          - name: frequency
+            type: enum
+            values: [Common, Occasional, Rare]
+            required: true
+          - name: handling
+            required: true
+          - name: affected_steps
+            type: reference_list
+            prefix: "PS"
+            required: false
+        validation:
+          min_count: 0
+
+      - id: control_points
+        heading: "## 6. Control Points"
+        content_type: item_list
+        item_prefix: "CP"
+        item_template: |
+          ### {{prefix}}{{number}}: {{title}}
+          **Type:** {{control_type}}
+          **At Step:** {{at_step}}
+          **Description:** {{description}}
+          **Evidence:** {{evidence}}
+        item_fields:
+          - name: title
+            required: true
+          - name: control_type
+            type: enum
+            values: [Preventive, Detective, Corrective]
+            required: true
+          - name: at_step
+            type: reference
+            prefix: "PS"
+            required: true
+          - name: description
+            required: true
+          - name: evidence
+            required: false
+        validation:
+          min_count: 1
+
+      - id: systems
+        heading: "## 7. Systems & Tools"
+        content_type: item_list
+        item_prefix: "SYS"
+        item_template: |
+          ### {{prefix}}{{number}}: {{name}}
+          **Type:** {{system_type}}
+          **Used In Steps:** {{used_in_steps}}
+          **Purpose:** {{purpose}}
+          **Integration Points:** {{integrations}}
+        item_fields:
+          - name: name
+            required: true
+          - name: system_type
+            type: enum
+            values: [Core Banking, CRM, Document Management, Communication, External, Other]
+            required: true
+          - name: used_in_steps
+            type: reference_list
+            prefix: "PS"
+            required: true
+          - name: purpose
+            required: true
+          - name: integrations
+            required: false
+        validation:
+          min_count: 1
+
+  cx_journey:
+    name: "Customer Journey Map"
+    template: "templates/documents/cx-journey.template.md"
+    required: false
+    depends_on: ["as_is"]
+
+    sections:
+      - id: journey_overview
+        heading: "## 1. Journey Overview"
+        content_type: prose
+        validation:
+          min_words: 100
+
+      - id: touchpoints
+        heading: "## 2. Customer Touchpoints"
+        content_type: item_list
+        item_prefix: "TP"
+        item_template: |
+          ### {{prefix}}{{number}}: {{name}}
+          **Channel:** {{channel}}
+          **At Step:** {{at_step}}
+          **Customer Action:** {{customer_action}}
+          **Customer Emotion:** {{emotion}}
+          **Moment of Truth:** {{moment_of_truth}}
+        item_fields:
+          - name: name
+            required: true
+          - name: channel
+            type: enum
+            values: [In-Person, Phone, Email, Web, Mobile App, Mail, Other]
+            required: true
+          - name: at_step
+            type: reference
+            prefix: "PS"
+            required: false
+          - name: customer_action
+            required: true
+          - name: emotion
+            type: enum
+            values: [Positive, Neutral, Negative, Frustrated, Confused]
+            required: false
+          - name: moment_of_truth
+            type: boolean
+            required: false
+
+      - id: friction_points
+        heading: "## 3. Friction Points"
+        content_type: item_list
+        item_prefix: "FP"
+        item_template: |
+          ### {{prefix}}{{number}}: {{title}}
+          **At Touchpoint:** {{at_touchpoint}}
+          **Severity:** {{severity}}
+          **Customer Impact:** {{customer_impact}}
+          **Related Pain Point:** {{related_pain_point}}
+        item_fields:
+          - name: title
+            required: true
+          - name: at_touchpoint
+            type: reference
+            prefix: "TP"
+            required: true
+          - name: severity
+            type: enum
+            values: [Critical, Major, Minor]
+            required: true
+          - name: customer_impact
+            required: true
+          - name: related_pain_point
+            type: reference
+            prefix: "PP"
+            required: false
+
+  sipoc:
+    name: "SIPOC Analysis"
+    template: "templates/documents/sipoc-analysis.md"
+    schema: "templates/documents/sipoc-analysis.schema.yaml"
+    required: false
+    depends_on: ["as_is"]
+    prerequisites:
+      - "AS-IS at ≥60% completion"
+      - "At least 5 PS# items"
+
+    sections:
+      - id: sipoc_overview
+        heading: "## 1. SIPOC Overview Diagram"
+        content_type: overview
+        description: "Summary table and visual flow diagram"
+
+      - id: suppliers
+        heading: "## 2. Suppliers Detail"
+        content_type: item_list
+        item_prefix: "SUP"
+        item_template: |
+          ### {{prefix}}{{number}}: {{name}}
+          **Type:** {{type}}
+          **Category:** {{category}}
+          **Provides:** {{provides}}
+          **Interface Method:** {{interface_method}}
+          **Reliability:** {{reliability}}
+          **SLA:** {{sla}}
+        item_fields:
+          - name: name
+            required: true
+          - name: type
+            type: enum
+            values: [Internal Team, External Partner, Regulatory Body, System/Automated, Client/Self-Service]
+            required: true
+          - name: category
+            required: false
+          - name: provides
+            type: reference_list
+            prefix: "INP"
+            required: true
+          - name: interface_method
+            required: false
+          - name: reliability
+            type: enum
+            values: [High, Medium, Low, Unknown]
+            required: false
+          - name: sla
+            required: false
+
+      - id: inputs
+        heading: "## 3. Inputs Detail"
+        content_type: item_list
+        item_prefix: "INP"
+        item_template: |
+          ### {{prefix}}{{number}}: {{name}}
+          **Type:** {{type}}
+          **Source:** {{source_supplier}}
+          **Format:** {{format}}
+          **Used By:** {{used_by_steps}}
+        item_fields:
+          - name: name
+            required: true
+          - name: type
+            type: enum
+            values: [Document, Data/Record, Decision/Approval, Trigger/Event, Material/Physical, Information/Verbal]
+            required: true
+          - name: source_supplier
+            type: reference
+            prefix: "SUP"
+            required: true
+          - name: format
+            required: false
+          - name: used_by_steps
+            type: reference_list
+            prefix: "PS"
+            required: false
+
+      - id: process_mapping
+        heading: "## 4. Process (Summary from AS-IS)"
+        content_type: mapping
+        description: "Maps PS# to INP# consumed and OUT# produced"
+
+      - id: outputs
+        heading: "## 5. Outputs Detail"
+        content_type: item_list
+        item_prefix: "OUT"
+        item_template: |
+          ### {{prefix}}{{number}}: {{name}}
+          **Type:** {{type}}
+          **Produced By:** {{produced_by}}
+          **Delivered To:** {{delivered_to}}
+          **SLA:** {{sla}}
+        item_fields:
+          - name: name
+            required: true
+          - name: type
+            type: enum
+            values: [Document, Data/Record, Decision/Status, Notification, Deliverable/Physical, Handoff/Trigger]
+            required: true
+          - name: produced_by
+            type: reference
+            prefix: "PS"
+            required: true
+          - name: delivered_to
+            type: reference_list
+            prefix: "CUS"
+            required: true
+          - name: sla
+            required: false
+
+      - id: customers
+        heading: "## 6. Customers Detail"
+        content_type: item_list
+        item_prefix: "CUS"
+        item_template: |
+          ### {{prefix}}{{number}}: {{name}}
+          **Type:** {{type}}
+          **Segment:** {{segment}}
+          **Receives:** {{receives}}
+          **Satisfaction:** {{satisfaction}}
+        item_fields:
+          - name: name
+            required: true
+          - name: type
+            type: enum
+            values: [Internal Team, External Client, Regulatory Body, Downstream Process, Management/Reporting]
+            required: true
+          - name: segment
+            required: false
+          - name: receives
+            type: reference_list
+            prefix: "OUT"
+            required: true
+          - name: satisfaction
+            type: enum
+            values: [Satisfied, Neutral, Dissatisfied, Unknown]
+            required: false
+
+      - id: interface_boundary
+        heading: "## 7. Interface & Boundary Analysis"
+        content_type: item_list
+        item_prefix: "IF"
+        item_template: |
+          ### {{prefix}}{{number}}: {{interface}}
+          **Type:** {{type}}
+          **Issue:** {{issue}}
+          **Impact:** {{impact}}
+        item_fields:
+          - name: interface
+            required: true
+          - name: type
+            type: enum
+            values: [Supplier→Process, Process→Customer, System→System, Team→Team]
+            required: true
+          - name: issue
+            required: true
+          - name: impact
+            required: true
+
+      - id: cross_reference
+        heading: "## 8. Cross-Reference Reconciliation"
+        content_type: reconciliation
+        description: "Maps findings back to AS-IS items"
+
+  dilo:
+    name: "DILO Observation"
+    template: "templates/documents/dilo-observation.md"
+    schema: "templates/documents/dilo-observation.schema.yaml"
+    required: false
+    depends_on: ["as_is"]
+    per_role: true
+    file_pattern: "dilo-observation-{role_slug}.md"
+    prerequisites:
+      - "AS-IS at ≥60% completion"
+      - "At least 5 PS# items"
+      - "RACI matrix populated"
+
+    sections:
+      - id: role_profile
+        heading: "## 1. Role Profile"
+        content_type: context
+        description: "Role identification and AS-IS vs DILO comparison"
+
+      - id: timeline
+        heading: "## 2. Timeline Observation"
+        content_type: item_list
+        item_prefix: "ACT"
+        mode: chronological
+        item_template: |
+          ### {{prefix}}{{number}}: {{activity}}
+          **Time:** {{time_start}} - {{time_end}} ({{duration}})
+          **PS# Link:** {{ps_link}}
+          **System:** {{system}}
+          **Value Class:** {{value_class}}
+        item_fields:
+          - name: activity
+            required: true
+          - name: time_start
+            required: true
+          - name: time_end
+            required: true
+          - name: duration
+            required: true
+          - name: ps_link
+            type: reference
+            prefix: "PS"
+            required: false
+          - name: system
+            required: false
+          - name: value_class
+            type: enum
+            values: [Value-Add, Necessary Non-Value-Add, Waste, Non-Process]
+            required: true
+
+      - id: interruptions
+        heading: "## 3. Interruptions & Context Switching"
+        content_type: item_list
+        item_prefix: "INT"
+        item_template: |
+          ### {{prefix}}{{number}}: {{source}} ({{type}})
+          **Time:** {{time}}
+          **Duration:** {{duration}}
+          **Impact:** {{impact}}
+          **Avoidable:** {{avoidable}}
+        item_fields:
+          - name: source
+            required: true
+          - name: type
+            type: enum
+            values: [Phone Call, Email/Chat, Walk-up, System Alert, Meeting, Escalation, Question from Colleague]
+            required: true
+          - name: time
+            required: true
+          - name: duration
+            required: true
+          - name: impact
+            required: true
+          - name: avoidable
+            type: boolean
+            required: false
+
+      - id: workarounds
+        heading: "## 4. Workarounds & Shadow Processes"
+        content_type: item_list
+        item_prefix: "WA"
+        item_template: |
+          ### {{prefix}}{{number}}: {{name}}
+          **Official Step:** {{official_step}}
+          **What Actually Happens:** {{actually_happens}}
+          **Why:** {{reason}}
+          **Risk Level:** {{risk_level}}
+        item_fields:
+          - name: name
+            required: true
+          - name: official_step
+            type: reference
+            prefix: "PS"
+            required: false
+          - name: actually_happens
+            required: true
+          - name: reason
+            required: true
+          - name: risk_level
+            type: enum
+            values: [High, Medium, Low]
+            required: true
+
+      - id: undocumented_steps
+        heading: "## 5. Undocumented Steps"
+        content_type: item_list
+        item_prefix: "UD"
+        item_template: |
+          ### {{prefix}}{{number}}: {{description}}
+          **Between:** {{between_steps}}
+          **Duration:** {{duration}}
+          **Category:** {{category}}
+          **Should Document:** {{should_document}}
+        item_fields:
+          - name: description
+            required: true
+          - name: between_steps
+            required: false
+          - name: duration
+            required: false
+          - name: category
+            type: enum
+            values: [Missing from AS-IS, Informal Addition, Workaround Step, Cross-Process, Administrative]
+            required: true
+          - name: should_document
+            type: boolean
+            required: true
+
+      - id: system_usage
+        heading: "## 6. System Usage Observation"
+        content_type: analysis
+        description: "Actual vs documented system usage and friction points"
+
+      - id: discrepancy_analysis
+        heading: "## 7. AS-IS Discrepancy Analysis"
+        content_type: item_list
+        item_prefix: "DIS"
+        item_template: |
+          ### {{prefix}}{{number}}: {{category}}
+          **AS-IS States:** {{asis_states}}
+          **DILO Observed:** {{dilo_observed}}
+          **Severity:** {{severity}}
+        item_fields:
+          - name: category
+            type: enum
+            values: [Missing Step, Wrong Duration, Wrong System, Wrong Owner, Wrong Sequence, Missing Exception, Hidden Workaround, Missing Pain Point]
+            required: true
+          - name: asis_states
+            required: true
+          - name: dilo_observed
+            required: true
+          - name: severity
+            type: enum
+            values: [Critical, Major, Minor]
+            required: true
+
+      - id: findings
+        heading: "## 8. Findings & Recommendations"
+        content_type: recommendations
+        description: "Top findings, AS-IS corrections, Lean 8-wastes classification"
+
+# Diagram generation rules
+diagrams:
+  process_flow:
+    type: mermaid_flowchart
+    source: "as_is.process_steps"
+    include_systems: true
+    include_control_points: true
+
+  swimlane:
+    type: mermaid_swimlane
+    source: "as_is.process_steps"
+    lanes_by: "actor"
+
+  journey_map:
+    type: mermaid_journey
+    source: "cx_journey.touchpoints"
+
+  system_architecture:
+    type: mermaid_c4
+    source: "as_is.systems"
+
+# Validation rules
+validation:
+  cross_references:
+    # Intra-document: references within the same document
+    - scope: intra-document
+      description: "All pain point affected_steps must reference valid PS#"
+      source: "as_is.pain_points.affected_steps"
+      target: "as_is.process_steps"
+    - scope: intra-document
+      description: "All control points must reference valid PS#"
+      source: "as_is.control_points.at_step"
+      target: "as_is.process_steps"
+    - scope: intra-document
+      description: "All exception affected_steps must reference valid PS#"
+      source: "as_is.exceptions.affected_steps"
+      target: "as_is.process_steps"
+    - scope: intra-document
+      description: "All systems used_in_steps must reference valid PS#"
+      source: "as_is.systems.used_in_steps"
+      target: "as_is.process_steps"
+    - scope: intra-document
+      description: "All friction points must reference valid TP#"
+      source: "cx_journey.friction_points.at_touchpoint"
+      target: "cx_journey.touchpoints"
+    # Inter-document: references across different documents
+    - scope: inter-document
+      description: "All touchpoint at_step must reference valid PS# in AS-IS"
+      source: "cx_journey.touchpoints.at_step"
+      target: "as_is.process_steps"
+    - scope: inter-document
+      description: "All friction point related_pain_point must reference valid PP# in AS-IS"
+      source: "cx_journey.friction_points.related_pain_point"
+      target: "as_is.pain_points"
+
+    # SIPOC intra-document references
+    - scope: intra-document
+      description: "All INP# source_supplier must reference valid SUP#"
+      source: "sipoc.inputs.source_supplier"
+      target: "sipoc.suppliers"
+    - scope: intra-document
+      description: "All OUT# delivered_to must reference valid CUS#"
+      source: "sipoc.outputs.delivered_to"
+      target: "sipoc.customers"
+    - scope: intra-document
+      description: "All SUP# provides must reference valid INP#"
+      source: "sipoc.suppliers.provides"
+      target: "sipoc.inputs"
+    - scope: intra-document
+      description: "All CUS# receives must reference valid OUT#"
+      source: "sipoc.customers.receives"
+      target: "sipoc.outputs"
+    # SIPOC inter-document references
+    - scope: inter-document
+      description: "All INP# used_by_steps must reference valid PS# in AS-IS"
+      source: "sipoc.inputs.used_by_steps"
+      target: "as_is.process_steps"
+    - scope: inter-document
+      description: "All OUT# produced_by must reference valid PS# in AS-IS"
+      source: "sipoc.outputs.produced_by"
+      target: "as_is.process_steps"
+    # DILO inter-document references
+    - scope: inter-document
+      description: "All ACT# ps_link must reference valid PS# in AS-IS"
+      source: "dilo.timeline.ps_link"
+      target: "as_is.process_steps"
+    - scope: inter-document
+      description: "All WA# official_step must reference valid PS# in AS-IS"
+      source: "dilo.workarounds.official_step"
+      target: "as_is.process_steps"
+
+  completeness:
+    as_is_minimum:
+      - "executive_summary.word_count >= 100"
+      - "process_steps.count >= 3"
+      - "control_points.count >= 1"
+      - "systems.count >= 1"
+    sipoc_minimum:
+      - "suppliers.count >= 1"
+      - "inputs.count >= 1"
+      - "outputs.count >= 1"
+      - "customers.count >= 1"
+    dilo_minimum:
+      - "timeline.count >= 3"

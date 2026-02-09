@@ -1,0 +1,353 @@
+# Schema for Innovation Analysis Documentation
+# Merged schema v3.0 — single source of truth for this document type.
+# Inherits shared defaults from _defaults.yaml.
+#
+# ARCHITECTURE: This replaces the former 2-layer split (master document-schema.yaml
+# + per-doc companion). All section definitions, validation rules, field types,
+# sync config, and cross-references for Innovation Analysis live here.
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "innovation-analysis-documentation"
+template_file: "innovation-analysis-documentation.md"
+template_description: "Innovation analysis with market trends, innovation backlog, feasibility matrix, and prioritized roadmap"
+required: false
+
+# ──────────────────────────────────────────────
+# Sections
+# ──────────────────────────────────────────────
+sections:
+  # ── Section 1: Executive Summary ──
+  - id: executive_summary
+    heading: "1. Executive Summary"
+    section_number: 1
+    content_type: prose
+    sync_enabled: false
+
+  # ── Section 2: Innovation Overview ──
+  - id: innovation_overview
+    heading: "2. Innovation Overview"
+    section_number: 2
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: analysis_scope
+        heading: "2.1 Analysis Scope"
+        content_type: prose
+        guidance: "Define the boundaries and focus areas of the innovation analysis."
+      - id: innovation_objectives
+        heading: "2.2 Innovation Objectives"
+        content_type: prose
+        guidance: "State the key objectives driving this innovation analysis."
+      - id: strategic_alignment
+        heading: "2.3 Strategic Alignment"
+        content_type: prose
+        guidance: "Describe how the innovation efforts align with overall business strategy."
+
+  # ── Section 3: Market Trends ──
+  - id: market_trends
+    heading: "3. Market Trends"
+    section_number: 3
+    content_type: mixed
+    item_prefix: "TR"
+    detail_document: "market-trends-detail.md"
+    sync_enabled: true
+    summary_table_header: "| TR ID | Trend Name | Category | Maturity | Relevance | Impact Potential | Source |"
+    subsections:
+      - id: trend_summary
+        heading: "3.1 Trend Summary"
+        content_type: summary_table
+        guidance: "Summary table of identified market trends with TR IDs."
+      - id: trend_analysis
+        heading: "3.2 Trend Analysis"
+        content_type: prose
+        guidance: "Narrative analysis of identified trends and their implications."
+      - id: competitive_landscape
+        heading: "3.3 Competitive Landscape"
+        content_type: prose
+        guidance: "Analysis of how competitors are responding to or driving these trends."
+      - id: technology_radar
+        heading: "3.4 Technology Radar"
+        content_type: summary_table
+        guidance: "Table mapping technologies by maturity, applicability, and existing initiatives."
+
+  # ── Section 4: Innovation Backlog ──
+  - id: innovation_backlog
+    heading: "4. Innovation Backlog"
+    section_number: 4
+    content_type: mixed
+    item_prefix: "II"
+    detail_document: "innovation-ideas-detail.md"
+    sync_enabled: true
+    summary_table_header: "| II ID | Innovation Idea | Category | Source | Status | Strategic Fit |"
+    subsections:
+      - id: innovation_ideas_summary
+        heading: "4.1 Innovation Ideas Summary"
+        content_type: summary_table
+        guidance: "Summary table of all innovation ideas with II IDs."
+      - id: innovation_details
+        heading: "4.2 Innovation Details"
+        content_type: prose
+        guidance: "Expanded descriptions and context for each innovation idea."
+      - id: innovation_categories
+        heading: "4.3 Innovation Categories"
+        content_type: key_value_table
+        guidance: "Breakdown of innovation ideas by category with counts."
+
+  # ── Section 5: Feasibility Matrix ──
+  - id: feasibility_matrix
+    heading: "5. Feasibility Matrix"
+    section_number: 5
+    content_type: mixed
+    item_prefix: "II"
+    sync_enabled: false
+    summary_table_header: "| II ID | Technical | Business | Strategic | Resource | Risk | Customer | Total Score |"
+    subsections:
+      - id: six_dimension_scoring
+        heading: "5.1 Six-Dimension Scoring"
+        content_type: summary_table
+        guidance: "Feasibility scoring matrix with six dimensions per innovation idea."
+      - id: dimension_definitions
+        heading: "5.2 Dimension Definitions"
+        content_type: key_value_table
+        guidance: "Definitions and scoring criteria for each feasibility dimension."
+      - id: feasibility_analysis
+        heading: "5.3 Feasibility Analysis"
+        content_type: prose
+        guidance: "Narrative interpretation of the feasibility scoring results."
+      - id: priority_matrix
+        heading: "5.4 Priority Matrix"
+        content_type: diagram
+        guidance: "Quadrant chart plotting innovations by feasibility vs. impact."
+
+  # ── Section 6: Innovation Deep Dives ──
+  - id: innovation_deep_dives
+    heading: "6. Innovation Deep Dives"
+    section_number: 6
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: top_priority_innovations
+        heading: "6.1 Top Priority Innovations"
+        content_type: prose
+        guidance: "Detailed analysis of the highest-priority innovation ideas."
+      - id: technical_architecture
+        heading: "6.2 Technical Architecture"
+        content_type: prose
+        guidance: "Technical architecture considerations for top innovations."
+      - id: implementation_approach
+        heading: "6.3 Implementation Approach"
+        content_type: prose
+        guidance: "Proposed implementation strategy and phasing for selected innovations."
+
+  # ── Section 7: MoSCoW Prioritization ──
+  - id: moscow_prioritization
+    heading: "7. MoSCoW Prioritization"
+    section_number: 7
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: must_have
+        heading: "7.1 MUST HAVE"
+        content_type: prose
+        guidance: "Innovations classified as must-have with supporting rationale."
+      - id: should_have
+        heading: "7.2 SHOULD HAVE"
+        content_type: prose
+        guidance: "Innovations classified as should-have with supporting rationale."
+      - id: could_have
+        heading: "7.3 COULD HAVE"
+        content_type: prose
+        guidance: "Innovations classified as could-have with supporting rationale."
+      - id: defer
+        heading: "7.4 DEFER"
+        content_type: prose
+        guidance: "Innovations deferred to future consideration with reasoning."
+
+  # ── Section 8: Strategic Recommendations ──
+  - id: strategic_recommendations
+    heading: "8. Strategic Recommendations"
+    section_number: 8
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: low_complexity_high_value
+        heading: "8.1 Low Complexity / High Value"
+        content_type: prose
+        guidance: "Recommendations for quick-win innovations with low complexity and high value."
+      - id: strategic_bets
+        heading: "8.2 Strategic Bets"
+        content_type: prose
+        guidance: "Recommendations for higher-risk strategic investments."
+      - id: future_consideration
+        heading: "8.3 Future Consideration"
+        content_type: prose
+        guidance: "Innovations worth monitoring for future evaluation."
+
+  # ── Section 9: Risk & Mitigation ──
+  - id: risk_mitigation
+    heading: "9. Risk & Mitigation"
+    section_number: 9
+    content_type: mixed
+    item_prefix: "IR"
+    sync_enabled: false
+    summary_table_header: "| Risk ID | Risk Description | Likelihood | Impact | Mitigation Strategy |"
+    subsections:
+      - id: innovation_risks
+        heading: "9.1 Innovation Risks"
+        content_type: summary_table
+        guidance: "Table of identified innovation risks with IR IDs, likelihood, and impact."
+      - id: risk_mitigation_plan
+        heading: "9.2 Risk Mitigation Plan"
+        content_type: prose
+        guidance: "Detailed mitigation strategies and contingency plans for identified risks."
+
+  # ── Section 10: Success Metrics ──
+  - id: success_metrics
+    heading: "10. Success Metrics"
+    section_number: 10
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: kpi_framework
+        heading: "10.1 KPI Framework"
+        content_type: prose
+        guidance: "Key performance indicators for measuring innovation success."
+      - id: measurement_plan
+        heading: "10.2 Measurement Plan"
+        content_type: prose
+        guidance: "Plan for how and when KPIs will be measured and reported."
+      - id: target_outcomes
+        heading: "10.3 Target Outcomes"
+        content_type: prose
+        guidance: "Specific target outcomes and success criteria for the innovation initiatives."
+
+  # ── Section 11: Appendices ──
+  - id: appendices
+    heading: "11. Appendices"
+    section_number: 11
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: research_sources
+        heading: "11.1 Research Sources"
+        content_type: prose
+        guidance: "Bibliography and references used during the innovation analysis."
+      - id: market_data
+        heading: "11.2 Market Data"
+        content_type: prose
+        guidance: "Supporting market data and statistics."
+      - id: technical_specifications
+        heading: "11.3 Technical Specifications"
+        content_type: prose
+        guidance: "Technical specifications and architectural details for reference."
+      - id: change_log
+        heading: "11.4 Change Log"
+        content_type: summary_table
+        guidance: "Version history tracking changes to this document."
+      - id: glossary
+        heading: "11.5 Glossary"
+        content_type: prose
+        guidance: "Definitions of key terms and acronyms used in this document."
+
+# ──────────────────────────────────────────────
+# Completeness Rules (validation gates)
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "market_trends.count >= 1"
+    - "innovation_backlog.count >= 1"
+  recommended:
+    - "feasibility_matrix.populated == true"
+    - "moscow_prioritization.populated == true"
+    - "strategic_recommendations.word_count >= 50"
+    - "risk_mitigation.count >= 1"
+
+# ──────────────────────────────────────────────
+# Cross-Reference Validation
+# ──────────────────────────────────────────────
+cross_references:
+  intra_document:
+    - description: "All feasibility matrix entries must reference valid II#"
+      source: "feasibility_matrix.innovation_id"
+      target: "innovation_backlog"
+    - description: "All risk entries must reference related II#"
+      source: "risk_mitigation.related_innovation"
+      target: "innovation_backlog"
+
+  inter_document:
+    - description: "Innovation ideas may reference AS-IS pain points PP#"
+      source: "innovation_backlog.related_pain_points"
+      target: "as-is-process-documentation.pain_points"
+    - description: "Innovation ideas may reference AS-IS systems SYS#"
+      source: "innovation_backlog.related_systems"
+      target: "as-is-process-documentation.systems"
+
+  required_references_by_section:
+    3:  # Market Trends
+      - "TR"
+    4:  # Innovation Backlog
+      - "II"
+    5:  # Feasibility Matrix
+      - "II"
+    6:  # Innovation Deep Dives
+      - "II"
+    9:  # Risk & Mitigation
+      - "IR"
+      - "II"
+
+# ──────────────────────────────────────────────
+# ID Patterns (document-specific subset)
+# ──────────────────────────────────────────────
+id_patterns:
+  market_trend: "TR-[A-Z]{2,4}-\\d{3}"
+  innovation_idea: "II-[A-Z]{2,4}-\\d{3}"
+  innovation_risk: "IR-[A-Z]{2,4}-\\d{3}"
+
+# ──────────────────────────────────────────────
+# Companion Documents
+# ──────────────────────────────────────────────
+companion_documents:
+  - name: "Market Trends Detail"
+    file: "market-trends-detail.md"
+    sync_section: 3
+    relationship: "detail"
+
+  - name: "Innovation Ideas Detail"
+    file: "innovation-ideas-detail.md"
+    sync_section: 4
+    relationship: "detail"
+
+  - name: "AS-IS Process Documentation"
+    file: "as-is-process-documentation.md"
+    relationship: "upstream"
+
+# ──────────────────────────────────────────────
+# Feasibility Scoring Configuration
+# ──────────────────────────────────────────────
+feasibility_scoring:
+  dimensions:
+    - name: "Technical Feasibility"
+      weight: 1.0
+      scale: "1-5"
+    - name: "Business Value"
+      weight: 1.5
+      scale: "1-5"
+    - name: "Strategic Alignment"
+      weight: 1.2
+      scale: "1-5"
+    - name: "Resource Availability"
+      weight: 1.0
+      scale: "1-5"
+    - name: "Risk Level"
+      weight: 1.0
+      scale: "1-5 (inverted)"
+    - name: "Customer Impact"
+      weight: 1.3
+      scale: "1-5"
+
+  priority_classification:
+    must_have_threshold: 24  # Total score >= 24 out of 30
+    should_have_threshold: 18
+    could_have_threshold: 12
+    wont_have_threshold: 0

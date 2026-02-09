@@ -1,0 +1,308 @@
+# Schema for Compliance & Control Assessment
+# Merged schema v3.0 — single source of truth for this document type.
+# Inherits shared defaults from _defaults.yaml.
+#
+# ARCHITECTURE: This replaces the former 2-layer split (master document-schema.yaml
+# + per-doc companion). All section definitions, validation rules, field types,
+# sync config, and cross-references for Compliance & Control Assessment live here.
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "compliance-control-assessment"
+template_file: "compliance-control-assessment.md"
+template_description: "Regulatory compliance and control analysis with gap assessment and risk mapping"
+required: false
+
+# ──────────────────────────────────────────────
+# Sections
+# ──────────────────────────────────────────────
+sections:
+  # ── Section 1: Regulatory Framework Mapping ──
+  - id: regulatory_framework
+    heading: "1. Regulatory Framework Mapping"
+    section_number: 1
+    content_type: mixed
+    item_prefix: "REG"
+    sync_enabled: false
+    summary_table_header: "| REG# | Regulation | Jurisdiction | Applicability | Compliance Status |"
+    subsections:
+      - id: applicable_regulations
+        heading: "1.1 Applicable Regulations"
+        content_type: summary_table
+        guidance: "Narrative overview of the regulatory landscape followed by a table of all applicable regulations with jurisdiction, applicability, and compliance status."
+      - id: regional_requirements
+        heading: "1.2 Regional Requirements"
+        content_type: summary_table
+        guidance: "Narrative on region-specific regulatory requirements followed by a table of regional requirements, authorities, and process impacts."
+      - id: industry_standards
+        heading: "1.3 Industry Standards"
+        content_type: summary_table
+        guidance: "Narrative on applicable industry standards followed by a table of standards, applicability, certification status, and key requirements."
+
+  # ── Section 2: Control Point Inventory ──
+  - id: control_inventory
+    heading: "2. Control Point Inventory"
+    section_number: 2
+    content_type: mixed
+    item_prefix: "CP"
+    detail_document: "control-points-detail.md"
+    sync_enabled: true
+    summary_table_header: "| CP# | Control Name | Type | Regulation | Process Step | Effectiveness |"
+    subsections:
+      - id: mandatory_controls
+        heading: "2.1 Mandatory Controls"
+        content_type: summary_table
+        guidance: "Narrative on mandatory regulatory controls followed by a table of control points with regulation references, process step mappings, type, and execution details."
+      - id: internal_policies
+        heading: "2.2 Internal Policies"
+        content_type: summary_table
+        guidance: "Narrative on controls driven by internal policies followed by a table of policy-based control points with policy references and process step mappings."
+      - id: audit_requirements
+        heading: "2.3 Audit Requirements"
+        content_type: summary_table
+        guidance: "Narrative on audit-related control requirements followed by a table of controls with evidence produced and retention periods."
+
+  # ── Section 3: Compliance Gap Analysis ──
+  - id: compliance_gaps
+    heading: "3. Compliance Gap Analysis"
+    section_number: 3
+    content_type: mixed
+    item_prefix: "GAP"
+    sync_enabled: false
+    summary_table_header: "| GAP# | Requirement | Current State | Gap Description | Risk Level | Remediation Priority |"
+    subsections:
+      - id: current_vs_required
+        heading: "3.1 Current vs Required"
+        content_type: summary_table
+        guidance: "Narrative on the gap analysis methodology and findings followed by a table of compliance gaps with requirement references, current state, gap descriptions, risk levels, and priorities."
+      - id: risk_exposure
+        heading: "3.2 Risk Exposure"
+        content_type: summary_table
+        guidance: "Narrative on overall risk exposure from compliance gaps followed by a summary table of risk levels, gap counts, affected areas, and remediation urgency."
+      - id: remediation_needs
+        heading: "3.3 Remediation Needs"
+        content_type: summary_table
+        guidance: "Narrative on remediation planning followed by a table of remediation actions per gap with owners, priorities, and target completion dates."
+
+  # ── Section 4: Control Effectiveness Assessment ──
+  - id: control_effectiveness
+    heading: "4. Control Effectiveness Assessment"
+    section_number: 4
+    content_type: mixed
+    item_prefix: "CEA"
+    sync_enabled: false
+    summary_table_header: "| CEA# | Control | Effectiveness Rating | Last Tested | Findings |"
+    subsections:
+      - id: control_strengths
+        heading: "4.1 Control Strengths"
+        content_type: summary_table
+        guidance: "Narrative on high-performing controls followed by a table of controls with effectiveness ratings and key strengths, plus highlights of notable control performance."
+      - id: control_weaknesses
+        heading: "4.2 Control Weaknesses"
+        content_type: summary_table
+        guidance: "Narrative on underperforming controls followed by a table of controls with ratings, key issues, and most affected effectiveness dimensions, plus per-weakness detail entries."
+      - id: improvement_opportunities
+        heading: "4.3 Improvement Opportunities"
+        content_type: prose
+        guidance: "Narrative on improvement opportunities identified from the effectiveness assessment followed by a list of specific improvement actions."
+
+  # ── Section 5: Audit Trail Requirements ──
+  - id: audit_trail
+    heading: "5. Audit Trail Requirements"
+    section_number: 5
+    content_type: item_list
+    item_prefix: "ATR"
+    sync_enabled: false
+    summary_table_header: "| ATR# | Requirement | Data Elements | Retention Period | System |"
+
+  # ── Section 6: Risk & Compliance Matrix ──
+  - id: risk_compliance_matrix
+    heading: "6. Risk & Compliance Matrix"
+    section_number: 6
+    content_type: matrix
+    item_prefix: "RCM"
+    sync_enabled: false
+    summary_table_header: "| RCM# | Risk | Regulation | Control | Residual Risk | Status |"
+
+  # ── Section 7: Regulatory Change Impact ──
+  - id: regulatory_change
+    heading: "7. Regulatory Change Impact"
+    section_number: 7
+    content_type: item_list
+    item_prefix: "RCI"
+    sync_enabled: false
+    summary_table_header: "| RCI# | Regulation | Change Description | Effective Date | Impact | Action Required |"
+
+  # ── Section 8: Open Audit Findings ──
+  - id: open_audit_findings
+    heading: "8. Open Audit Findings"
+    section_number: 8
+    content_type: item_list
+    item_prefix: "OAF"
+    sync_enabled: false
+    summary_table_header: "| OAF# | Finding | Source | Date Issued | Severity | Affected Control (CP#) | Status | Target Closure |"
+
+  # ── Section 9: Control Improvement Recommendations ──
+  - id: control_improvements
+    heading: "9. Control Improvement Recommendations"
+    section_number: 9
+    content_type: mixed
+    item_prefix: "CIR"
+    sync_enabled: false
+    summary_table_header: "| CIR# | Control | Recommendation | Priority | Effort | Expected Benefit |"
+    subsections:
+      - id: critical_priority
+        heading: "Critical Priority"
+        content_type: prose
+        guidance: "Detailed narrative on critical-priority control improvement recommendations requiring immediate action."
+      - id: high_priority
+        heading: "High Priority"
+        content_type: prose
+        guidance: "Detailed narrative on high-priority control improvement recommendations to be addressed within 30 days."
+      - id: medium_priority
+        heading: "Medium Priority"
+        content_type: prose
+        guidance: "Detailed narrative on medium-priority control improvement recommendations to be addressed within 90 days."
+      - id: low_priority
+        heading: "Low Priority"
+        content_type: prose
+        guidance: "Detailed narrative on low-priority control improvement recommendations for the next review cycle."
+      - id: transformation_considerations
+        heading: "Transformation Considerations"
+        content_type: prose
+        guidance: "Narrative on how control improvements should be factored into broader process transformation initiatives."
+
+# ──────────────────────────────────────────────
+# Completeness Rules (validation gates)
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "regulatory_framework.count >= 1"
+    - "control_inventory.count >= 1"
+  recommended:
+    - "compliance_gaps.count >= 0"
+    - "control_effectiveness.count >= 1"
+    - "risk_compliance_matrix.populated == true"
+    - "control_improvements.count >= 1"
+
+# ──────────────────────────────────────────────
+# Cross-Reference Validation
+# ──────────────────────────────────────────────
+cross_references:
+  intra_document:
+    - description: "All compliance gaps must reference valid REG# and CP#"
+      source: "compliance_gaps.regulation"
+      target: "regulatory_framework"
+    - description: "All control effectiveness must reference valid CP#"
+      source: "control_effectiveness.control"
+      target: "control_inventory"
+    - description: "All open audit findings must reference valid CP#"
+      source: "open_audit_findings.affected_control"
+      target: "control_inventory"
+
+  inter_document:
+    - description: "All CP# must reference valid control points in AS-IS"
+      source: "control_inventory.control_id"
+      target: "as-is-process-documentation.control_points"
+
+  required_references_by_section:
+    2:  # Control Point Inventory
+      - "CP#"
+      - "REG#"
+    3:  # Compliance Gap Analysis
+      - "GAP#"
+      - "REG#"
+      - "CP#"
+    4:  # Control Effectiveness
+      - "CEA#"
+      - "CP#"
+    6:  # Risk & Compliance Matrix
+      - "RCM#"
+      - "CP#"
+      - "REG#"
+    8:  # Open Audit Findings
+      - "OAF#"
+      - "CP#"
+    9:  # Control Improvement
+      - "CIR#"
+      - "CP#"
+
+# ──────────────────────────────────────────────
+# ID Patterns (document-specific subset)
+# ──────────────────────────────────────────────
+id_patterns:
+  regulation: "REG-[A-Z]{2,4}-\\d{3}"
+  control_point: "CP-[A-Z]{2,4}-\\d{3}"
+  compliance_gap: "GAP-[A-Z]{2,4}-\\d{3}"
+  control_effectiveness: "CEA-[A-Z]{2,4}-\\d{3}"
+  audit_trail: "ATR-[A-Z]{2,4}-\\d{3}"
+  risk_compliance: "RCM-[A-Z]{2,4}-\\d{3}"
+  regulatory_change: "RCI-[A-Z]{2,4}-\\d{3}"
+  open_audit_finding: "OAF-[A-Z]{2,4}-\\d{3}"
+  control_improvement: "CIR-[A-Z]{2,4}-\\d{3}"
+
+# ──────────────────────────────────────────────
+# Companion Documents
+# ──────────────────────────────────────────────
+companion_documents:
+  - name: "Control Points Detail"
+    file: "control-points-detail.md"
+    sync_section: 2
+    relationship: "detail"
+
+  - name: "AS-IS Process Documentation"
+    file: "as-is-process-documentation.md"
+    relationship: "upstream"
+
+# ──────────────────────────────────────────────
+# Risk Rating Configuration
+# ──────────────────────────────────────────────
+risk_ratings:
+  levels:
+    - level: "Critical"
+      score_range: "9-10"
+      response_time: "Immediate"
+    - level: "High"
+      score_range: "7-8"
+      response_time: "30 days"
+    - level: "Medium"
+      score_range: "4-6"
+      response_time: "90 days"
+    - level: "Low"
+      score_range: "1-3"
+      response_time: "Next review cycle"
+
+# ──────────────────────────────────────────────
+# Control Effectiveness Ratings (5-point scale)
+# ──────────────────────────────────────────────
+effectiveness_ratings:
+  - rating: "Highly Effective"
+    score: 5
+    description: "Control consistently operates as designed with strong evidence"
+  - rating: "Effective"
+    score: 4
+    description: "Control operates as designed with minor variations"
+  - rating: "Partially Effective"
+    score: 3
+    description: "Control operates but with notable deficiencies"
+  - rating: "Ineffective"
+    score: 2
+    description: "Control does not reliably achieve its objective"
+  - rating: "Not Operating"
+    score: 1
+    description: "Control is not being performed"
+
+# ──────────────────────────────────────────────
+# Effectiveness Assessment Dimensions
+# ──────────────────────────────────────────────
+effectiveness_dimensions:
+  - name: "Consistency"
+    description: "Is the control performed every time it should be?"
+  - name: "Detection"
+    description: "Does it catch exceptions when they occur?"
+  - name: "Evidence Quality"
+    description: "Is there adequate proof the control was performed?"
+  - name: "Accountability"
+    description: "Is there clear ownership and follow-up?"
+  - name: "Timeliness"
+    description: "Is the control performed when it should be?"

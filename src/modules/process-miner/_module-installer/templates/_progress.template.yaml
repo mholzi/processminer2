@@ -1,0 +1,105 @@
+# ProcessMiner Progress Tracking Template
+# Copy this file to your process folder as _progress.yaml
+
+meta:
+  process_id: "{PROCESS_ID}"
+  process_name: "{PROCESS_NAME}"
+  schema_version: "1.0"
+  created: "{DATE}"
+  last_updated: "{DATE}"
+  last_validated: null
+
+documents:
+  as_is:
+    path: "./as-is-documentation.md"
+    overall_status: not_started
+    sections:
+      executive_summary:
+        status: not_started
+        word_count: 0
+      process_overview:
+        status: not_started
+        word_count: 0
+      process_steps:
+        status: not_started
+        count: 0
+      pain_points:
+        status: not_started
+        count: 0
+        expected_min: 3
+        expected_max: 10
+      exceptions:
+        status: not_started
+        count: 0
+      control_points:
+        status: not_started
+        count: 0
+      systems:
+        status: not_started
+        count: 0
+
+  cx_journey:
+    path: "./cx-journey.md"
+    overall_status: not_started
+    sections:
+      journey_overview:
+        status: not_started
+      touchpoints:
+        status: not_started
+        count: 0
+      friction_points:
+        status: not_started
+        count: 0
+
+  transformation:
+    path: "./transformation-recommendations.md"
+    overall_status: not_started
+
+  innovation:
+    path: "./innovation-opportunities.md"
+    overall_status: not_started
+
+  architecture:
+    path: "./technical-architecture.md"
+    overall_status: not_started
+
+agent_sessions:
+  companion:
+    last_run: null
+    status: ready
+  pda:
+    last_run: null
+    status: ready
+  cx_journey:
+    last_run: null
+    status: blocked
+    blocked_reason: "as_is documentation required first"
+  control:
+    last_run: null
+    status: blocked
+    blocked_reason: "as_is.control_points required"
+  transformation:
+    last_run: null
+    status: blocked
+    blocked_reason: "as_is documentation required first"
+  innovation:
+    last_run: null
+    status: blocked
+    blocked_reason: "as_is documentation required first"
+  it_architect:
+    last_run: null
+    status: blocked
+    blocked_reason: "transformation recommendations required"
+  qa:
+    last_run: null
+    status: ready
+
+milestones:
+  as_is_complete: false
+  cx_journey_complete: false
+  control_validated: false
+  transformation_complete: false
+  innovation_complete: false
+  architecture_complete: false
+  qa_validated: false
+  process_complete: false

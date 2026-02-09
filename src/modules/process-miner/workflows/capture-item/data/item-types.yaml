@@ -1,0 +1,106 @@
+# Item Type Configuration for capture-item workflow
+# Maps user-facing codes to schema locations
+#
+# This file is the single source of truth for:
+# - Which item types the workflow supports
+# - Which schema file defines each item type
+# - Which section in the schema contains the item type
+#
+# The workflow reads this config and then loads the actual schema
+# to get the current heading, fields, and template.
+
+schema_dir: "{project-root}/src/modules/process-miner/templates/documents"
+
+item_types:
+  # ─────────────────────────────────────────────
+  # AS-IS Process Documentation Items
+  # ─────────────────────────────────────────────
+  PS:
+    name: "Process Step"
+    description: "A step in the process flow"
+    category: "AS-IS Documentation"
+    schema_file: "as-is-process-documentation.schema.yaml"
+    section_id: "process_steps"
+
+  PP:
+    name: "Pain Point"
+    description: "Something that causes friction or frustration"
+    category: "AS-IS Documentation"
+    schema_file: "as-is-process-documentation.schema.yaml"
+    section_id: "pain_points"
+
+  EX:
+    name: "Exception"
+    description: "An edge case or alternate path"
+    category: "AS-IS Documentation"
+    schema_file: "as-is-process-documentation.schema.yaml"
+    section_id: "exceptions"
+
+  CP:
+    name: "Control Point"
+    description: "A compliance or quality control"
+    category: "AS-IS Documentation"
+    schema_file: "as-is-process-documentation.schema.yaml"
+    section_id: "control_points"
+
+  SYS:
+    name: "System"
+    description: "A tool, application, or system used"
+    category: "AS-IS Documentation"
+    schema_file: "as-is-process-documentation.schema.yaml"
+    section_id: "systems"
+
+  # ─────────────────────────────────────────────
+  # CX Journey Items
+  # ─────────────────────────────────────────────
+  JT:
+    name: "Journey Touchpoint"
+    description: "Customer interaction point"
+    category: "CX Journey"
+    schema_file: "cx-journey-documentation.schema.yaml"
+    section_id: "touchpoints"
+
+  FP:
+    name: "Friction Point"
+    description: "Customer friction in the journey"
+    category: "CX Journey"
+    schema_file: "cx-journey-documentation.schema.yaml"
+    section_id: "friction_points"
+
+  # ─────────────────────────────────────────────
+  # Innovation Items
+  # ─────────────────────────────────────────────
+  II:
+    name: "Innovation Idea"
+    description: "Automation or improvement opportunity"
+    category: "Innovation"
+    schema_file: "innovation-analysis-documentation.schema.yaml"
+    section_id: "innovation_backlog"
+
+  # ─────────────────────────────────────────────
+  # Transformation Items
+  # ─────────────────────────────────────────────
+  TD:
+    name: "Transformation Decision"
+    description: "Design decision for TO-BE state"
+    category: "Transformation"
+    schema_file: "target-state-documentation.schema.yaml"
+    section_id: "transformation_decisions"
+
+# Category groupings for menu display
+categories:
+  - name: "AS-IS Documentation"
+    description: "Items for documenting the current state"
+    items: [PS, PP, EX, CP, SYS]
+
+  - name: "CX Journey"
+    description: "Customer experience items"
+    items: [JT, FP]
+
+  - name: "Innovation"
+    description: "Innovation and automation items"
+    items: [II]
+
+  - name: "Transformation"
+    description: "TO-BE design items"
+    items: [TD]

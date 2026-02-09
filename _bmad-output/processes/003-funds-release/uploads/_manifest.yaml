@@ -1,0 +1,34 @@
+manifest_version: "1.0"
+process_id: "003"
+process_name: "Funds Release"
+
+uploads:
+  - filename: "2026-02-06_funds-release-process-map.md"
+    original_name: "Funds Release Process Map"
+    uploaded_date: "2026-02-06T10:15:00Z"
+    uploaded_by: "Markus"
+    source_type: "Process Map"
+    file_type: "markdown"
+    summary: "Process map from Operations Team showing 8-step funds release flow with systems, controls, and known pain points"
+    sections_extracted:
+      - executive_summary
+      - process_overview
+      - process_steps
+      - pain_points
+      - control_points
+      - systems
+
+  - filename: "2026-02-06_funds-release-dtp.md"
+    original_name: "DTP-OPS-042 v2.3 - Funds Release"
+    uploaded_date: "2026-02-06T10:25:00Z"
+    uploaded_by: "Markus"
+    source_type: "Detailed Task Procedure"
+    file_type: "markdown"
+    summary: "Official DTP from Operations (Dec 2025) with 10-step procedure, detailed controls, SLAs, and system references. Includes sanctions screening and Treasury Workstation."
+    sections_extracted:
+      - process_steps
+      - exceptions
+      - control_points
+      - systems
+      - slas
+    discrepancies_found: 7

@@ -1,0 +1,261 @@
+# Schema for Exceptions Detail
+# Merged schema v3.0 — single source of truth for this document type.
+# Inherits shared defaults from _defaults.yaml.
+#
+# ARCHITECTURE: This replaces the former 2-layer split (master document-schema.yaml
+# + per-doc companion). All section definitions, validation rules, field types,
+# sync config, and cross-references for Exceptions Detail live here.
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "exceptions-detail"
+template_file: "exceptions-detail.md"
+template_description: "Detailed exception analysis with root causes, handling procedures, and downstream agent input"
+required: false
+
+# ──────────────────────────────────────────────
+# Detail Document Info
+# ──────────────────────────────────────────────
+detail_document_info:
+  parent_documents:
+    - "as-is-process-documentation.md"
+  sync_section_in_parent: 3
+  structured_id_prefix: "EX"
+
+# ──────────────────────────────────────────────
+# Sections
+# ──────────────────────────────────────────────
+sections:
+  # ── Exception Summary Table ──
+  - id: exception_summary
+    heading: "Exception Summary Table"
+    section_number: 1
+    content_type: summary_table
+    structured_id_prefix: "EX"
+    sync_enabled: false
+    summary_table_header: "| EX# | Exception Name | Trigger Condition | Affected Steps | Frequency | Business Impact | Handling Owner |"
+
+  # ── Exception Statistics ──
+  - id: exception_statistics
+    heading: "Exception Statistics"
+    section_number: 2
+    content_type: statistics
+    sync_enabled: false
+
+  # ── Detailed Exception Analysis ──
+  - id: detailed_exception_analysis
+    heading: "Detailed Exception Analysis"
+    section_number: 3
+    content_type: detail_entries
+    structured_id_prefix: "EX"
+    sync_enabled: false
+    entry_template: true
+
+  # ── Exception Patterns & Insights ──
+  - id: exception_patterns
+    heading: "Exception Patterns & Insights"
+    section_number: 4
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: clustering_analysis
+        heading: "Clustering Analysis"
+        content_type: prose
+        guidance: "Identify patterns in when and why exceptions occur, including temporal, volumetric, or causal clusters."
+      - id: high_impact_exception_summary
+        heading: "High-Impact Exception Summary"
+        content_type: prose
+        guidance: "Summarize exceptions requiring priority attention in transformation planning."
+      - id: exception_to_pain_point_mapping
+        heading: "Exception-to-Pain-Point Mapping"
+        content_type: summary_table
+        guidance: "Map exceptions to related pain points with connection descriptions."
+
+  # ── Recommendations for TO-BE Design ──
+  - id: recommendations
+    heading: "Recommendations for TO-BE Design"
+    section_number: 5
+    content_type: recommendations
+    sync_enabled: false
+
+  # ── Input for Downstream Agents ──
+  - id: downstream_input
+    heading: "Input for Downstream Agents"
+    section_number: 6
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: for_transformation_agent
+        heading: "For Transformation Agent"
+        content_type: prose
+        guidance: "Key exceptions to address in TO-BE design — elimination, prevention, or improved handling."
+      - id: for_control_analyst
+        heading: "For Control Analyst"
+        content_type: prose
+        guidance: "Exception patterns indicating control weaknesses or missing controls."
+      - id: for_client_journey_analyst
+        heading: "For Client Journey Analyst"
+        content_type: prose
+        guidance: "Client-facing exceptions affecting experience and effort scores."
+
+# ──────────────────────────────────────────────
+# Exception Entry Structure
+# ──────────────────────────────────────────────
+exception_entry_fields:
+  overview:
+    - exception_id
+    - exception_name
+    - category
+    - affected_steps
+    - frequency
+    - frequency_percentage
+    - impact_level
+    - handling_owner
+    - resolution_time
+
+  sections:
+    - trigger_conditions
+    - detection_method
+    - business_impact_analysis
+    - current_handling_procedure
+    - escalation_path
+    - system_behavior
+    - documentation_evidence
+    - root_cause_analysis
+    - improvement_opportunities
+    - related_exceptions
+
+  # Required fields for each exception entry
+  required_fields:
+    - exception_id
+    - exception_name
+    - category
+    - affected_steps
+    - trigger_conditions
+    - impact_level
+    - handling_owner
+
+  # Required cross-references
+  required_references:
+    - "EX#"
+    - "PS#"
+
+# ──────────────────────────────────────────────
+# Completeness Rules (validation gates)
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "exception_summary.count >= 1"
+    - "detailed_exception_analysis.count >= 1"
+  recommended:
+    - "exception_patterns.word_count >= 50"
+    - "recommendations.word_count >= 50"
+
+# ──────────────────────────────────────────────
+# Cross-Reference Validation
+# ──────────────────────────────────────────────
+cross_references:
+  intra_document:
+    - description: "All related_exceptions must reference valid EX#"
+      source: "detailed_exception_analysis.related_exceptions"
+      target: "detailed_exception_analysis"
+
+  inter_document:
+    - description: "All affected_steps must reference valid PS# in AS-IS"
+      source: "detailed_exception_analysis.affected_steps"
+      target: "as-is-process-documentation.process_steps"
+
+  required_references_by_section:
+    1:  # Summary Table
+      - "EX#"
+      - "PS#"
+    3:  # Detailed Analysis
+      - "EX#"
+      - "PS#"
+
+# ──────────────────────────────────────────────
+# ID Patterns (document-specific subset)
+# ──────────────────────────────────────────────
+id_patterns:
+  exception: "EX-[A-Z]{2,4}-\\d{3}"
+  process_step: "PS-[A-Z]{2,4}-\\d{3}"
+  pain_point: "PP-[A-Z]{2,4}-\\d{3}"
+
+# ──────────────────────────────────────────────
+# Companion Documents
+# ──────────────────────────────────────────────
+companion_documents:
+  - name: "AS-IS Process Documentation"
+    file: "as-is-process-documentation.md"
+    relationship: "parent"
+
+  - name: "Pain Points Detail"
+    file: "pain-points-detail.md"
+    relationship: "sibling"
+
+  - name: "Control Points Detail"
+    file: "control-points-detail.md"
+    relationship: "sibling"
+
+# ──────────────────────────────────────────────
+# Impact Rating Scale
+# ──────────────────────────────────────────────
+impact_ratings:
+  - rating: "Critical"
+    score: 5
+    description: "Process stops, regulatory/compliance breach, major financial impact"
+  - rating: "High"
+    score: 4
+    description: "Significant delay, client-facing impact, moderate financial impact"
+  - rating: "Medium"
+    score: 3
+    description: "Noticeable delay, internal operational impact"
+  - rating: "Low"
+    score: 2
+    description: "Minor inconvenience, handled within normal operations"
+  - rating: "Negligible"
+    score: 1
+    description: "No material impact, informational only"
+
+# ──────────────────────────────────────────────
+# Frequency Scale
+# ──────────────────────────────────────────────
+frequency_ratings:
+  - rating: "Always"
+    percentage: ">50%"
+    description: "Occurs in majority of transactions"
+  - rating: "Often"
+    percentage: "25-50%"
+    description: "Occurs frequently"
+  - rating: "Sometimes"
+    percentage: "10-25%"
+    description: "Occurs regularly but not majority"
+  - rating: "Rarely"
+    percentage: "1-10%"
+    description: "Uncommon occurrence"
+  - rating: "Very Rarely"
+    percentage: "<1%"
+    description: "Edge case"
+
+# ──────────────────────────────────────────────
+# Sync Rules
+# ──────────────────────────────────────────────
+sync_rules:
+  parent_document: "as-is-process-documentation.md"
+  parent_section: 3
+  parent_table_header: "| EX# | Exception | Trigger | Affected Steps | Frequency | Impact | Handling Owner |"
+  sync_fields:
+    - source: "exception_id"
+      target: "EX#"
+    - source: "exception_name"
+      target: "Exception"
+    - source: "trigger_conditions"
+      target: "Trigger"
+    - source: "affected_steps"
+      target: "Affected Steps"
+    - source: "frequency"
+      target: "Frequency"
+    - source: "impact_level"
+      target: "Impact"
+    - source: "handling_owner"
+      target: "Handling Owner"

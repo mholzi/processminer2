@@ -1,0 +1,36 @@
+{
+  "$schema": "process-miner-structured-data-v1",
+  "schema_version": "1.0.0",
+  "session": {
+    "started": "{{timestamp}}",
+    "last_updated": "{{timestamp}}",
+    "contributor": {
+      "name": "{{contributor_name}}",
+      "role": "{{contributor_role}}"
+    },
+    "process": {
+      "id": "{{process_number}}",
+      "name": "{{current_process_name}}"
+    },
+    "client_groups": "{{client_groups}}",
+    "checkpoint": {
+      "step": 1,
+      "last_item_id": null
+    }
+  },
+  "metadata": {
+    "purpose": null,
+    "trigger": null,
+    "frequency": null,
+    "volume": null
+  },
+  "process_steps": [],
+  "process_exceptions": [],
+  "pain_points": [],
+  "controls": [],
+  "systems": [],
+  "validation": {
+    "status": "DRAFT",
+    "completed_at": null
+  }
+}

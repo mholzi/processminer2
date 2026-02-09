@@ -1,0 +1,865 @@
+# Schema for Management Summary (Amazon 6-Pager)
+# Unified schema v3.0 — single source of truth for all management summary variants.
+# Inherits shared defaults from _defaults.yaml.
+#
+# ARCHITECTURE: One schema, multiple domain variants. Each variant maps to its own
+# template file and source document. The generate-outputs workflow reads this schema
+# at runtime and adapts behavior based on the selected variant.
+# Template files are maintained separately as domain-specific .md files.
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "management-summary"
+template_description: "Amazon 6-Pager management summary — multi-domain, schema-driven"
+required: false  # Generated output, not a primary capture document
+
+# ──────────────────────────────────────────────
+# Document Format
+# ──────────────────────────────────────────────
+format:
+  type: "Amazon 6-Pager"
+  reading_time: "20-30 minutes"
+  writing_principles:
+    - "Lead with WHY — first paragraph must hook the reader with business impact"
+    - "Anchor in DATA — every claim needs evidence, not opinions"
+    - "BRUTAL HONESTY — especially in Lessons Learned. No sugar-coating."
+    - "NARRATIVE FLOW — Problem → Context → Solution → Impact"
+    - "CLEAR OWNERSHIP — every action has a name and deadline"
+    - "WRITE INTRODUCTION LAST — after you understand the full picture"
+  anti_patterns:
+    - "Generic descriptions ('This process is designed to...')"
+    - "Passive voice ('It was decided that...')"
+    - "Vague metrics ('Significant improvement expected...')"
+    - "Missing baselines ('Baseline: Not established')"
+    - "Polite criticism ('Some areas could be improved...')"
+    - "Actions without owners ('The team should...')"
+
+# ──────────────────────────────────────────────
+# Domain Variants
+# ──────────────────────────────────────────────
+# Each variant defines source, template, agent, and domain-specific config.
+# The workflow selects a variant at runtime (via data.template or agent detection).
+#
+# subsection_overrides: When a variant uses different sub-headings for a shared
+# section (e.g. "The Client Experience Problem" instead of "The Problem"), the
+# overrides list the section_id and the replacement subsections. Any section NOT
+# listed in subsection_overrides inherits the base subsections from `sections`.
+variants:
+  process:
+    label: "Process Documentation"
+    template_file: "management-summary-process.md"
+    output_file: "management-summary-process.md"
+    source_document: "as-is-process-documentation.md"
+    agent_id: "process-documentation-analyst"
+    trigger: "management-summary-process"
+    writing_focus: "Lead with operational impact — what's broken, what it costs"
+    companion_documents:
+      - "exceptions-detail.md"
+      - "pain-points-detail.md"
+      - "control-points-detail.md"
+    comparison_metrics:
+      - { name: "Total Process Steps", source_path: "process_steps.count" }
+      - { name: "Total Exceptions", source_path: "exceptions.count" }
+      - { name: "Total Pain Points", source_path: "pain_points.count" }
+      - { name: "Total Control Points", source_path: "control_points.count" }
+      - { name: "Total Systems", source_path: "systems.count" }
+      - { name: "Overall Confidence", source_path: "confidence.overall" }
+      - { name: "Top 5 Pain Points", source_path: "pain_points.top_5" }
+      - { name: "Strategic Priorities", source_path: "strategic_priorities" }
+    appendix_sections:
+      - { id: "process_flow", heading: "Process Flow Diagram", type: "mermaid" }
+      - { id: "pain_points", heading: "Pain Point Summary", ref: "pain-points-detail.md" }
+      - { id: "exceptions", heading: "Exception Summary", ref: "exceptions-detail.md" }
+      - { id: "controls", heading: "Control Point Summary", ref: "control-points-detail.md" }
+      - { id: "systems", heading: "System Dependency Map", type: "table" }
+      - { id: "raci", heading: "RACI Matrix", type: "matrix" }
+    # Process variant uses base subsections — no overrides needed.
+
+  cx:
+    label: "Client Experience"
+    template_file: "management-summary-cx.md"
+    output_file: "management-summary-cx.md"
+    source_document: "cx-journey-documentation.md"
+    agent_id: "client-journey-analyst"
+    trigger: "management-summary-cx"
+    writing_focus: "Lead with client impact — what clients are experiencing, quantify effort"
+    companion_documents:
+      - "friction-points-detail.md"
+      - "client-touchpoints-detail.md"
+    comparison_metrics:
+      - { name: "Client Effort Score (CES)", source_path: "ces_score" }
+      - { name: "Total Touchpoints", source_path: "touchpoints.count" }
+      - { name: "Total Friction Points", source_path: "friction_points.count" }
+      - { name: "Moments That Matter", source_path: "moments_that_matter.count" }
+      - { name: "Enhancement Ideas", source_path: "enhancement_ideas.count" }
+      - { name: "Top 5 Friction Points", source_path: "friction_points.top_5" }
+      - { name: "Strategic Priorities", source_path: "strategic_priorities" }
+    appendix_sections:
+      - { id: "journey_map", heading: "Client Journey Map", type: "mermaid" }
+      - { id: "touchpoints", heading: "Touchpoint Summary", ref: "client-touchpoints-detail.md" }
+      - { id: "friction", heading: "Friction Point Summary", ref: "friction-points-detail.md" }
+      - { id: "channels", heading: "Channel Analysis", type: "table" }
+    subsection_overrides:
+      introduction:
+        - id: the_client_experience_problem
+          heading: "The Client Experience Problem"
+          content_type: prose
+          guidance: "State what clients are experiencing in 2-3 sentences. How much effort? How do they feel? What is the business impact?"
+        - id: background
+          heading: "Background"
+          content_type: prose
+          guidance: "Brief context for readers unfamiliar with the journey."
+        - id: purpose
+          heading: "Purpose of This Document"
+          content_type: prose
+          guidance: "Describe the CX analysis scope and executive decision requested."
+        - id: scope
+          heading: "Scope"
+          content_type: key_value_table
+          guidance: "Journey type, client segment, geographic scope, analysis period."
+        - id: key_definitions
+          heading: "Key Definitions"
+          content_type: key_value_table
+          guidance: "CES, Friction Point, Moment That Matters, Touchpoint."
+      goals:
+        - id: primary_objectives
+          heading: "Primary Objectives"
+          content_type: summary_table
+          summary_table_header: "| Objective | Baseline | Current | Target | Target Date |"
+          guidance: "CES, friction resolved, CSAT, journey completion rate."
+        - id: success_metrics
+          heading: "Success Metrics"
+          content_type: prose
+          guidance: "CES reduction target, friction elimination, channel consolidation, MTM improvement."
+      tenets:
+        - id: core_principles
+          heading: "Core Principles"
+          content_type: prose
+          guidance: "Client-centric tenets: journey over process, effort over time, moments that matter."
+        - id: constraints
+          heading: "Constraints"
+          content_type: summary_table
+          summary_table_header: "| Constraint | Rationale | Impact on CX |"
+          guidance: "Regulatory, system, and resource constraints affecting CX."
+      state_of_business:
+        - id: journey_overview
+          heading: "Journey Overview"
+          content_type: prose
+          guidance: "Narrative overview of the current client journey."
+        - id: key_metrics_summary
+          heading: "Key Metrics Summary"
+          content_type: summary_table
+          summary_table_header: "| Metric | Value | Industry Benchmark | Gap |"
+          guidance: "CES, touchpoints, friction points, channel switches, duration, documents required."
+        - id: ces_breakdown
+          heading: "CES Breakdown"
+          content_type: summary_table
+          summary_table_header: "| Component | Count | Weight | Weighted Score | % of Total |"
+          guidance: "Decomposition of Client Effort Score by component."
+        - id: critical_friction_points
+          heading: "Critical Friction Points (Top 5)"
+          content_type: summary_table
+          summary_table_header: "| Rank | Friction Point | Stage | Severity | CES Impact | Client Emotion |"
+          guidance: "Top 5 friction points ranked by CES impact."
+        - id: moments_that_matter
+          heading: "Moments That Matter"
+          content_type: summary_table
+          summary_table_header: "| Moment | Touchpoint | Current Experience | Risk if Degraded |"
+          guidance: "Critical touchpoints that disproportionately define client perception."
+        - id: channel_analysis
+          heading: "Channel Analysis"
+          content_type: summary_table
+          summary_table_header: "| Channel | Touchpoints | CES Contribution | Client Preference |"
+          guidance: "Breakdown of experience by channel."
+      lessons_learned:
+        - id: what_clients_value
+          heading: "What Clients Value"
+          content_type: prose
+          guidance: "Evidence-based successes from the client perspective."
+        - id: what_frustrates_clients
+          heading: "What Frustrates Clients"
+          content_type: prose
+          guidance: "Brutally honest account of client frustrations with quotes where possible."
+        - id: root_cause_analysis
+          heading: "Root Cause Analysis"
+          content_type: summary_table
+          summary_table_header: "| Friction Issue | Root Cause | Evidence | Client Impact |"
+          guidance: "Root causes of friction, not symptoms."
+        - id: key_insights
+          heading: "Key Insights"
+          content_type: prose
+          guidance: "Actionable CX insights, not observations."
+        - id: competitive_comparison
+          heading: "Competitive Comparison"
+          content_type: summary_table
+          summary_table_header: "| Competitor | Their Approach | Our Gap | Learning |"
+          guidance: "How competitors handle the same journey."
+        - id: experience_degradation_risks
+          heading: "Experience Degradation Risks"
+          content_type: summary_table
+          summary_table_header: "| Risk | Explanation | Alternative |"
+          guidance: "Changes that would worsen CX — must be avoided in transformation."
+      strategic_priorities:
+        - id: priority_1
+          heading: "Priority 1"
+          content_type: priority_block
+          guidance: "Top CX improvement priority with CES impact estimate."
+        - id: priority_2
+          heading: "Priority 2"
+          content_type: priority_block
+          guidance: "Second CX improvement priority with CES impact estimate."
+        - id: priority_3
+          heading: "Priority 3"
+          content_type: priority_block
+          guidance: "Third CX improvement priority with CES impact estimate."
+        - id: quick_wins
+          heading: "Quick Wins (Immediate CX Impact)"
+          content_type: summary_table
+          summary_table_header: "| Quick Win | Effort | CES Reduction | Owner | Target |"
+          guidance: "Low-effort, high-impact CX improvements."
+        - id: enhancement_ideas_summary
+          heading: "Enhancement Ideas Summary"
+          content_type: summary_table
+          summary_table_header: "| Category | Count | Total CES Reduction Potential |"
+          guidance: "Aggregated view of all enhancement ideas by category."
+        - id: recommendations
+          heading: "Recommendations"
+          content_type: prose
+          guidance: "Immediate, short-term, and long-term CX recommendations."
+        - id: next_steps
+          heading: "Next Steps"
+          content_type: summary_table
+          summary_table_header: "| Step | Responsible | Deadline | Expected CES Impact |"
+          guidance: "Concrete next actions with owners and deadlines."
+
+  compliance:
+    label: "Compliance & Controls"
+    template_file: "management-summary-compliance.md"
+    output_file: "management-summary-compliance.md"
+    source_document: "compliance-control-assessment.md"
+    agent_id: "control-analyst"
+    trigger: "management-summary-compliance"
+    writing_focus: "Lead with risk exposure — quantify compliance risk, no ambiguity"
+    companion_documents:
+      - "control-points-detail.md"
+    comparison_metrics:
+      - { name: "Total Control Points", source_path: "control_points.count" }
+      - { name: "Regulatory Controls", source_path: "regulatory_controls.count" }
+      - { name: "Compliance Coverage %", source_path: "compliance_coverage" }
+      - { name: "Open Audit Findings", source_path: "open_audit_findings.count" }
+      - { name: "Control Effectiveness", source_path: "control_effectiveness" }
+      - { name: "Critical Gaps", source_path: "critical_gaps.count" }
+      - { name: "Strategic Priorities", source_path: "strategic_priorities" }
+    appendix_sections:
+      - { id: "control_matrix", heading: "Control Matrix", type: "table" }
+      - { id: "regulatory_map", heading: "Regulatory Mapping", type: "table" }
+      - { id: "gap_register", heading: "Compliance Gap Register", type: "table" }
+      - { id: "audit_findings", heading: "Audit Finding Status", type: "table" }
+    subsection_overrides:
+      introduction:
+        - id: compliance_risk_summary
+          heading: "Compliance Risk Summary"
+          content_type: prose
+          guidance: "State compliance exposure in 2-3 sentences. How many gaps? Which regulations? Potential consequences?"
+        - id: background
+          heading: "Background"
+          content_type: prose
+          guidance: "Brief context for readers unfamiliar with the compliance landscape."
+        - id: purpose
+          heading: "Purpose of This Document"
+          content_type: prose
+          guidance: "Describe the compliance assessment scope and executive decision requested."
+        - id: scope
+          heading: "Scope"
+          content_type: key_value_table
+          guidance: "Process category, regulatory jurisdictions, applicable regulations, assessment period."
+        - id: key_definitions
+          heading: "Key Definitions"
+          content_type: key_value_table
+          guidance: "Control Point, Regulatory Control, Internal Control, Control Effectiveness, Compliance Gap."
+      goals:
+        - id: primary_objectives
+          heading: "Primary Objectives"
+          content_type: summary_table
+          summary_table_header: "| Objective | Baseline | Current | Target | Target Date |"
+          guidance: "Coverage, effectiveness, open findings, automation rate."
+        - id: success_metrics
+          heading: "Success Metrics"
+          content_type: prose
+          guidance: "Zero critical gaps, effectiveness target, audit readiness, regulatory change mapping."
+      tenets:
+        - id: core_principles
+          heading: "Core Principles"
+          content_type: prose
+          guidance: "Compliance tenets: traceability, effectiveness over existence, risk-based, segregation of duties."
+        - id: constraints
+          heading: "Constraints"
+          content_type: summary_table
+          summary_table_header: "| Constraint | Rationale | Impact |"
+          guidance: "Regulatory mandates, audit requirements, system limitations."
+      state_of_business:
+        - id: compliance_overview
+          heading: "Compliance Overview"
+          content_type: prose
+          guidance: "Narrative overview of current compliance posture."
+        - id: key_metrics_summary
+          heading: "Key Metrics Summary"
+          content_type: summary_table
+          summary_table_header: "| Metric | Value | Status | Risk Level |"
+          guidance: "Total controls, regulatory/internal split, automated/manual split, overall effectiveness."
+        - id: regulatory_framework_coverage
+          heading: "Regulatory Framework Coverage"
+          content_type: summary_table
+          summary_table_header: "| Regulation | Requirements | Controls Mapped | Coverage | Gaps |"
+          guidance: "Per-regulation compliance coverage with gap counts."
+        - id: control_effectiveness_distribution
+          heading: "Control Effectiveness Distribution"
+          content_type: summary_table
+          summary_table_header: "| Rating | Count | Percentage | Action Required |"
+          guidance: "Distribution of controls across effectiveness ratings."
+        - id: critical_compliance_gaps
+          heading: "Critical Compliance Gaps (Top 5)"
+          content_type: summary_table
+          summary_table_header: "| Rank | Gap | Regulation | Risk Exposure | Remediation Status |"
+          guidance: "Top 5 compliance gaps ranked by risk exposure."
+        - id: audit_findings_status
+          heading: "Audit Findings Status"
+          content_type: summary_table
+          summary_table_header: "| Category | Open | In Progress | Closed | Overdue |"
+          guidance: "Status of audit findings by severity."
+        - id: control_type_distribution
+          heading: "Control Type Distribution"
+          content_type: summary_table
+          summary_table_header: "| Control Type | Count | Effectiveness | Automation Potential |"
+          guidance: "Preventive, detective, corrective control breakdown."
+      lessons_learned:
+        - id: whats_working
+          heading: "What's Working"
+          content_type: prose
+          guidance: "Specific control successes with evidence."
+        - id: whats_not_working
+          heading: "What's Not Working"
+          content_type: prose
+          guidance: "Brutally honest account of control failures."
+        - id: root_cause_analysis
+          heading: "Root Cause Analysis"
+          content_type: summary_table
+          summary_table_header: "| Control Issue | Root Cause | Evidence | Risk Implication |"
+          guidance: "Root causes of control failures, not symptoms."
+        - id: key_insights
+          heading: "Key Insights"
+          content_type: prose
+          guidance: "Actionable compliance insights."
+        - id: regulatory_change_horizon
+          heading: "Regulatory Change Horizon"
+          content_type: summary_table
+          summary_table_header: "| Upcoming Regulation | Effective Date | Impact Assessment | Readiness |"
+          guidance: "Emerging regulations and readiness assessment."
+        - id: control_optimization_opportunities
+          heading: "Control Optimization Opportunities"
+          content_type: summary_table
+          summary_table_header: "| Control | Current State | Optimization | Benefit |"
+          guidance: "Controls that can be improved or automated."
+      strategic_priorities:
+        - id: priority_1
+          heading: "Priority 1"
+          content_type: priority_block
+          guidance: "Top compliance remediation priority with risk addressed."
+        - id: priority_2
+          heading: "Priority 2"
+          content_type: priority_block
+          guidance: "Second compliance remediation priority with risk addressed."
+        - id: priority_3
+          heading: "Priority 3"
+          content_type: priority_block
+          guidance: "Third compliance remediation priority with risk addressed."
+        - id: quick_wins
+          heading: "Quick Wins (Immediate Risk Reduction)"
+          content_type: summary_table
+          summary_table_header: "| Quick Win | Effort | Risk Reduction | Owner | Target |"
+          guidance: "Low-effort compliance improvements with immediate risk reduction."
+        - id: remediation_summary
+          heading: "Remediation Summary"
+          content_type: summary_table
+          summary_table_header: "| Category | Items | Investment Required | Risk Reduction |"
+          guidance: "Aggregated view of remediation effort by category."
+        - id: recommendations
+          heading: "Recommendations"
+          content_type: prose
+          guidance: "Immediate, short-term, and long-term compliance recommendations."
+        - id: next_steps
+          heading: "Next Steps"
+          content_type: summary_table
+          summary_table_header: "| Step | Responsible | Deadline | Regulatory Driver |"
+          guidance: "Concrete next actions with owners, deadlines, and regulatory drivers."
+
+  innovation:
+    label: "Innovation Analysis"
+    template_file: "management-summary-innovation.md"
+    output_file: "management-summary-innovation.md"
+    source_document: "innovation-analysis-documentation.md"
+    agent_id: "innovation-analyst"
+    trigger: "management-summary-innovation"
+    writing_focus: "Lead with competitive urgency — what competitors are doing, feasibility over hype"
+    companion_documents:
+      - "innovation-market-analysis.md"
+    comparison_metrics:
+      - { name: "Total Innovation Ideas", source_path: "innovation_ideas.count" }
+      - { name: "Market Trends Analyzed", source_path: "market_trends.count" }
+      - { name: "MUST HAVE Count", source_path: "must_have.count" }
+      - { name: "Avg Feasibility Score", source_path: "avg_feasibility" }
+      - { name: "Quick Wins Identified", source_path: "quick_wins.count" }
+      - { name: "Top Priorities", source_path: "top_priorities" }
+      - { name: "Strategic Priorities", source_path: "strategic_priorities" }
+    appendix_sections:
+      - { id: "innovation_backlog", heading: "Innovation Backlog", type: "table" }
+      - { id: "market_trends", heading: "Market Trend Analysis", type: "table" }
+      - { id: "feasibility_scores", heading: "Feasibility Scoring", type: "table" }
+      - { id: "competitive_landscape", heading: "Competitive Landscape", type: "table" }
+    subsection_overrides:
+      introduction:
+        - id: the_competitive_reality
+          heading: "The Competitive Reality"
+          content_type: prose
+          guidance: "State the competitive/market situation in 2-3 sentences. What are competitors doing? What is at stake?"
+        - id: background
+          heading: "Background"
+          content_type: prose
+          guidance: "Brief context for readers unfamiliar with the innovation landscape."
+        - id: purpose
+          heading: "Purpose of This Document"
+          content_type: prose
+          guidance: "Describe the innovation analysis scope and executive decision requested."
+        - id: scope
+          heading: "Scope"
+          content_type: key_value_table
+          guidance: "Process category, innovation focus areas, market scope, analysis period."
+        - id: key_definitions
+          heading: "Key Definitions"
+          content_type: key_value_table
+          guidance: "Market Trend, Innovation Idea, Feasibility Score, Strategic Fit, MUST HAVE."
+      goals:
+        - id: primary_objectives
+          heading: "Primary Objectives"
+          content_type: summary_table
+          summary_table_header: "| Objective | Baseline | Current | Target | Target Date |"
+          guidance: "Ideas validated, quick wins implemented, strategic initiatives launched, competitive gap closed."
+        - id: success_metrics
+          heading: "Success Metrics"
+          content_type: prose
+          guidance: "Innovation pipeline, MUST HAVE integration, ROI achievement, time to value."
+      tenets:
+        - id: core_principles
+          heading: "Core Principles"
+          content_type: prose
+          guidance: "Innovation tenets: strategic alignment, differentiation, client-centric, PoC before scale, regulatory awareness, feasibility first."
+        - id: constraints
+          heading: "Constraints"
+          content_type: summary_table
+          summary_table_header: "| Constraint | Rationale | Impact on Innovation |"
+          guidance: "Regulatory, legacy technology, resource, and budget constraints."
+      state_of_business:
+        - id: innovation_overview
+          heading: "Innovation Overview"
+          content_type: prose
+          guidance: "Narrative overview of current innovation landscape."
+        - id: key_metrics_summary
+          heading: "Key Metrics Summary"
+          content_type: summary_table
+          summary_table_header: "| Metric | Value | Industry Benchmark | Gap |"
+          guidance: "Ideas captured, trends analyzed, MUST HAVEs, feasibility, readiness."
+        - id: market_trends_summary
+          heading: "Market Trends Summary"
+          content_type: summary_table
+          summary_table_header: "| Category | Count | High Relevance | Medium Relevance | Low Relevance |"
+          guidance: "Technology, business model, CX, and regulatory trends by relevance."
+        - id: innovation_ideas_by_category
+          heading: "Innovation Ideas by Category"
+          content_type: summary_table
+          summary_table_header: "| Category | Count | Avg Feasibility | MUST HAVE | SHOULD HAVE | COULD HAVE |"
+          guidance: "Innovation ideas grouped by category with MoSCoW priority."
+        - id: top_innovation_opportunities
+          heading: "Top Innovation Opportunities (Top 5)"
+          content_type: summary_table
+          summary_table_header: "| Rank | Innovation | Category | Feasibility | Strategic Fit | ROI Potential |"
+          guidance: "Top 5 innovation opportunities ranked by composite score."
+        - id: competitive_landscape
+          heading: "Competitive Landscape"
+          content_type: summary_table
+          summary_table_header: "| Competitor | Key Innovation | Our Gap | Threat Level |"
+          guidance: "Key competitors and their innovation posture."
+        - id: technology_radar_summary
+          heading: "Technology Radar Summary"
+          content_type: summary_table
+          summary_table_header: "| Ring | Count | Examples |"
+          guidance: "Adopt, Trial, Assess, Hold technology categorization."
+      lessons_learned:
+        - id: whats_working_in_the_market
+          heading: "What's Working in the Market"
+          content_type: prose
+          guidance: "Market innovations that are succeeding — evidence-based."
+        - id: whats_not_working_overhyped
+          heading: "What's Not Working / Overhyped"
+          content_type: prose
+          guidance: "Brutally honest about overhyped technologies and failed innovations."
+        - id: key_insights
+          heading: "Key Insights"
+          content_type: prose
+          guidance: "Actionable innovation insights."
+        - id: failed_innovation_examples
+          heading: "Failed Innovation Examples (Industry)"
+          content_type: summary_table
+          summary_table_header: "| Innovation | Why It Failed | Lesson for Us |"
+          guidance: "Industry failures and lessons applicable to us."
+        - id: successful_innovation_examples
+          heading: "Successful Innovation Examples (Industry)"
+          content_type: summary_table
+          summary_table_header: "| Innovation | Why It Succeeded | Applicability to Us |"
+          guidance: "Industry successes and their applicability."
+        - id: feasibility_lessons
+          heading: "Feasibility Lessons"
+          content_type: summary_table
+          summary_table_header: "| Dimension | Insight | Implication |"
+          guidance: "Technical, business, resource, and risk feasibility learnings."
+      strategic_priorities:
+        - id: priority_1
+          heading: "Priority 1"
+          content_type: priority_block
+          guidance: "Top innovation priority with feasibility score and strategic alignment."
+        - id: priority_2
+          heading: "Priority 2"
+          content_type: priority_block
+          guidance: "Second innovation priority with feasibility score and strategic alignment."
+        - id: priority_3
+          heading: "Priority 3"
+          content_type: priority_block
+          guidance: "Third innovation priority with feasibility score and strategic alignment."
+        - id: quick_wins
+          heading: "Quick Wins (0-3 Months)"
+          content_type: summary_table
+          summary_table_header: "| Quick Win | Effort | Impact | Owner | Target |"
+          guidance: "Low-effort innovations deliverable within 0-3 months."
+        - id: strategic_initiatives
+          heading: "Strategic Initiatives (3-12 Months)"
+          content_type: summary_table
+          summary_table_header: "| Initiative | Business Case | Investment | Expected ROI |"
+          guidance: "Medium-term strategic innovation initiatives."
+        - id: future_exploration
+          heading: "Future Exploration (12+ Months)"
+          content_type: summary_table
+          summary_table_header: "| Innovation | Current Status | Readiness Trigger | Watch Indicators |"
+          guidance: "Long-horizon innovations to monitor for readiness."
+        - id: innovation_target_state_integration
+          heading: "Innovation-Target State Integration"
+          content_type: summary_table
+          summary_table_header: "| Innovation | Transformation Impact | Integration Point |"
+          guidance: "MUST HAVE innovations required for TO-BE state design."
+        - id: recommendations
+          heading: "Recommendations"
+          content_type: prose
+          guidance: "Immediate, short-term, and long-term innovation recommendations."
+        - id: next_steps
+          heading: "Next Steps"
+          content_type: summary_table
+          summary_table_header: "| Step | Responsible | Deadline | Deliverable |"
+          guidance: "Concrete next actions with owners and deadlines."
+
+# ──────────────────────────────────────────────
+# Sections (shared 6-Pager structure)
+# ──────────────────────────────────────────────
+sections:
+  - id: introduction
+    heading: "1. Introduction"
+    section_number: 1
+    content_type: prose
+    page_budget: "½–1"
+    write_order: "LAST"  # Write after all other sections
+    subsections:
+      - id: the_problem
+        heading: "The Problem"
+        content_type: prose
+        guidance: "State the core business problem in 2-3 sentences. Include: What's broken? What's the cost? Why now?"
+      - id: background
+        heading: "Background"
+        content_type: prose
+        guidance: "Brief context for readers unfamiliar with the process. Keep SHORT."
+      - id: purpose
+        heading: "Purpose of This Document"
+        content_type: prose
+        guidance: "State what decision or action this memo supports."
+      - id: scope
+        heading: "Scope"
+        content_type: key_value_table
+        guidance: "Boundaries of the analysis — process category, region, org scope, period."
+      - id: key_definitions
+        heading: "Key Definitions"
+        content_type: key_value_table
+        guidance: "Domain-specific terms the reader must know."
+    validation:
+      min_words: 100
+      max_words: 500
+
+  - id: goals
+    heading: "2. Goals"
+    section_number: 2
+    content_type: mixed
+    page_budget: "½"
+    subsections:
+      - id: success_vision
+        heading: "What Success Looks Like"
+        content_type: prose
+        guidance: "One sentence describing the target state."
+      - id: primary_objectives
+        heading: "Primary Objectives"
+        content_type: summary_table
+        summary_table_header: "| Objective | Baseline | Current | Target | Gap | Status |"
+        guidance: "If baseline is unknown, write 'UNKNOWN ⚠️' not 'Not established'."
+      - id: success_metrics
+        heading: "Success Metrics Summary"
+        content_type: prose
+        guidance: "Primary, secondary, and lagging indicators with current and target values."
+    validation:
+      min_words: 50
+      requires_table: true
+
+  - id: tenets
+    heading: "3. Tenets"
+    section_number: 3
+    content_type: mixed
+    page_budget: "½"
+    subsections:
+      - id: guiding_principles
+        heading: "Guiding Principles"
+        content_type: prose
+        guidance: "Trade-off resolvers, not tactics or goals. Each tenet must answer 'X over Y when they conflict'."
+      - id: hard_constraints
+        heading: "Hard Constraints"
+        content_type: summary_table
+        summary_table_header: "| Constraint | Why Non-Negotiable | Impact If Violated |"
+        guidance: "Non-negotiable boundaries that constrain all decisions."
+    validation:
+      min_words: 50
+
+  - id: state_of_business
+    heading: "4. State of the Business"
+    section_number: 4
+    content_type: mixed
+    page_budget: "1"
+    subsections:
+      - id: executive_summary
+        heading: "Executive Summary"
+        content_type: prose
+        guidance: "3-4 sentences maximum. The headline. Diagnostic, not description."
+      - id: scorecard
+        heading: "Scorecard"
+        content_type: summary_table
+        summary_table_header: "| Metric | Value | Target | Status | Trend |"
+        guidance: "Key performance metrics with traffic-light status."
+      - id: whats_working
+        heading: "What's Working"
+        content_type: prose
+        guidance: "Be specific. Include evidence."
+      - id: whats_not_working
+        heading: "What's NOT Working"
+        content_type: prose
+        guidance: "Be brutally honest. Name problems clearly."
+      - id: top_5_critical
+        heading: "Top 5 Critical Items"
+        content_type: summary_table
+        summary_table_header: "| Rank | Issue | Impact | Evidence | Owner |"
+        guidance: "Top 5 issues prioritized by business impact."
+    validation:
+      min_words: 200
+      requires_table: true
+
+  - id: lessons_learned
+    heading: "5. Lessons Learned"
+    section_number: 5
+    content_type: mixed
+    page_budget: "½–1"
+    subsections:
+      - id: got_right
+        heading: "What We Got Right"
+        content_type: prose
+        guidance: "Specific successes with evidence."
+      - id: got_wrong
+        heading: "What We Got Wrong"
+        content_type: prose
+        guidance: "Be uncomfortable. Name failures. If nothing makes you uncomfortable, you're not being honest enough."
+      - id: root_causes
+        heading: "Root Causes"
+        content_type: summary_table
+        summary_table_header: "| Problem | Root Cause | Evidence | Accountability |"
+        guidance: "Root causes, not symptoms."
+      - id: key_insights
+        heading: "Key Insights"
+        content_type: prose
+        guidance: "Actionable insights, not observations."
+    validation:
+      min_words: 150
+      honesty_check: true  # Flag if language is too soft
+
+  - id: strategic_priorities
+    heading: "6. Strategic Priorities"
+    section_number: 6
+    content_type: mixed
+    page_budget: "2–3"
+    subsections:
+      - id: priority_1
+        heading: "Priority 1"
+        content_type: priority_block
+        guidance: "Highest-impact strategic priority."
+      - id: priority_2
+        heading: "Priority 2"
+        content_type: priority_block
+        guidance: "Second-highest-impact strategic priority."
+      - id: priority_3
+        heading: "Priority 3"
+        content_type: priority_block
+        guidance: "Third-highest-impact strategic priority."
+      - id: quick_wins
+        heading: "Quick Wins (Do This Week)"
+        content_type: summary_table
+        summary_table_header: "| Action | Owner | Effort | Impact | Deadline |"
+        guidance: "Low-effort, high-impact actions that can start immediately."
+      - id: next_steps
+        heading: "Immediate Next Steps"
+        content_type: summary_table
+        summary_table_header: "| Step | Owner | By When | Deliverable |"
+        guidance: "Concrete next actions with owners and deadlines."
+    validation:
+      min_priorities: 3
+      requires_ownership: true
+      requires_deadlines: true
+
+  - id: appendix
+    heading: "Appendix"
+    section_number: 7
+    content_type: mixed
+    page_budget: "unlimited"
+    guidance: "Supporting evidence for the main document. No page limit. No new conclusions."
+    # Base subsections match the process variant template (A.1–A.9).
+    # Domain-specific appendix items are defined in variants.appendix_sections.
+    subsections:
+      - id: process_flow_diagram
+        heading: "A.1 Process Flow Diagram"
+        content_type: mermaid
+        guidance: "Visual process flow diagram in Mermaid syntax."
+      - id: pain_point_summary
+        heading: "A.2 Pain Point Summary (Top Items)"
+        content_type: summary_table
+        guidance: "Top pain points with category, impact, priority, and quick-win flag. References pain-points-detail.md."
+      - id: exception_summary
+        heading: "A.3 Exception Summary (Top Items)"
+        content_type: summary_table
+        guidance: "Top exceptions with trigger, frequency, impact, and handling owner. References exceptions-detail.md."
+      - id: control_point_summary
+        heading: "A.4 Control Point Summary (Top Items)"
+        content_type: summary_table
+        guidance: "Top control points with type, regulation, effectiveness, and risk level. References control-points-detail.md."
+      - id: system_dependency_map
+        heading: "A.5 System Dependency Map"
+        content_type: summary_table
+        guidance: "Systems involved in the process with type, purpose, and integration points."
+      - id: raci_matrix
+        heading: "A.6 RACI Matrix"
+        content_type: matrix
+        guidance: "Responsibility assignment matrix for key process activities."
+      - id: document_confidence_analysis
+        heading: "A.7 Document Confidence Analysis"
+        content_type: summary_table
+        guidance: "Per-section confidence rating with key gaps and validation needs."
+      - id: source_documents
+        heading: "A.8 Source Documents"
+        content_type: summary_table
+        guidance: "List of source documents with type, date, and relevance."
+      - id: contributors
+        heading: "A.9 Contributors"
+        content_type: summary_table
+        guidance: "List of contributors with role, contribution, and date."
+
+# ──────────────────────────────────────────────
+# Priority Block Template
+# ──────────────────────────────────────────────
+priority_block:
+  fields:
+    - name: title
+      required: true
+    - name: objective
+      required: true
+    - name: why_now
+      required: true
+      guidance: "Create urgency. Why can't this wait?"
+    - name: actions
+      type: table
+      required: true
+      table_header: "| # | Action | Owner | Deadline | Dependencies |"
+    - name: success_criteria
+      required: true
+    - name: consequences
+      required: true
+      guidance: "Be specific about what happens if we DON'T do this."
+
+# ──────────────────────────────────────────────
+# Auto-Transformation Rules (applied in extraction)
+# ──────────────────────────────────────────────
+auto_transform:
+  weak_to_strong:
+    - pattern: "could be improved"
+      transform: "fails X% at step Y (derive from metrics)"
+    - pattern: "Baseline: Not established"
+      transform: "Baseline: UNKNOWN ⚠️ — Gap requiring action"
+    - pattern: "Some challenges exist"
+      transform: "We have N critical gaps: [list from source]"
+    - pattern: "should consider"
+      transform: "[Role] will deliver [thing] by [date] — or Owner: TBD"
+    - pattern: "room for improvement"
+      transform: "We are X% below target. Impact: €Y (derive from metrics)"
+    - pattern: "Generally compliant"
+      transform: "N of M requirements met. K gaps require remediation."
+
+# ──────────────────────────────────────────────
+# Change Detection Thresholds
+# ──────────────────────────────────────────────
+change_detection:
+  critical_threshold_pct: 20   # Metrics changed >20% → CRITICAL
+  material_threshold_pct: 10   # Metrics changed 10-20% → MATERIAL
+  # Below 10% → MINOR
+  critical_triggers:
+    - "New high-priority items added"
+    - "Removed items that were in priorities"
+    - "Changed strategic recommendations"
+    - "Compliance gaps changed"
+  material_triggers:
+    - "New items added (not high priority)"
+    - "Moderate changes to analysis sections"
+    - "Updated benchmarks or targets"
+
+# ──────────────────────────────────────────────
+# Completeness Rules
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "introduction.word_count >= 100"
+    - "state_of_business.word_count >= 200"
+    - "strategic_priorities.priority_count >= 3"
+    - "lessons_learned.word_count >= 150"
+  recommended:
+    - "goals.has_table == true"
+    - "state_of_business.has_table == true"
+    - "strategic_priorities.has_ownership == true"
+
+# ──────────────────────────────────────────────
+# Document Metadata (frontmatter for output)
+# ──────────────────────────────────────────────
+output_frontmatter:
+  - document_type: "Management Summary (Amazon 6-Pager)"
+  - process_name: "{current_process_name}"
+  - process_id: "{current_process_id}"
+  - variant: "{selected_variant}"
+  - agent_type: "{agent_id}"
+  - generated_date: "{date}"
+  - source_document: "{source_document}"
+  - version: "{version}"
+  - status: "draft|final"
+  - stepsCompleted: "[]"

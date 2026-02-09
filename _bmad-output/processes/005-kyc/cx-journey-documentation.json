@@ -1,0 +1,27 @@
+{
+  "template_id": "cx-journey-documentation",
+  "sections": {
+    "journey_overview": {
+      "journey_name": "KYC Client Onboarding Journey",
+      "process_id": "005",
+      "client_goal": "To successfully complete the Know Your Customer (KYC) verification process and gain access to banking services.",
+      "journey_trigger": "New client application or periodic review of existing client.",
+      "success_outcome": "Client's identity is verified, regulatory requirements are met, and banking services are provisioned.",
+      "typical_duration": "7–10 business days (standard path); 10–13 business days (high-risk with EDD)",
+      "client_segment": "All business segments: BizBanking (small business), MidCap (mid-market corporates), LargeCap (large corporates)",
+      "client_profile": "Business owner or corporate representative applying for banking services. May be an individual (BizBanking) or a corporate officer acting on behalf of a legal entity (MidCap/LargeCap). Submits identity documents, corporate filings, and beneficial ownership declarations.",
+      "key_motivations": "Gain access to banking services; meet regulatory requirements efficiently; minimise time spent on administrative paperwork; receive clear communication on application status and next steps.",
+      "expected_experience": "A secure, efficient, and transparent process with minimal manual intervention. Clear upfront communication of required documents, predictable timelines, proactive status updates, and no need to chase the bank for progress.",
+      "journey_context": "This section provides an initial high-level overview of the client's journey through the Know Your Customer (KYC) process. It establishes the critical client perspective, identifying the core objectives and expectations of individuals undergoing identity verification. The journey encompasses the initial application or review trigger, navigating through data submission, verification steps, and ultimately achieving compliance to access or continue utilizing banking services. Understanding this journey from the client's viewpoint is crucial for identifying areas of friction and opportunities for enhancing the overall experience. This foundational understanding will guide subsequent detailed analysis of touchpoints and pain points.",
+      "confidence": 55,
+      "status": "draft",
+      "subsection_status": {
+        "journey_identification": "approved",
+        "client_persona": "reviewed",
+        "journey_context": "draft"
+      },
+      "word_count": 100
+    }
+  },
+  "discrepancies": []
+}

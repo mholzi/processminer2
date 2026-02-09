@@ -1,0 +1,9 @@
+session:
+  contributor_name: 'Markus'
+  contributor_role: 'CEO'
+  started: '2026-02-09T05:08:00Z'
+  agent: 'companion'
+  active_process:
+    id: '005'
+    name: 'KYC'
+    folder: '/home/dev/ProcessMiner/_bmad-output/processes/005-kyc'

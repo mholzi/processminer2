@@ -1,0 +1,109 @@
+# ProcessMiner Progress Tracking Template
+# Used by: step-03-init-tracking.md
+# Variables: {{process_id}}, {{process_name}}, {{description}}, {{timestamp}}
+
+meta:
+  process_id: "{{process_id}}"
+  process_name: "{{process_name}}"
+  description: "{{description}}"
+  schema_version: "1.0"
+  created: "{{timestamp}}"
+  last_updated: "{{timestamp}}"
+
+documents:
+  as_is:
+    path: "./as-is-documentation.md"
+    overall_status: not_started
+    sections:
+      executive_summary:
+        status: not_started
+        word_count: 0
+        min_words: 100
+      process_overview:
+        status: not_started
+        word_count: 0
+        min_words: 150
+      process_steps:
+        status: not_started
+        count: 0
+        min_count: 3
+      pain_points:
+        status: not_started
+        count: 0
+        expected_range: [3, 15]
+      exceptions:
+        status: not_started
+        count: 0
+      control_points:
+        status: not_started
+        count: 0
+      systems:
+        status: not_started
+        count: 0
+        min_count: 1
+
+  cx_journey:
+    path: "./cx-journey.md"
+    overall_status: not_started
+    sections:
+      touchpoints:
+        count: 0
+      friction_points:
+        count: 0
+
+  transformation:
+    path: "./transformation.md"
+    overall_status: not_started
+    sections:
+      recommendations:
+        count: 0
+
+  innovation:
+    path: "./innovation.md"
+    overall_status: not_started
+    sections:
+      opportunities:
+        count: 0
+
+  architecture:
+    path: "./architecture.md"
+    overall_status: not_started
+
+agent_sessions:
+  pda:
+    last_run: "{{timestamp}}"
+    status: active
+  companion:
+    last_run: null
+    status: waiting
+  transformation:
+    last_run: null
+    status: waiting
+  cx_journey:
+    last_run: null
+    status: waiting
+  control:
+    last_run: null
+    status: waiting
+  innovation:
+    last_run: null
+    status: waiting
+  it_architect:
+    last_run: null
+    status: waiting
+  qa:
+    last_run: null
+    status: waiting
+
+milestones:
+  as_is_started: false
+  as_is_complete: false
+  specialists_engaged: false
+  qa_validated: false
+  process_complete: false
+
+validation:
+  last_validated: null
+  score: null
+  errors: 0
+  warnings: 0

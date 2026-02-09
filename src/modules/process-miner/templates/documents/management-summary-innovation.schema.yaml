@@ -1,0 +1,390 @@
+# Standalone Schema for Management Summary — INNOVATION variant
+# Flattened from the unified management-summary.schema.yaml (v3.0).
+# This file is self-contained: it includes all section definitions with
+# innovation-specific subsections already resolved (no variant indirection).
+# Template: management-summary-innovation.md
+# Source:   innovation-analysis-documentation.md
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "management-summary-innovation"
+template_description: "Innovation Analysis management summary — Amazon 6-Pager format"
+required: false  # Generated output, not a primary capture document
+
+# ──────────────────────────────────────────────
+# Variant Metadata (innovation)
+# ──────────────────────────────────────────────
+source_document: "innovation-analysis-documentation.md"
+agent_id: "innovation-analyst"
+writing_focus: "Lead with competitive urgency — what competitors are doing, feasibility over hype"
+companion_documents:
+  - "innovation-market-analysis.md"
+comparison_metrics:
+  - { name: "Total Innovation Ideas", source_path: "innovation_ideas.count" }
+  - { name: "Market Trends Analyzed", source_path: "market_trends.count" }
+  - { name: "MUST HAVE Count", source_path: "must_have.count" }
+  - { name: "Avg Feasibility Score", source_path: "avg_feasibility" }
+  - { name: "Quick Wins Identified", source_path: "quick_wins.count" }
+  - { name: "Top Priorities", source_path: "top_priorities" }
+  - { name: "Strategic Priorities", source_path: "strategic_priorities" }
+appendix_sections:
+  - { id: "innovation_backlog", heading: "Innovation Backlog", type: "table" }
+  - { id: "market_trends", heading: "Market Trend Analysis", type: "table" }
+  - { id: "feasibility_scores", heading: "Feasibility Scoring", type: "table" }
+  - { id: "competitive_landscape", heading: "Competitive Landscape", type: "table" }
+
+# ──────────────────────────────────────────────
+# Document Format
+# ──────────────────────────────────────────────
+format:
+  type: "Amazon 6-Pager"
+  reading_time: "20-30 minutes"
+  writing_principles:
+    - "Lead with WHY — first paragraph must hook the reader with business impact"
+    - "Anchor in DATA — every claim needs evidence, not opinions"
+    - "BRUTAL HONESTY — especially in Lessons Learned. No sugar-coating."
+    - "NARRATIVE FLOW — Problem → Context → Solution → Impact"
+    - "CLEAR OWNERSHIP — every action has a name and deadline"
+    - "WRITE INTRODUCTION LAST — after you understand the full picture"
+  anti_patterns:
+    - "Generic descriptions ('This process is designed to...')"
+    - "Passive voice ('It was decided that...')"
+    - "Vague metrics ('Significant improvement expected...')"
+    - "Missing baselines ('Baseline: Not established')"
+    - "Polite criticism ('Some areas could be improved...')"
+    - "Actions without owners ('The team should...')"
+
+# ──────────────────────────────────────────────
+# Sections (innovation-specific 6-Pager)
+# ──────────────────────────────────────────────
+sections:
+  - id: introduction
+    heading: "1. Introduction"
+    section_number: 1
+    content_type: prose
+    page_budget: "1/2-1"
+    write_order: "LAST"
+    subsections:
+      - id: the_competitive_reality
+        heading: "The Competitive Reality"
+        content_type: prose
+        guidance: "State the competitive/market situation in 2-3 sentences. What are competitors doing? What is at stake?"
+      - id: background
+        heading: "Background"
+        content_type: prose
+        guidance: "Brief context for readers unfamiliar with the innovation landscape."
+      - id: purpose
+        heading: "Purpose of This Document"
+        content_type: prose
+        guidance: "Describe the innovation analysis scope and executive decision requested."
+      - id: scope
+        heading: "Scope"
+        content_type: key_value_table
+        guidance: "Process category, innovation focus areas, market scope, analysis period."
+      - id: key_definitions
+        heading: "Key Definitions"
+        content_type: key_value_table
+        guidance: "Market Trend, Innovation Idea, Feasibility Score, Strategic Fit, MUST HAVE."
+    validation:
+      min_words: 100
+      max_words: 500
+
+  - id: goals
+    heading: "2. Goals"
+    section_number: 2
+    content_type: mixed
+    page_budget: "1/2"
+    subsections:
+      - id: primary_objectives
+        heading: "Primary Objectives"
+        content_type: summary_table
+        summary_table_header: "| Objective | Baseline | Current | Target | Target Date |"
+        guidance: "Ideas validated, quick wins implemented, strategic initiatives launched, competitive gap closed."
+      - id: success_metrics
+        heading: "Success Metrics"
+        content_type: prose
+        guidance: "Innovation pipeline, MUST HAVE integration, ROI achievement, time to value."
+    validation:
+      min_words: 50
+      requires_table: true
+
+  - id: tenets
+    heading: "3. Tenets"
+    section_number: 3
+    content_type: mixed
+    page_budget: "1/2"
+    subsections:
+      - id: core_principles
+        heading: "Core Principles"
+        content_type: prose
+        guidance: "Innovation tenets: strategic alignment, differentiation, client-centric, PoC before scale, regulatory awareness, feasibility first."
+      - id: constraints
+        heading: "Constraints"
+        content_type: summary_table
+        summary_table_header: "| Constraint | Rationale | Impact on Innovation |"
+        guidance: "Regulatory, legacy technology, resource, and budget constraints."
+    validation:
+      min_words: 50
+
+  - id: state_of_business
+    heading: "4. State of the Business"
+    section_number: 4
+    content_type: mixed
+    page_budget: "1"
+    subsections:
+      - id: innovation_overview
+        heading: "Innovation Overview"
+        content_type: prose
+        guidance: "Narrative overview of current innovation landscape."
+      - id: key_metrics_summary
+        heading: "Key Metrics Summary"
+        content_type: summary_table
+        summary_table_header: "| Metric | Value | Industry Benchmark | Gap |"
+        guidance: "Ideas captured, trends analyzed, MUST HAVEs, feasibility, readiness."
+      - id: market_trends_summary
+        heading: "Market Trends Summary"
+        content_type: summary_table
+        summary_table_header: "| Category | Count | High Relevance | Medium Relevance | Low Relevance |"
+        guidance: "Technology, business model, CX, and regulatory trends by relevance."
+      - id: innovation_ideas_by_category
+        heading: "Innovation Ideas by Category"
+        content_type: summary_table
+        summary_table_header: "| Category | Count | Avg Feasibility | MUST HAVE | SHOULD HAVE | COULD HAVE |"
+        guidance: "Innovation ideas grouped by category with MoSCoW priority."
+      - id: top_innovation_opportunities
+        heading: "Top Innovation Opportunities (Top 5)"
+        content_type: summary_table
+        summary_table_header: "| Rank | Innovation | Category | Feasibility | Strategic Fit | ROI Potential |"
+        guidance: "Top 5 innovation opportunities ranked by composite score."
+      - id: competitive_landscape
+        heading: "Competitive Landscape"
+        content_type: summary_table
+        summary_table_header: "| Competitor | Key Innovation | Our Gap | Threat Level |"
+        guidance: "Key competitors and their innovation posture."
+      - id: technology_radar_summary
+        heading: "Technology Radar Summary"
+        content_type: summary_table
+        summary_table_header: "| Ring | Count | Examples |"
+        guidance: "Adopt, Trial, Assess, Hold technology categorization."
+    validation:
+      min_words: 200
+      requires_table: true
+
+  - id: lessons_learned
+    heading: "5. Lessons Learned"
+    section_number: 5
+    content_type: mixed
+    page_budget: "1/2-1"
+    subsections:
+      - id: whats_working_in_the_market
+        heading: "What's Working in the Market"
+        content_type: prose
+        guidance: "Market innovations that are succeeding — evidence-based."
+      - id: whats_not_working_overhyped
+        heading: "What's Not Working / Overhyped"
+        content_type: prose
+        guidance: "Brutally honest about overhyped technologies and failed innovations."
+      - id: key_insights
+        heading: "Key Insights"
+        content_type: prose
+        guidance: "Actionable innovation insights."
+      - id: failed_innovation_examples
+        heading: "Failed Innovation Examples (Industry)"
+        content_type: summary_table
+        summary_table_header: "| Innovation | Why It Failed | Lesson for Us |"
+        guidance: "Industry failures and lessons applicable to us."
+      - id: successful_innovation_examples
+        heading: "Successful Innovation Examples (Industry)"
+        content_type: summary_table
+        summary_table_header: "| Innovation | Why It Succeeded | Applicability to Us |"
+        guidance: "Industry successes and their applicability."
+      - id: feasibility_lessons
+        heading: "Feasibility Lessons"
+        content_type: summary_table
+        summary_table_header: "| Dimension | Insight | Implication |"
+        guidance: "Technical, business, resource, and risk feasibility learnings."
+    validation:
+      min_words: 150
+      honesty_check: true
+
+  - id: strategic_priorities
+    heading: "6. Strategic Priorities"
+    section_number: 6
+    content_type: mixed
+    page_budget: "2-3"
+    subsections:
+      - id: priority_1
+        heading: "Priority 1"
+        content_type: priority_block
+        guidance: "Top innovation priority with feasibility score and strategic alignment."
+      - id: priority_2
+        heading: "Priority 2"
+        content_type: priority_block
+        guidance: "Second innovation priority with feasibility score and strategic alignment."
+      - id: priority_3
+        heading: "Priority 3"
+        content_type: priority_block
+        guidance: "Third innovation priority with feasibility score and strategic alignment."
+      - id: quick_wins
+        heading: "Quick Wins (0-3 Months)"
+        content_type: summary_table
+        summary_table_header: "| Quick Win | Effort | Impact | Owner | Target |"
+        guidance: "Low-effort innovations deliverable within 0-3 months."
+      - id: strategic_initiatives
+        heading: "Strategic Initiatives (3-12 Months)"
+        content_type: summary_table
+        summary_table_header: "| Initiative | Business Case | Investment | Expected ROI |"
+        guidance: "Medium-term strategic innovation initiatives."
+      - id: future_exploration
+        heading: "Future Exploration (12+ Months)"
+        content_type: summary_table
+        summary_table_header: "| Innovation | Current Status | Readiness Trigger | Watch Indicators |"
+        guidance: "Long-horizon innovations to monitor for readiness."
+      - id: innovation_target_state_integration
+        heading: "Innovation-Target State Integration"
+        content_type: summary_table
+        summary_table_header: "| Innovation | Transformation Impact | Integration Point |"
+        guidance: "MUST HAVE innovations required for TO-BE state design."
+      - id: recommendations
+        heading: "Recommendations"
+        content_type: prose
+        guidance: "Immediate, short-term, and long-term innovation recommendations."
+      - id: next_steps
+        heading: "Next Steps"
+        content_type: summary_table
+        summary_table_header: "| Step | Responsible | Deadline | Deliverable |"
+        guidance: "Concrete next actions with owners and deadlines."
+    validation:
+      min_priorities: 3
+      requires_ownership: true
+      requires_deadlines: true
+
+  - id: appendix
+    heading: "Appendix"
+    section_number: 7
+    content_type: mixed
+    page_budget: "unlimited"
+    guidance: "Supporting evidence for the main document. No page limit. No new conclusions."
+    subsections:
+      - id: innovation_priority_matrix
+        heading: "A.1 Innovation Priority Matrix"
+        content_type: mermaid
+        guidance: "Quadrant chart showing innovation priority matrix: feasibility vs impact."
+      - id: complete_market_trends_register
+        heading: "A.2 Complete Market Trends Register"
+        content_type: summary_table
+        guidance: "All market trends with category, maturity, relevance, and impact potential."
+      - id: complete_innovation_ideas_catalog
+        heading: "A.3 Complete Innovation Ideas Catalog"
+        content_type: summary_table
+        guidance: "All innovation ideas with category, source, feasibility, priority, and status."
+      - id: six_dimension_feasibility_matrix
+        heading: "A.4 Six-Dimension Feasibility Matrix"
+        content_type: summary_table
+        guidance: "Feasibility scores across technical, business, strategic, resource, risk, and customer dimensions."
+      - id: investment_analysis
+        heading: "A.5 Investment Analysis"
+        content_type: summary_table
+        guidance: "Investment breakdown: development, infrastructure, ongoing costs, TCO, and ROI."
+      - id: implementation_roadmap
+        heading: "A.6 Implementation Roadmap"
+        content_type: mermaid
+        guidance: "Gantt chart showing innovation implementation roadmap."
+      - id: risk_register
+        heading: "A.7 Risk Register"
+        content_type: summary_table
+        guidance: "Innovation risks with likelihood, impact, and mitigation strategies."
+      - id: research_sources
+        heading: "A.8 Research Sources"
+        content_type: summary_table
+        guidance: "Research sources with type, date, and key insights."
+      - id: contributors
+        heading: "A.9 Contributors"
+        content_type: summary_table
+        guidance: "List of contributors with role, contribution, and date."
+
+# ──────────────────────────────────────────────
+# Priority Block Template
+# ──────────────────────────────────────────────
+priority_block:
+  fields:
+    - name: title
+      required: true
+    - name: objective
+      required: true
+    - name: why_now
+      required: true
+      guidance: "Create urgency. Why can't this wait?"
+    - name: actions
+      type: table
+      required: true
+      table_header: "| # | Action | Owner | Deadline | Dependencies |"
+    - name: success_criteria
+      required: true
+    - name: consequences
+      required: true
+      guidance: "Be specific about what happens if we DON'T do this."
+
+# ──────────────────────────────────────────────
+# Auto-Transformation Rules (applied in extraction)
+# ──────────────────────────────────────────────
+auto_transform:
+  weak_to_strong:
+    - pattern: "could be improved"
+      transform: "fails X% at step Y (derive from metrics)"
+    - pattern: "Baseline: Not established"
+      transform: "Baseline: UNKNOWN -- Gap requiring action"
+    - pattern: "Some challenges exist"
+      transform: "We have N critical gaps: [list from source]"
+    - pattern: "should consider"
+      transform: "[Role] will deliver [thing] by [date] -- or Owner: TBD"
+    - pattern: "room for improvement"
+      transform: "We are X% below target. Impact: Y (derive from metrics)"
+    - pattern: "Generally compliant"
+      transform: "N of M requirements met. K gaps require remediation."
+
+# ──────────────────────────────────────────────
+# Change Detection Thresholds
+# ──────────────────────────────────────────────
+change_detection:
+  critical_threshold_pct: 20   # Metrics changed >20% -> CRITICAL
+  material_threshold_pct: 10   # Metrics changed 10-20% -> MATERIAL
+  # Below 10% -> MINOR
+  critical_triggers:
+    - "New high-priority items added"
+    - "Removed items that were in priorities"
+    - "Changed strategic recommendations"
+    - "Compliance gaps changed"
+  material_triggers:
+    - "New items added (not high priority)"
+    - "Moderate changes to analysis sections"
+    - "Updated benchmarks or targets"
+
+# ──────────────────────────────────────────────
+# Completeness Rules
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "introduction.word_count >= 100"
+    - "state_of_business.word_count >= 200"
+    - "strategic_priorities.priority_count >= 3"
+    - "lessons_learned.word_count >= 150"
+  recommended:
+    - "goals.has_table == true"
+    - "state_of_business.has_table == true"
+    - "strategic_priorities.has_ownership == true"
+
+# ──────────────────────────────────────────────
+# Document Metadata (frontmatter for output)
+# ──────────────────────────────────────────────
+output_frontmatter:
+  - document_type: "Management Summary (Amazon 6-Pager)"
+  - process_name: "{current_process_name}"
+  - process_id: "{current_process_id}"
+  - variant: "innovation"
+  - agent_type: "{agent_id}"
+  - generated_date: "{date}"
+  - source_document: "{source_document}"
+  - version: "{version}"
+  - status: "draft|final"
+  - stepsCompleted: "[]"

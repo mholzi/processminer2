@@ -1,0 +1,343 @@
+# Schema for Control Points Detail
+# Merged schema v3.0 — single source of truth for this document type.
+# Inherits shared defaults from _defaults.yaml.
+#
+# ARCHITECTURE: This replaces the former 2-layer split (master document-schema.yaml
+# + per-doc companion). All section definitions, validation rules, field types,
+# sync config, and cross-references for Control Points Detail live here.
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "control-points-detail"
+template_file: "control-points-detail.md"
+template_description: "Detailed control point analysis with compliance mapping, effectiveness assessment, and audit readiness"
+required: false
+
+# ──────────────────────────────────────────────
+# Detail Document Info
+# ──────────────────────────────────────────────
+detail_document_info:
+  parent_documents:
+    - "as-is-process-documentation.md"
+    - "compliance-control-assessment.md"
+  sync_section_in_parent: 4
+  structured_id_prefix: "CP"
+
+# ──────────────────────────────────────────────
+# Sections
+# ──────────────────────────────────────────────
+sections:
+  # ── Control Point Summary Table ──
+  - id: control_summary
+    heading: "Control Point Summary Table"
+    section_number: 1
+    content_type: summary_table
+    structured_id_prefix: "CP"
+    sync_enabled: false
+    summary_table_header: "| CP# | Control Name | Type | Regulation/Policy | Process Step | Effectiveness | Risk Level |"
+
+  # ── Regulatory Coverage Matrix ──
+  - id: regulatory_coverage
+    heading: "Regulatory Coverage Matrix"
+    section_number: 2
+    content_type: matrix
+    structured_id_prefix: "REG"
+    sync_enabled: false
+
+  # ── Control Type Breakdown ──
+  - id: control_type_breakdown
+    heading: "Control Type Breakdown"
+    section_number: 3
+    content_type: statistics
+    sync_enabled: false
+
+  # ── Detailed Control Point Analysis ──
+  - id: detailed_control_analysis
+    heading: "Detailed Control Point Analysis"
+    section_number: 4
+    content_type: detail_entries
+    structured_id_prefix: "CP"
+    sync_enabled: false
+    entry_template: true
+
+  # ── Control Framework Analysis ──
+  - id: control_framework
+    heading: "Control Framework Analysis"
+    section_number: 5
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: controls_by_risk_level
+        heading: "Controls by Risk Level"
+        content_type: summary_table
+        guidance: "Breakdown of controls by risk level with gap counts and coverage percentages."
+      - id: control_gaps_identified
+        heading: "Control Gaps Identified"
+        content_type: prose
+        guidance: "Areas where controls are missing or insufficient."
+      - id: orphan_controls
+        heading: "Orphan Controls"
+        content_type: prose
+        guidance: "Controls without clear regulatory requirement that represent potential waste."
+      - id: uncontrolled_requirements
+        heading: "Uncontrolled Requirements"
+        content_type: prose
+        guidance: "Regulatory requirements without adequate controls, representing compliance risk."
+
+  # ── Segregation of Duties Matrix ──
+  - id: segregation_of_duties
+    heading: "Segregation of Duties Matrix"
+    section_number: 6
+    content_type: matrix
+    structured_id_prefix: "SOD"
+    sync_enabled: false
+
+  # ── Audit Readiness Assessment ──
+  - id: audit_readiness
+    heading: "Audit Readiness Assessment"
+    section_number: 7
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: audit_trail_completeness
+        heading: "Audit Trail Completeness"
+        content_type: summary_table
+        guidance: "Assessment of audit trail completeness by process area — complete, partial, or missing."
+      - id: last_audit_findings
+        heading: "Last Audit Findings (if available)"
+        content_type: prose
+        guidance: "Summary of findings from the most recent audit, if available."
+      - id: remediation_status
+        heading: "Remediation Status"
+        content_type: prose
+        guidance: "Current status of remediation efforts for identified audit findings."
+
+  # ── Recommendations ──
+  - id: recommendations
+    heading: "Recommendations"
+    section_number: 8
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: critical_compliance_risk
+        heading: "Critical (Compliance Risk)"
+        content_type: prose
+        guidance: "Recommendations addressing critical compliance risks requiring immediate action."
+      - id: high_priority_control_improvement
+        heading: "High Priority (Control Improvement)"
+        content_type: prose
+        guidance: "Recommendations for high-priority control improvements."
+      - id: medium_priority_optimization
+        heading: "Medium Priority (Optimization)"
+        content_type: prose
+        guidance: "Recommendations for medium-priority control optimization opportunities."
+
+  # ── Input for Downstream Agents ──
+  - id: downstream_input
+    heading: "Input for Downstream Agents"
+    section_number: 9
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: for_control_analyst_agent
+        heading: "For Control Analyst Agent"
+        content_type: prose
+        guidance: "Detailed input for control effectiveness analysis."
+      - id: for_transformation_agent
+        heading: "For Transformation Agent"
+        content_type: prose
+        guidance: "Controls that must be preserved or enhanced in TO-BE design."
+      - id: for_it_architect
+        heading: "For IT Architect"
+        content_type: prose
+        guidance: "Control automation opportunities and system requirements."
+
+  # ── Regulatory Quick Reference ──
+  - id: regulatory_reference
+    heading: "Regulatory Quick Reference"
+    section_number: 10
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: applicable_regulations
+        heading: "Applicable Regulations"
+        content_type: summary_table
+        guidance: "Table of applicable regulations with scope, key requirements, and mapped controls."
+      - id: upcoming_regulatory_changes
+        heading: "Upcoming Regulatory Changes"
+        content_type: prose
+        guidance: "Upcoming or pending regulatory changes that may impact this process."
+
+# ──────────────────────────────────────────────
+# Control Entry Structure
+# ──────────────────────────────────────────────
+control_entry_fields:
+  overview:
+    - control_id
+    - control_name
+    - control_type
+    - category
+    - process_steps
+    - control_owner
+    - execution_type
+    - frequency
+    - effectiveness_rating
+    - last_audit_date
+
+  sections:
+    - control_description
+    - regulatory_requirement
+    - control_objective
+    - risk_addressed
+    - control_activity
+    - timing_and_frequency
+    - execution_details
+    - evidence_and_audit_trail
+    - effectiveness_assessment
+    - control_gaps_weaknesses
+    - segregation_of_duties
+    - dependencies
+    - exception_handling
+    - related_controls
+    - improvement_recommendations
+    - transformation_considerations
+
+  # Required fields for each control entry
+  required_fields:
+    - control_id
+    - control_name
+    - control_type
+    - regulation
+    - effectiveness
+    - control_activity
+    - evidence_captured
+
+  # Required cross-references
+  required_references:
+    - "CP#"
+    - "PS#"
+    - "REG#"
+
+# ──────────────────────────────────────────────
+# Completeness Rules (validation gates)
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "control_summary.count >= 1"
+    - "detailed_control_analysis.count >= 1"
+  recommended:
+    - "regulatory_coverage.populated == true"
+    - "segregation_of_duties.populated == true"
+    - "recommendations.word_count >= 50"
+
+# ──────────────────────────────────────────────
+# Cross-Reference Validation
+# ──────────────────────────────────────────────
+cross_references:
+  intra_document:
+    - description: "All related_controls must reference valid CP#"
+      source: "detailed_control_analysis.related_controls"
+      target: "detailed_control_analysis"
+
+  inter_document:
+    - description: "All process_steps must reference valid PS# in AS-IS"
+      source: "detailed_control_analysis.process_steps"
+      target: "as-is-process-documentation.process_steps"
+    - description: "All regulatory references must match valid REG#"
+      source: "detailed_control_analysis.regulatory_requirement"
+      target: "compliance-control-assessment.regulations"
+
+  required_references_by_section:
+    1:  # Summary Table
+      - "CP#"
+      - "REG#"
+      - "PS#"
+    4:  # Detailed Analysis
+      - "CP#"
+      - "PS#"
+      - "REG#"
+
+# ──────────────────────────────────────────────
+# ID Patterns (document-specific subset)
+# ──────────────────────────────────────────────
+id_patterns:
+  control_point: "CP-[A-Z]{2,4}-\\d{3}"
+  process_step: "PS-[A-Z]{2,4}-\\d{3}"
+  regulation: "REG-[A-Z]{2,4}-\\d{3}"
+  system: "SYS-[A-Z]{2,4}-\\d{3}"
+
+# ──────────────────────────────────────────────
+# Companion Documents
+# ──────────────────────────────────────────────
+companion_documents:
+  - name: "AS-IS Process Documentation"
+    file: "as-is-process-documentation.md"
+    relationship: "parent"
+
+  - name: "Compliance Control Assessment"
+    file: "compliance-control-assessment.md"
+    relationship: "parent"
+
+  - name: "Exceptions Detail"
+    file: "exceptions-detail.md"
+    relationship: "sibling"
+
+  - name: "Pain Points Detail"
+    file: "pain-points-detail.md"
+    relationship: "sibling"
+
+# ──────────────────────────────────────────────
+# Control Type Classifications
+# ──────────────────────────────────────────────
+control_types:
+  by_purpose:
+    - Preventive
+    - Detective
+    - Corrective
+
+  by_execution:
+    - Automated
+    - Manual
+    - Semi-Automated
+
+  by_source:
+    - Regulatory
+    - Internal Policy
+    - Best Practice
+
+# ──────────────────────────────────────────────
+# Effectiveness Rating Scale
+# ──────────────────────────────────────────────
+effectiveness_ratings:
+  - rating: "Highly Effective"
+    score: 5
+    description: "Control consistently operates as designed with strong evidence"
+  - rating: "Effective"
+    score: 4
+    description: "Control operates as designed with minor variations"
+  - rating: "Partially Effective"
+    score: 3
+    description: "Control operates but with notable deficiencies"
+  - rating: "Ineffective"
+    score: 2
+    description: "Control does not reliably achieve its objective"
+  - rating: "Not Operating"
+    score: 1
+    description: "Control is not being performed"
+
+# ──────────────────────────────────────────────
+# Risk Levels
+# ──────────────────────────────────────────────
+risk_levels:
+  - level: "Critical"
+    score_range: "9-10"
+    color: "red"
+  - level: "High"
+    score_range: "7-8"
+    color: "orange"
+  - level: "Medium"
+    score_range: "4-6"
+    color: "yellow"
+  - level: "Low"
+    score_range: "1-3"
+    color: "green"

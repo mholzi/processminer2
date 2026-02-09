@@ -1,0 +1,323 @@
+# Schema for Pain Points Detail
+# Merged schema v3.0 — single source of truth for this document type.
+# Inherits shared defaults from _defaults.yaml.
+#
+# ARCHITECTURE: This replaces the former 2-layer split (master document-schema.yaml
+# + per-doc companion). All section definitions, validation rules, field types,
+# sync config, and cross-references for Pain Points Detail live here.
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "pain-points-detail"
+template_file: "pain-points-detail.md"
+template_description: "Detailed pain point analysis with root causes, improvement ideas, and downstream agent input"
+required: false
+
+# ──────────────────────────────────────────────
+# Detail Document Info
+# ──────────────────────────────────────────────
+detail_document_info:
+  parent_documents:
+    - "as-is-process-documentation.md"
+  sync_section_in_parent: 9
+  structured_id_prefix: "PP"
+
+# ──────────────────────────────────────────────
+# Sections
+# ──────────────────────────────────────────────
+sections:
+  # ── Pain Point Summary Table ──
+  - id: pain_point_summary
+    heading: "Pain Point Summary Table"
+    section_number: 1
+    content_type: summary_table
+    structured_id_prefix: "PP"
+    sync_enabled: false
+    summary_table_header: "| PP# | Pain Point | Category | Affected Steps | Impact | Frequency | Priority Score | Quick Win? |"
+
+  # ── Pain Point Statistics ──
+  - id: pain_point_statistics
+    heading: "Pain Point Statistics"
+    section_number: 2
+    content_type: statistics
+    sync_enabled: false
+
+  # ── Pain Point Categories ──
+  - id: pain_point_categories
+    heading: "Pain Point Categories"
+    section_number: 3
+    content_type: breakdown
+    sync_enabled: false
+
+  # ── Detailed Pain Point Analysis ──
+  - id: detailed_pain_point_analysis
+    heading: "Detailed Pain Point Analysis"
+    section_number: 4
+    content_type: detail_entries
+    structured_id_prefix: "PP"
+    sync_enabled: false
+    entry_template: true
+
+  # ── Pain Point Patterns & Themes ──
+  - id: pain_point_patterns
+    heading: "Pain Point Patterns & Themes"
+    section_number: 5
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: theme_analysis
+        heading: "Theme Analysis"
+        content_type: prose
+        guidance: "Identify patterns and recurring themes that emerge across pain points."
+      - id: automation_opportunities
+        heading: "Automation Opportunities"
+        content_type: summary_table
+        guidance: "List pain points that are strong candidates for automation with feasibility and impact."
+      - id: quick_wins
+        heading: "Quick Wins"
+        content_type: summary_table
+        guidance: "List pain points addressable with minimal effort or risk, including proposed solutions and timelines."
+      - id: high_complexity_transformations
+        heading: "High-Complexity Transformations"
+        content_type: prose
+        guidance: "Summarize pain points requiring significant change as strategic initiatives."
+
+  # ── Prioritized Recommendations ──
+  - id: prioritized_recommendations
+    heading: "Prioritized Recommendations"
+    section_number: 6
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: priority_1_critical
+        heading: "Priority 1: Critical (Address Immediately)"
+        content_type: prose
+        guidance: "Pain points requiring immediate attention due to critical business impact."
+      - id: priority_2_high
+        heading: "Priority 2: High (Address in 0-6 months)"
+        content_type: prose
+        guidance: "High-priority pain points to address within the first six months."
+      - id: priority_3_medium
+        heading: "Priority 3: Medium (Address in 6-12 months)"
+        content_type: prose
+        guidance: "Medium-priority pain points to address within six to twelve months."
+      - id: priority_4_low
+        heading: "Priority 4: Low (Backlog / Future Consideration)"
+        content_type: prose
+        guidance: "Lower-priority pain points for backlog or future consideration."
+
+  # ── Input for Downstream Agents ──
+  - id: downstream_input
+    heading: "Input for Downstream Agents"
+    section_number: 7
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: for_transformation_agent
+        heading: "For Transformation Agent"
+        content_type: prose
+        guidance: "Key pain points to address in TO-BE design."
+      - id: for_client_journey_analyst
+        heading: "For Client Journey Analyst"
+        content_type: prose
+        guidance: "Pain points with client experience impact."
+      - id: for_control_analyst
+        heading: "For Control Analyst"
+        content_type: prose
+        guidance: "Pain points affecting compliance and controls."
+      - id: for_innovation_analyst
+        heading: "For Innovation Analyst"
+        content_type: prose
+        guidance: "Pain points that might benefit from emerging technologies."
+
+# ──────────────────────────────────────────────
+# Pain Point Entry Structure
+# ──────────────────────────────────────────────
+pain_point_entry_fields:
+  overview:
+    - pain_point_id
+    - pain_point_name
+    - category
+    - affected_steps
+    - frequency
+    - impact_level
+    - priority_score
+    - quick_win
+
+  sections:
+    - problem_description
+    - who_is_affected
+    - current_state_analysis
+    - root_cause_analysis
+    - impact_on_downstream
+    - related_pain_points
+    - current_workarounds
+    - improvement_ideas
+    - transformation_considerations
+    - linked_exceptions
+    - linked_controls
+
+  # Required fields for each pain point entry
+  required_fields:
+    - pain_point_id
+    - pain_point_name
+    - category
+    - affected_steps
+    - impact_level
+    - problem_description
+    - priority_score
+
+  # Required cross-references
+  required_references:
+    - "PP#"
+    - "PS#"
+    - "EX#"
+    - "CP#"
+
+# ──────────────────────────────────────────────
+# Completeness Rules (validation gates)
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "pain_point_summary.count >= 1"
+    - "detailed_pain_point_analysis.count >= 1"
+  recommended:
+    - "pain_point_patterns.word_count >= 50"
+    - "prioritized_recommendations.word_count >= 50"
+
+# ──────────────────────────────────────────────
+# Cross-Reference Validation
+# ──────────────────────────────────────────────
+cross_references:
+  intra_document:
+    - description: "All related_pain_points must reference valid PP#"
+      source: "detailed_pain_point_analysis.related_pain_points"
+      target: "detailed_pain_point_analysis"
+
+  inter_document:
+    - description: "All affected_steps must reference valid PS# in AS-IS"
+      source: "detailed_pain_point_analysis.affected_steps"
+      target: "as-is-process-documentation.process_steps"
+    - description: "All linked_exceptions must reference valid EX#"
+      source: "detailed_pain_point_analysis.linked_exceptions"
+      target: "exceptions-detail.exceptions"
+    - description: "All linked_controls must reference valid CP#"
+      source: "detailed_pain_point_analysis.linked_controls"
+      target: "control-points-detail.control_points"
+
+  required_references_by_section:
+    1:  # Summary Table
+      - "PP#"
+      - "PS#"
+    4:  # Detailed Analysis
+      - "PP#"
+      - "PS#"
+      - "EX#"
+      - "CP#"
+
+# ──────────────────────────────────────────────
+# ID Patterns (document-specific subset)
+# ──────────────────────────────────────────────
+id_patterns:
+  pain_point: "PP-[A-Z]{2,4}-\\d{3}"
+  process_step: "PS-[A-Z]{2,4}-\\d{3}"
+  exception: "EX-[A-Z]{2,4}-\\d{3}"
+  control_point: "CP-[A-Z]{2,4}-\\d{3}"
+
+# ──────────────────────────────────────────────
+# Companion Documents
+# ──────────────────────────────────────────────
+companion_documents:
+  - name: "AS-IS Process Documentation"
+    file: "as-is-process-documentation.md"
+    relationship: "parent"
+
+  - name: "Exceptions Detail"
+    file: "exceptions-detail.md"
+    relationship: "sibling"
+
+  - name: "Control Points Detail"
+    file: "control-points-detail.md"
+    relationship: "sibling"
+
+  - name: "Client Touchpoints Detail"
+    file: "client-touchpoints-detail.md"
+    relationship: "sibling"
+
+# ──────────────────────────────────────────────
+# Priority Scoring
+# ──────────────────────────────────────────────
+priority_scoring:
+  scale: "1-10"
+  factors:
+    - name: "Impact"
+      weight: 0.4
+      description: "Severity of business/operational impact"
+    - name: "Frequency"
+      weight: 0.3
+      description: "How often the pain point occurs"
+    - name: "Breadth"
+      weight: 0.2
+      description: "Number of steps/stakeholders affected"
+    - name: "Solvability"
+      weight: 0.1
+      description: "Feasibility of resolution"
+
+  priority_levels:
+    - level: "Critical"
+      score_range: "9-10"
+      description: "Must address immediately"
+    - level: "High"
+      score_range: "7-8"
+      description: "Address in 0-6 months"
+    - level: "Medium"
+      score_range: "4-6"
+      description: "Address in 6-12 months"
+    - level: "Low"
+      score_range: "1-3"
+      description: "Backlog / future consideration"
+
+# ──────────────────────────────────────────────
+# Impact Rating Scale
+# ──────────────────────────────────────────────
+impact_ratings:
+  - rating: "Critical"
+    score: 5
+    description: "Process failure, compliance risk, major client impact"
+  - rating: "High"
+    score: 4
+    description: "Significant delays, frequent errors, visible client impact"
+  - rating: "Medium"
+    score: 3
+    description: "Operational inefficiency, moderate staff frustration"
+  - rating: "Low"
+    score: 2
+    description: "Minor inconvenience, manageable workarounds exist"
+  - rating: "Negligible"
+    score: 1
+    description: "Minimal impact, cosmetic or preference-based"
+
+# ──────────────────────────────────────────────
+# Sync Rules
+# ──────────────────────────────────────────────
+sync_rules:
+  parent_document: "as-is-process-documentation.md"
+  parent_section: 9
+  parent_table_header: "| PP# | Pain Point | Category | Affected Steps | Impact | Frequency | Priority | Quick Win? |"
+  sync_fields:
+    - source: "pain_point_id"
+      target: "PP#"
+    - source: "pain_point_name"
+      target: "Pain Point"
+    - source: "category"
+      target: "Category"
+    - source: "affected_steps"
+      target: "Affected Steps"
+    - source: "impact_level"
+      target: "Impact"
+    - source: "frequency"
+      target: "Frequency"
+    - source: "priority_score"
+      target: "Priority"
+    - source: "quick_win"
+      target: "Quick Win?"

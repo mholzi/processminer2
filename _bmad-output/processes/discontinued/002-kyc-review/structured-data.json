@@ -1,0 +1,164 @@
+{
+  "$schema": "process-miner-structured-data-v1",
+  "schema_version": "1.0.0",
+  "template_id": "as_is",
+  "session": {
+    "started": "2026-02-05T15:13:00Z",
+    "last_updated": "2026-02-05T16:45:00Z",
+    "contributor": {
+      "name": "Markus",
+      "role": "CEO"
+    },
+    "process": {
+      "id": "002",
+      "name": "KYC Review"
+    },
+    "client_groups": "All segments",
+    "checkpoint": {
+      "step": 5,
+      "last_item_id": "DOC-KYC-009"
+    }
+  },
+  "metadata": {
+    "purpose": "Ensure regulatory compliance by verifying client identity, assessing risk profiles, and maintaining up-to-date documentation",
+    "trigger": "Periodic review cycle, event-driven trigger, or new client onboarding",
+    "frequency": "Ongoing — periodic (1yr/3yr) and event-driven",
+    "volume": "~2,400 reviews/year (~200/month)"
+  },
+  "process_overview": {
+    "process_owner": "Head of KYC Operations",
+    "regulatory_domain": "AML/CFT, FATF, Local Banking Regulations",
+    "annual_volume": 2400,
+    "monthly_average": 200,
+    "volume_split": {
+      "periodic": 60,
+      "event_triggered": 25,
+      "new_client": 15
+    },
+    "peak_periods": ["Q4", "Q1"],
+    "standard_duration_days": "5-15",
+    "edd_duration_days": "20-40",
+    "dedicated_ftes": 17,
+    "cost_per_standard_review": 45,
+    "cost_per_edd_review": 180,
+    "annual_operating_cost": 350000
+  },
+  "stakeholders": [
+    {"role": "Relationship Manager", "responsibility": "Triggers reviews, client liaison", "count": "Various"},
+    {"role": "KYC Analyst", "responsibility": "Data collection, risk assessment", "count": "12 FTEs"},
+    {"role": "Senior KYC Analyst", "responsibility": "EDD cases, complex reviews", "count": "3 FTEs"},
+    {"role": "KYC Team Lead", "responsibility": "Case assignment, workload management", "count": "1 FTE"},
+    {"role": "Compliance Officer", "responsibility": "Review approval, escalation", "count": "2 FTEs"},
+    {"role": "Exit Committee", "responsibility": "High-risk client decisions", "count": "As needed"}
+  ],
+  "service_levels": [
+    {"id": "SLA-KYC-001", "metric": "Standard review turnaround", "target": "10 business days", "actual": "~12 days", "regulatory": false},
+    {"id": "SLA-KYC-002", "metric": "EDD review turnaround", "target": "30 business days", "actual": "~35 days", "regulatory": false},
+    {"id": "SLA-KYC-003", "metric": "Periodic review completion", "target": "Within 30 days of due date", "actual": "70% compliant", "regulatory": true}
+  ],
+  "process_variants": [
+    {"name": "BizBanking", "scope": "Small business clients", "key_differences": "Simplified KYC, mostly automated triggers"},
+    {"name": "MidCap", "scope": "Mid-market corporates", "key_differences": "Standard process as documented"},
+    {"name": "LargeCap", "scope": "Large corporates", "key_differences": "Senior analyst review required, often EDD"},
+    {"name": "Legal Entities", "scope": "All corporate clients", "key_differences": "Additional UBO verification (+2-3 days)"}
+  ],
+  "process_steps": [
+    {"id": "PS1", "title": "Trigger Identification", "actor": "KYC System / Relationship Manager", "system": "SYS1", "description": "Review triggered by schedule or risk event", "inputs": "Client record, trigger event", "outputs": "KYC case created", "duration": "<5 min", "wait_time": "<1 day"},
+    {"id": "PS2", "title": "Case Assignment", "actor": "KYC Operations Team Lead", "system": "SYS1", "description": "Case assigned to analyst based on workload and expertise", "inputs": "KYC case", "outputs": "Assigned case", "duration": "10-15 min", "wait_time": "<4 hrs"},
+    {"id": "PS3", "title": "Data Collection — Internal", "actor": "KYC Analyst", "system": "SYS1, SYS2", "description": "Gather client data from core banking and previous KYC files", "inputs": "Client ID, previous KYC file", "outputs": "Internal data package", "duration": "1-2 hrs", "wait_time": null},
+    {"id": "PS4", "title": "Data Collection — External", "actor": "KYC Analyst", "system": "SYS3", "description": "PEP, sanctions, adverse media screening via external provider", "inputs": "Client name, registration details", "outputs": "Screening results", "duration": "30 min", "wait_time": "24-48 hrs"},
+    {"id": "PS5", "title": "Risk Assessment", "actor": "KYC Analyst", "system": "SYS1", "description": "Score client risk based on collected data and screening results", "inputs": "Internal data, screening results", "outputs": "Risk score, risk category", "duration": "1-2 hrs", "wait_time": "<1 day"},
+    {"id": "PS6", "title": "Enhanced Due Diligence", "actor": "Senior KYC Analyst", "system": "SYS1, SYS4", "description": "Additional source-of-wealth verification for high-risk clients", "inputs": "High risk flag", "outputs": "EDD report", "duration": "4-8 hrs", "wait_time": "5-15 days"},
+    {"id": "PS7", "title": "Compliance Review & Approval", "actor": "Compliance Officer", "system": "SYS1", "description": "Review complete KYC file and approve, rework, or escalate", "inputs": "Complete KYC file", "outputs": "Decision", "duration": "30 min - 2 hrs", "wait_time": "1-2 days"},
+    {"id": "PS8", "title": "System Update & Notification", "actor": "KYC Analyst", "system": "SYS1, SYS2", "description": "Update KYC status and risk rating, notify RM, set next review", "inputs": "Approval decision", "outputs": "Updated records", "duration": "15-30 min", "wait_time": null}
+  ],
+  "handoff_points": [
+    {"id": "HO-KYC-001", "from": "Relationship Manager", "to": "KYC Ops Team Lead", "trigger": "Case created", "method": "System notification", "avg_wait": "<1 day"},
+    {"id": "HO-KYC-002", "from": "KYC Team Lead", "to": "KYC Analyst", "trigger": "Case assigned", "method": "System assignment", "avg_wait": "<4 hrs"},
+    {"id": "HO-KYC-003", "from": "KYC Analyst", "to": "External Screening", "trigger": "Screening submitted", "method": "API call", "avg_wait": "24-48 hrs"},
+    {"id": "HO-KYC-004", "from": "KYC Analyst", "to": "Senior KYC Analyst", "trigger": "High-risk flag", "method": "System escalation", "avg_wait": "<1 day"},
+    {"id": "HO-KYC-005", "from": "Analyst", "to": "Compliance Officer", "trigger": "File ready", "method": "System workflow", "avg_wait": "1-2 days"},
+    {"id": "HO-KYC-006", "from": "Compliance Officer", "to": "Exit Committee", "trigger": "Escalation", "method": "Email + meeting", "avg_wait": "3-5 days"},
+    {"id": "HO-KYC-007", "from": "Compliance Officer", "to": "KYC Analyst", "trigger": "Rework required", "method": "System rejection", "avg_wait": "<4 hrs"}
+  ],
+  "business_rules": [
+    {"id": "BR-KYC-001", "rule": "Review frequency", "condition": "Low risk", "action": "Every 3 years", "source": "AML Policy"},
+    {"id": "BR-KYC-002", "rule": "Review frequency", "condition": "Medium risk", "action": "Every 2 years", "source": "AML Policy"},
+    {"id": "BR-KYC-003", "rule": "Review frequency", "condition": "High risk", "action": "Annually", "source": "AML Policy"},
+    {"id": "BR-KYC-004", "rule": "EDD requirement", "condition": "Risk score >= 75", "action": "Mandatory EDD", "source": "AML Policy"},
+    {"id": "BR-KYC-005", "rule": "Four-eyes principle", "condition": "All assessments", "action": "Dual review", "source": "Compliance SOP"},
+    {"id": "BR-KYC-006", "rule": "Overdue escalation", "condition": ">30 days overdue", "action": "Auto-escalate", "source": "KYC Platform"},
+    {"id": "BR-KYC-007", "rule": "Onboarding gate", "condition": "New client", "action": "KYC approved first", "source": "Onboarding Policy"},
+    {"id": "BR-KYC-008", "rule": "PEP handling", "condition": "Client is PEP", "action": "Auto high-risk", "source": "AML Policy"}
+  ],
+  "decision_points": [
+    {"id": "DP-KYC-001", "decision": "EDD required?", "at_step": "PS5", "criteria": "Risk >= 75 or PEP", "yes_path": "PS6 (EDD)", "no_path": "PS7 (Review)"},
+    {"id": "DP-KYC-002", "decision": "Approve/Rework/Escalate?", "at_step": "PS7", "criteria": "File quality, risk", "yes_path": "Approve→PS8", "no_path": "Rework→PS5, Escalate→Committee"},
+    {"id": "DP-KYC-003", "decision": "Legal entity?", "at_step": "PS4", "criteria": "Client type", "yes_path": "Add UBO checks", "no_path": "Standard screening"},
+    {"id": "DP-KYC-004", "decision": "Client responsive?", "at_step": "PS6", "criteria": "Response <30 days", "yes_path": "Continue", "no_path": "Trigger EX1"}
+  ],
+  "process_exceptions": [
+    {"id": "EX1", "title": "Client Unresponsive", "trigger": "No response to documentation requests within 30 days", "frequency": "Occasional", "handling": "Escalate to RM, then exit committee after 60 days", "affected_steps": ["PS6"]},
+    {"id": "EX2", "title": "Adverse Media Hit", "trigger": "Significant adverse media finding from screening", "frequency": "Rare", "handling": "Immediate escalation to Senior Compliance Officer, relationship frozen", "affected_steps": ["PS4", "PS7"]}
+  ],
+  "pain_points": [
+    {"id": "PP1", "title": "Manual Data Re-keying", "impact": "High", "frequency": "Always", "root_cause": "KYC Platform and Core Banking lack real-time integration", "affected_steps": ["PS3", "PS5", "PS8"]},
+    {"id": "PP2", "title": "External Screening Turnaround", "impact": "Medium", "frequency": "Often", "root_cause": "External provider SLA frequently exceeded", "affected_steps": ["PS4"]},
+    {"id": "PP3", "title": "Unclear EDD Trigger Criteria", "impact": "High", "frequency": "Sometimes", "root_cause": "Borderline risk scores lead to inconsistent EDD decisions", "affected_steps": ["PS5", "PS6"]}
+  ],
+  "controls": [
+    {"id": "CP1", "title": "Four-Eyes Principle on Risk Scoring", "control_type": "Preventive", "at_step": "PS5", "description": "Dual review of all risk assessments", "evidence": "Dual sign-off in KYC Platform"},
+    {"id": "CP2", "title": "Compliance Approval Gate", "control_type": "Preventive", "at_step": "PS7", "description": "Mandatory compliance officer approval before case closure", "evidence": "Approval timestamp and officer ID"},
+    {"id": "CP3", "title": "Screening Completeness Check", "control_type": "Detective", "at_step": "PS4", "description": "System validates all required screenings completed", "evidence": "Screening completion flags"}
+  ],
+  "systems": [
+    {"id": "SYS1", "name": "KYC Platform", "system_type": "Core Banking", "used_in_steps": ["PS1","PS2","PS3","PS5","PS6","PS7","PS8"], "purpose": "Primary case management and workflow", "integrations": "Batch sync with SYS2, API with SYS3"},
+    {"id": "SYS2", "name": "Core Banking System", "system_type": "Core Banking", "used_in_steps": ["PS3","PS8"], "purpose": "Client master data, accounts, transactions", "integrations": "Overnight batch with SYS1"},
+    {"id": "SYS3", "name": "External Screening Tool", "system_type": "External", "used_in_steps": ["PS4"], "purpose": "PEP, sanctions, adverse media, company registry", "integrations": "Async API with SYS1 (24-48hr)"},
+    {"id": "SYS4", "name": "Document Management System", "system_type": "Document Management", "used_in_steps": ["PS6"], "purpose": "EDD documentation storage", "integrations": "Manual upload, linked via reference ID"}
+  ],
+  "informal_tools": [
+    {"tool": "Excel tracker", "purpose": "SLA monitoring", "risk": "Out of sync, manual effort"},
+    {"tool": "Outlook email", "purpose": "Client requests, escalations", "risk": "No audit trail"},
+    {"tool": "Shared drive (N:)", "purpose": "Working document storage", "risk": "Version control issues"},
+    {"tool": "WhatsApp", "purpose": "Quick analyst queries", "risk": "No formal record"}
+  ],
+  "integrations": [
+    {"id": "INT-KYC-001", "source": "Core Banking", "target": "KYC Platform", "method": "Batch", "frequency": "Overnight", "data_exchanged": "Client master data", "error_handling": "Manual retry + alert"},
+    {"id": "INT-KYC-002", "source": "KYC Platform", "target": "Core Banking", "method": "Batch", "frequency": "Overnight", "data_exchanged": "KYC status, risk rating", "error_handling": "Manual retry + alert"},
+    {"id": "INT-KYC-003", "source": "KYC Platform", "target": "External Screening", "method": "REST API", "frequency": "On-demand", "data_exchanged": "Client details", "error_handling": "Auto-retry x3"},
+    {"id": "INT-KYC-004", "source": "External Screening", "target": "KYC Platform", "method": "REST API", "frequency": "Async 24-48 hrs", "data_exchanged": "Screening results", "error_handling": "Alert if >72 hrs"},
+    {"id": "INT-KYC-005", "source": "Doc Management", "target": "KYC Platform", "method": "Manual", "frequency": "On-demand", "data_exchanged": "Doc reference ID", "error_handling": "N/A"}
+  ],
+  "documents": [
+    {"id": "DOC-KYC-001", "name": "KYC Questionnaire", "source": "Client", "format": "PDF", "retention": "10 years", "regulatory": true},
+    {"id": "DOC-KYC-002", "name": "ID Documents", "source": "Client", "format": "PDF scan", "retention": "10 years", "regulatory": true},
+    {"id": "DOC-KYC-003", "name": "Screening Report", "source": "SYS3", "format": "PDF", "retention": "10 years", "regulatory": true},
+    {"id": "DOC-KYC-004", "name": "Company Registry Extract", "source": "External", "format": "PDF", "retention": "10 years", "regulatory": true},
+    {"id": "DOC-KYC-005", "name": "Source of Wealth Declaration", "source": "Client", "format": "PDF", "retention": "10 years", "regulatory": true},
+    {"id": "DOC-KYC-006", "name": "UBO Declaration", "source": "Client", "format": "PDF", "retention": "10 years", "regulatory": true},
+    {"id": "DOC-KYC-007", "name": "Risk Assessment Form", "source": "SYS1", "format": "System", "retention": "10 years", "regulatory": true},
+    {"id": "DOC-KYC-008", "name": "Compliance Approval Record", "source": "SYS1", "format": "System", "retention": "10 years", "regulatory": true},
+    {"id": "DOC-KYC-009", "name": "EDD Report", "source": "Analyst", "format": "Word/PDF", "retention": "10 years", "regulatory": true}
+  ],
+  "section_confidence": {
+    "executive_summary": {"score": 75, "level": "MEDIUM", "basis": "Expanded with key findings, still needs volume/cost data validation"},
+    "process_overview": {"score": 85, "level": "MEDIUM-HIGH", "basis": "Comprehensive subsections populated with mocked but realistic data"},
+    "process_steps": {"score": 90, "level": "HIGH", "basis": "Complete step documentation with timing, handoffs, business rules, and decision points", "approved": true},
+    "exceptions": {"score": 45, "level": "LOW", "basis": "Only 2 exceptions — process chart likely doesn't show all edge cases"},
+    "control_points": {"score": 50, "level": "LOW", "basis": "3 control points — likely more exist especially around data quality and audit trail"},
+    "systems": {"score": 90, "level": "HIGH", "basis": "Complete system inventory with integrations, informal tools, and document inventory", "approved": true},
+    "organizational_mapping": {"score": 0, "level": "STUB", "basis": "Section not started"},
+    "existing_documentation": {"score": 0, "level": "STUB", "basis": "Section not started"},
+    "process_gaps": {"score": 0, "level": "STUB", "basis": "Section not started"},
+    "pain_points": {"score": 50, "level": "LOW", "basis": "Only 3 pain points captured — expected range is 3–10, likely more exist"}
+  },
+  "discrepancies": [
+    {"id": "DISC-001", "scope": "intra-document", "type": "missing", "source_section": "executive_summary", "target_section": null, "description": "Executive summary below minimum word count (68/100)", "status": "resolved", "found_in_step": 2, "resolved_in_step": 5},
+    {"id": "DISC-002", "scope": "intra-document", "type": "cross-reference", "source_section": "pain_points", "target_section": "process_steps", "description": "PP3 originally referenced PS9 which does not exist — corrected to PS5, PS6", "status": "resolved", "found_in_step": 2, "resolved_in_step": 2}
+  ],
+  "validation": {
+    "status": "DRAFT",
+    "completed_at": null
+  }
+}

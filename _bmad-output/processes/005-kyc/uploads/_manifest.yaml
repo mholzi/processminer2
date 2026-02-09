@@ -1,0 +1,31 @@
+manifest_version: "1.0"
+process_id: "005"
+process_name: "KYC"
+
+uploads:
+  - filename: "2026-02-09_kyc-process-chart.md"
+    original_name: "KYC Process Chart"
+    uploaded_date: "2026-02-09T05:11:00Z"
+    uploaded_by: "Markus"
+    source_type: "process_flowchart"
+    file_type: "image/flowchart"
+    summary: "KYC process flow diagram showing 10 steps from customer application to periodic review scheduling, including systems, pain points, and controls."
+    sections_extracted:
+      - process_steps
+      - systems
+      - pain_points
+      - control_points
+
+  - filename: "2026-02-09_kyc-desktop-procedure.md"
+    original_name: "KYC Desktop Procedure (DTP)"
+    uploaded_date: "2026-02-09T05:13:00Z"
+    uploaded_by: "Markus"
+    source_type: "desktop_procedure"
+    file_type: "document/procedure"
+    summary: "Detailed desktop procedure v2.3 with step-by-step instructions, SLAs, system details, and controls. Contains updated information from Q3 2025."
+    sections_extracted:
+      - process_steps
+      - systems
+      - control_points
+      - pain_points
+    discrepancies_found: 5

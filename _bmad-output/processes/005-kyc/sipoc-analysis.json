@@ -1,0 +1,120 @@
+{
+  "$schema": "process-miner-structured-data-v1",
+  "schema_version": "1.0.0",
+  "template_id": "sipoc-analysis",
+  "session": {
+    "started": "2026-02-09T06:15:00Z",
+    "last_updated": "2026-02-09T06:15:00Z",
+    "contributor": {
+      "name": "Markus",
+      "role": "CEO"
+    },
+    "process": {
+      "id": "005",
+      "name": "KYC"
+    }
+  },
+  "suppliers": [
+    {
+      "id": "SUP-KYC-001",
+      "name": "External Client",
+      "type": "Client/Self-Service",
+      "category": "Primary",
+      "provides": ["INP-KYC-001", "INP-KYC-002", "INP-KYC-003", "INP-KYC-004"],
+      "interface_method": "Client Portal / Email",
+      "reliability": "PREFILLED — variable",
+      "criticality": "Critical",
+      "related_steps": ["PS-KYC-001", "PS-KYC-002", "PS-KYC-006", "PS-KYC-008"],
+      "related_pain_points": ["PP-KYC-003"]
+    },
+    {
+      "id": "SUP-KYC-002",
+      "name": "Thomson Reuters/LSEG",
+      "type": "External Partner",
+      "category": "Screening",
+      "provides": ["INP-KYC-005"],
+      "interface_method": "System-to-system (SYS-KYC-002)",
+      "reliability": "PREFILLED — intermittent timeouts (PP-KYC-002)",
+      "criticality": "Critical",
+      "related_steps": ["PS-KYC-004"],
+      "related_pain_points": ["PP-KYC-002"]
+    },
+    {
+      "id": "SUP-KYC-003",
+      "name": "Compliance Department",
+      "type": "Internal Team",
+      "category": "Policy",
+      "provides": ["INP-KYC-006"],
+      "interface_method": "SharePoint / CRM",
+      "reliability": "PREFILLED — assumed reliable",
+      "criticality": "High",
+      "related_steps": ["PS-KYC-005", "PS-KYC-006", "PS-KYC-007", "PS-KYC-008"],
+      "related_pain_points": []
+    },
+    {
+      "id": "SUP-KYC-004",
+      "name": "Regulatory Bodies",
+      "type": "Regulatory Body",
+      "category": "Compliance",
+      "provides": ["INP-KYC-007"],
+      "interface_method": "Published regulations",
+      "reliability": "PREFILLED — reliable",
+      "criticality": "High",
+      "related_steps": ["PS-KYC-004", "PS-KYC-005", "PS-KYC-006", "PS-KYC-007"],
+      "related_pain_points": []
+    },
+    {
+      "id": "SUP-KYC-005",
+      "name": "Client Portal",
+      "type": "System/Automated",
+      "category": "Intake",
+      "provides": ["INP-KYC-008"],
+      "interface_method": "SYS-KYC-006 → SYS-KYC-001",
+      "reliability": "PREFILLED — no issues reported",
+      "criticality": "Medium",
+      "related_steps": ["PS-KYC-001"],
+      "related_pain_points": []
+    }
+  ],
+  "inputs": [
+    {"id": "INP-KYC-001", "name": "Customer Application", "type": "Document", "source": "SUP-KYC-001", "used_by": ["PS-KYC-001", "PS-KYC-003"]},
+    {"id": "INP-KYC-002", "name": "Identity Documents", "type": "Document", "source": "SUP-KYC-001", "used_by": ["PS-KYC-002", "PS-KYC-003"]},
+    {"id": "INP-KYC-003", "name": "Proof of Address", "type": "Document", "source": "SUP-KYC-001", "used_by": ["PS-KYC-002", "PS-KYC-003"]},
+    {"id": "INP-KYC-004", "name": "Corporate Documents", "type": "Document", "source": "SUP-KYC-001", "used_by": ["PS-KYC-002", "PS-KYC-003"]},
+    {"id": "INP-KYC-005", "name": "Screening Data", "type": "Data/Record", "source": "SUP-KYC-002", "used_by": ["PS-KYC-004"]},
+    {"id": "INP-KYC-006", "name": "Risk Rating Matrix & Policies", "type": "Document", "source": "SUP-KYC-003", "used_by": ["PS-KYC-005", "PS-KYC-006", "PS-KYC-007"]},
+    {"id": "INP-KYC-007", "name": "AML/CTF Regulations", "type": "Information", "source": "SUP-KYC-004", "used_by": ["PS-KYC-004", "PS-KYC-005"]},
+    {"id": "INP-KYC-008", "name": "Digital Application Submission", "type": "Trigger/Event", "source": "SUP-KYC-005", "used_by": ["PS-KYC-001"]}
+  ],
+  "outputs": [
+    {"id": "OUT-KYC-001", "name": "Approval/Rejection Decision", "type": "Decision/Status", "produced_by": "PS-KYC-007", "delivered_to": ["CUS-KYC-001"]},
+    {"id": "OUT-KYC-002", "name": "Customer Notification Letter", "type": "Notification", "produced_by": "PS-KYC-008", "delivered_to": ["CUS-KYC-001"]},
+    {"id": "OUT-KYC-003", "name": "Active Customer Account", "type": "Deliverable/Physical", "produced_by": "PS-KYC-009", "delivered_to": ["CUS-KYC-001", "CUS-KYC-002"]},
+    {"id": "OUT-KYC-004", "name": "Risk Rating Assignment", "type": "Data/Record", "produced_by": "PS-KYC-005", "delivered_to": ["CUS-KYC-003", "CUS-KYC-005"]},
+    {"id": "OUT-KYC-005", "name": "AML Screening Report", "type": "Data/Record", "produced_by": "PS-KYC-004", "delivered_to": ["CUS-KYC-003"]},
+    {"id": "OUT-KYC-006", "name": "CRM Customer Record", "type": "Data/Record", "produced_by": "PS-KYC-003", "delivered_to": ["CUS-KYC-004"]},
+    {"id": "OUT-KYC-007", "name": "Periodic Review Schedule", "type": "Handoff/Trigger", "produced_by": "PS-KYC-010", "delivered_to": ["CUS-KYC-005"]},
+    {"id": "OUT-KYC-008", "name": "EDD Report", "type": "Document", "produced_by": "PS-KYC-006", "delivered_to": ["CUS-KYC-003"]}
+  ],
+  "customers": [
+    {"id": "CUS-KYC-001", "name": "External Client", "type": "External Client", "segment": "BizBanking / MidCap / LargeCap", "receives": ["OUT-KYC-001", "OUT-KYC-002", "OUT-KYC-003"]},
+    {"id": "CUS-KYC-002", "name": "Operations Team", "type": "Internal Team", "segment": "Operations", "receives": ["OUT-KYC-003"]},
+    {"id": "CUS-KYC-003", "name": "Regulatory Bodies / Auditors", "type": "Regulatory Body", "segment": "Compliance", "receives": ["OUT-KYC-004", "OUT-KYC-005", "OUT-KYC-008"]},
+    {"id": "CUS-KYC-004", "name": "Management / Reporting", "type": "Management/Reporting", "segment": "Internal", "receives": ["OUT-KYC-006"]},
+    {"id": "CUS-KYC-005", "name": "Periodic Review Process", "type": "Downstream Process", "segment": "Internal", "receives": ["OUT-KYC-004", "OUT-KYC-007"]}
+  ],
+  "interface_issues": [
+    {"id": "IF-KYC-001", "interface": "SUP-KYC-002 → Process", "type": "Supplier→Process", "issue": "World-Check ONE integration timeouts", "related_pp": "PP-KYC-002"},
+    {"id": "IF-KYC-002", "interface": "Process → CUS-KYC-001", "type": "Process→Customer", "issue": "T24 batch processing overnight delay", "related_pp": "PP-KYC-006"},
+    {"id": "IF-KYC-003", "interface": "Process → CUS-KYC-005", "type": "Process→Customer", "issue": "No automated review reminders", "related_pp": "PP-KYC-004"}
+  ],
+  "boundary_discrepancies": [
+    {"id": "BD-KYC-001", "description": "Periodic review process boundary undefined"},
+    {"id": "BD-KYC-002", "description": "Client Portal supplier characteristics not assessed"}
+  ],
+  "validation": {
+    "status": "DRAFT",
+    "completed_at": null
+  },
+  "discrepancies": []
+}

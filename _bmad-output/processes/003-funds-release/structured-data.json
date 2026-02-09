@@ -1,0 +1,445 @@
+{
+  "$schema": "process-miner-structured-data-v1",
+  "schema_version": "1.0.0",
+  "template_id": "as-is-process-documentation",
+  "session": {
+    "started": "2026-02-06T10:00:00Z",
+    "last_updated": "2026-02-06T10:25:00Z",
+    "contributor": {
+      "name": "Markus",
+      "role": "CEO"
+    },
+    "process": {
+      "id": "003",
+      "name": "Funds Release"
+    },
+    "client_groups": "All commercial lending segments: BizBanking, MidCap, Corporate",
+    "checkpoint": {
+      "step": 2,
+      "last_item_id": "PS-FRL-010"
+    }
+  },
+  "metadata": {
+    "purpose": "Disbursement of approved loan amounts or credit facilities to clients",
+    "trigger": "Loan or facility fully approved with all conditions precedent satisfied",
+    "frequency": null,
+    "volume": null,
+    "process_owner": "Head of Operations",
+    "scope": "All commercial lending segments: BizBanking, MidCap, Corporate",
+    "segments": ["BizBanking", "MidCap", "Corporate"],
+    "classification": null,
+    "process_variants": "None — same process applies across all segments"
+  },
+  "process_steps": [
+    {
+      "id": "PS-FRL-001",
+      "name": "Receive and Log Release Request",
+      "owner": "Operations Clerk",
+      "owner_discrepancy": "DISC-002",
+      "systems": ["SYS-FRL-001", "SYS-FRL-009"],
+      "description": "Receive release request from RM via email or LoanIQ. Log request in Operations tracking spreadsheet. Assign reference number. Acknowledge receipt to RM within 30 minutes.",
+      "input": "Approved loan/facility",
+      "output": "Logged release request with reference number",
+      "sla": "Acknowledge within 30 minutes"
+    },
+    {
+      "id": "PS-FRL-002",
+      "name": "Validate Conditions Precedent",
+      "owner": "Operations Officer",
+      "systems": ["SYS-FRL-002", "SYS-FRL-001"],
+      "description": "Open CP checklist in DMS. Verify all items marked Complete. Cross-check against LoanIQ facility record. If any CP incomplete, reject back to RM with details.",
+      "input": "Release request",
+      "output": "CP validation complete",
+      "pain_points": ["PP-FRL-001"],
+      "escalation": "If CP status unclear, escalate to Credit Administration"
+    },
+    {
+      "id": "PS-FRL-003",
+      "name": "Perform KYC and Sanctions Check",
+      "owner": "Compliance Officer",
+      "systems": ["SYS-FRL-004", "SYS-FRL-010"],
+      "description": "Verify client KYC is current (within 12 months). Run sanctions screening on beneficiary. Document clearance in compliance log.",
+      "input": "Client and beneficiary details",
+      "output": "Compliance clearance",
+      "controls": ["CP-FRL-004", "CP-FRL-005"],
+      "source": "DTP only - not in process map",
+      "discrepancy": "DISC-004"
+    },
+    {
+      "id": "PS-FRL-004",
+      "name": "Verify Beneficiary Account Details",
+      "owner": "Operations Officer",
+      "systems": ["SYS-FRL-003"],
+      "description": "Match beneficiary account to facility agreement. Verify account is active and not frozen. Obtain second verification from Senior Operations Officer.",
+      "input": "Beneficiary details from request",
+      "output": "Verified beneficiary",
+      "controls": ["CP-FRL-001"]
+    },
+    {
+      "id": "PS-FRL-005",
+      "name": "Create Payment Instruction",
+      "owner": "Operations Officer",
+      "systems": ["SYS-FRL-011"],
+      "systems_discrepancy": "DISC-003",
+      "description": "Create MT103 or local payment instruction in Treasury Workstation. Enter amount, value date, beneficiary details. Attach supporting documentation.",
+      "input": "Verified beneficiary details",
+      "output": "Payment instruction ready",
+      "pain_points": ["PP-FRL-002"]
+    },
+    {
+      "id": "PS-FRL-006",
+      "name": "Authorize Payment (First Approval)",
+      "owner": "Senior Operations Officer",
+      "systems": ["SYS-FRL-011"],
+      "description": "Review payment details against source documents. Verify amount matches approved facility. Apply first authorization signature.",
+      "input": "Payment instruction",
+      "output": "First approval applied",
+      "controls": ["CP-FRL-002"],
+      "source": "DTP - process map shows single dual auth step",
+      "discrepancy": "DISC-005"
+    },
+    {
+      "id": "PS-FRL-007",
+      "name": "Authorize Payment (Second Approval)",
+      "owner": "Operations Manager",
+      "systems": ["SYS-FRL-011"],
+      "description": "Independent review of payment instruction. Apply second authorization signature. Release for execution. Maker-checker must be different individuals with no reporting relationship.",
+      "input": "First-approved payment",
+      "output": "Fully authorized payment",
+      "controls": ["CP-FRL-002"],
+      "source": "DTP - process map shows single dual auth step",
+      "discrepancy": "DISC-005"
+    },
+    {
+      "id": "PS-FRL-008",
+      "name": "Execute Payment",
+      "owner": "Treasury Operations",
+      "systems": ["SYS-FRL-006"],
+      "description": "Transmit payment instruction via SWIFT Alliance or RTGS. Monitor for acknowledgment. Capture payment reference.",
+      "input": "Authorized payment",
+      "output": "Funds transferred",
+      "sla": "Execute within 1 hour of final authorization",
+      "sla_discrepancy": "DISC-006"
+    },
+    {
+      "id": "PS-FRL-009",
+      "name": "Update Loan System",
+      "owner": "Operations Officer",
+      "systems": ["SYS-FRL-001"],
+      "description": "Record drawdown in LoanIQ. Update facility utilization. Generate drawdown confirmation.",
+      "input": "Payment confirmation",
+      "output": "Updated loan records"
+    },
+    {
+      "id": "PS-FRL-010",
+      "name": "Notify Client",
+      "owner": "Relationship Manager",
+      "owner_discrepancy": "DISC-007",
+      "systems": ["SYS-FRL-007", "SYS-FRL-008"],
+      "description": "Send payment confirmation to client. Include payment reference and value date. Copy Operations for records.",
+      "input": "Payment reference",
+      "output": "Client notified",
+      "sla": "Notify within 2 hours of payment execution",
+      "pain_points": ["PP-FRL-003"]
+    }
+  ],
+  "process_exceptions": [
+    {
+      "id": "EX-FRL-001",
+      "title": "Incomplete Conditions Precedent",
+      "trigger": "One or more CPs not marked complete in DMS",
+      "frequency": "Occasional",
+      "handling": "Reject back to RM with details of missing items",
+      "affected_steps": ["PS-FRL-002"]
+    },
+    {
+      "id": "EX-FRL-002",
+      "title": "Unclear CP Status",
+      "trigger": "CP status cannot be determined from available documentation",
+      "frequency": "Rare",
+      "handling": "Escalate to Credit Administration",
+      "affected_steps": ["PS-FRL-002"]
+    }
+  ],
+  "pain_points": [
+    {
+      "id": "PP-FRL-001",
+      "title": "Manual CP checking across multiple systems",
+      "impact": "Medium",
+      "frequency": "Always",
+      "root_cause": "No integration between LoanIQ and DMS for CP status",
+      "affected_steps": ["PS-FRL-002"]
+    },
+    {
+      "id": "PP-FRL-002",
+      "title": "Manual data entry from LoanIQ to Treasury Workstation",
+      "impact": "High",
+      "frequency": "Always",
+      "root_cause": "No straight-through processing between systems",
+      "affected_steps": ["PS-FRL-005"]
+    },
+    {
+      "id": "PP-FRL-003",
+      "title": "Manual client confirmation emails",
+      "impact": "Medium",
+      "frequency": "Always",
+      "root_cause": "No automated confirmation workflow",
+      "affected_steps": ["PS-FRL-010"]
+    },
+    {
+      "id": "PP-FRL-004",
+      "title": "No real-time payment status visibility for RMs",
+      "impact": "Medium",
+      "frequency": "Often",
+      "root_cause": "Systems not integrated for status updates",
+      "affected_steps": ["PS-FRL-008", "PS-FRL-009"]
+    },
+    {
+      "id": "PP-FRL-005",
+      "title": "Manual request logging in Excel spreadsheet",
+      "impact": "Low",
+      "frequency": "Always",
+      "root_cause": "No integrated request tracking in LoanIQ",
+      "affected_steps": ["PS-FRL-001"],
+      "source": "DTP"
+    }
+  ],
+  "controls": [
+    {
+      "id": "CP-FRL-001",
+      "title": "Four-eyes verification on beneficiary details",
+      "control_type": "Preventive",
+      "at_step": "PS-FRL-004",
+      "description": "Two officers verify account details - Operations Officer and Senior Operations Officer"
+    },
+    {
+      "id": "CP-FRL-002",
+      "title": "Dual authorization on payments",
+      "control_type": "Preventive",
+      "at_step": "PS-FRL-006",
+      "description": "Two signatures required. Maker-checker must be different individuals with no reporting relationship."
+    },
+    {
+      "id": "CP-FRL-003",
+      "title": "Conditions precedent 100% complete",
+      "control_type": "Preventive",
+      "at_step": "PS-FRL-002",
+      "description": "All conditions precedent must be marked complete before release can proceed"
+    },
+    {
+      "id": "CP-FRL-004",
+      "title": "KYC currency check",
+      "control_type": "Preventive",
+      "at_step": "PS-FRL-003",
+      "description": "Client KYC must be current (within 12 months) before funds can be released"
+    },
+    {
+      "id": "CP-FRL-005",
+      "title": "Sanctions screening",
+      "control_type": "Preventive",
+      "at_step": "PS-FRL-003",
+      "description": "All beneficiaries must be screened against sanctions lists before payment",
+      "source": "DTP only - not in process map"
+    }
+  ],
+  "systems": [
+    {
+      "id": "SYS-FRL-001",
+      "name": "LoanIQ",
+      "system_type": "Core Banking",
+      "purpose": "Loan management - release requests, facility records, outstanding balances",
+      "used_in_steps": ["PS-FRL-001", "PS-FRL-002", "PS-FRL-009"]
+    },
+    {
+      "id": "SYS-FRL-002",
+      "name": "DMS",
+      "system_type": "Document Management",
+      "purpose": "Document Management System for conditions precedent checklist",
+      "used_in_steps": ["PS-FRL-002"]
+    },
+    {
+      "id": "SYS-FRL-003",
+      "name": "Core Banking",
+      "system_type": "Core Banking",
+      "purpose": "Beneficiary account verification",
+      "used_in_steps": ["PS-FRL-004"]
+    },
+    {
+      "id": "SYS-FRL-004",
+      "name": "KYC Portal",
+      "system_type": "Other",
+      "purpose": "KYC status verification",
+      "used_in_steps": ["PS-FRL-003"]
+    },
+    {
+      "id": "SYS-FRL-006",
+      "name": "SWIFT Alliance / RTGS",
+      "system_type": "External",
+      "purpose": "Funds transfer execution",
+      "used_in_steps": ["PS-FRL-008"]
+    },
+    {
+      "id": "SYS-FRL-007",
+      "name": "CRM",
+      "system_type": "CRM",
+      "purpose": "Client relationship management",
+      "used_in_steps": ["PS-FRL-010"]
+    },
+    {
+      "id": "SYS-FRL-008",
+      "name": "Email",
+      "system_type": "Communication",
+      "purpose": "Client confirmation notifications",
+      "used_in_steps": ["PS-FRL-010"]
+    },
+    {
+      "id": "SYS-FRL-009",
+      "name": "Operations Log (Excel)",
+      "system_type": "Other",
+      "purpose": "Request tracking spreadsheet",
+      "used_in_steps": ["PS-FRL-001"],
+      "source": "DTP only"
+    },
+    {
+      "id": "SYS-FRL-010",
+      "name": "Sanctions Screening Tool",
+      "system_type": "Other",
+      "purpose": "Beneficiary sanctions screening",
+      "used_in_steps": ["PS-FRL-003"],
+      "source": "DTP only"
+    },
+    {
+      "id": "SYS-FRL-011",
+      "name": "Treasury Workstation",
+      "system_type": "Other",
+      "purpose": "Payment instruction creation and authorization",
+      "used_in_steps": ["PS-FRL-005", "PS-FRL-006", "PS-FRL-007"],
+      "replaces": "SYS-FRL-005 (Payment Gateway)",
+      "discrepancy": "DISC-003"
+    }
+  ],
+  "slas": [
+    {
+      "id": "SLA-FRL-001",
+      "metric": "Request acknowledgment",
+      "target": "30 minutes",
+      "source": "DTP"
+    },
+    {
+      "id": "SLA-FRL-002",
+      "metric": "End-to-end processing",
+      "target": "4 hours",
+      "source": "DTP"
+    },
+    {
+      "id": "SLA-FRL-003",
+      "metric": "Same-day release cut-off",
+      "target": "1:00 PM",
+      "source": "DTP",
+      "discrepancy": "DISC-006"
+    },
+    {
+      "id": "SLA-FRL-004",
+      "metric": "Client notification",
+      "target": "2 hours from execution",
+      "source": "DTP"
+    }
+  ],
+  "validation": {
+    "status": "IN_PROGRESS",
+    "completed_at": null
+  },
+  "discrepancies": [
+    {
+      "id": "DISC-001",
+      "scope": "intra-document",
+      "type": "inconsistent",
+      "source_section": "metadata",
+      "target_section": "metadata",
+      "description": "Scope conflict: Process map states 'All segments', DTP states 'BizBanking and MidCap only'. RESOLVED: Confirmed as 'All commercial lending segments: BizBanking, MidCap, Corporate'. DTP is outdated — Corporate was added subsequently.",
+      "source_doc": "Process Map vs DTP",
+      "status": "resolved",
+      "severity": "HIGH",
+      "found_in_step": 2,
+      "resolved_in_step": 4
+    },
+    {
+      "id": "DISC-002",
+      "scope": "intra-document",
+      "type": "inconsistent",
+      "source_section": "process_steps",
+      "target_section": "process_steps",
+      "description": "Performer conflict at PS-FRL-001: Process map says 'Relationship Manager', DTP says 'Operations Clerk'",
+      "source_doc": "Process Map vs DTP",
+      "status": "open",
+      "severity": "MEDIUM",
+      "found_in_step": 2,
+      "resolved_in_step": null
+    },
+    {
+      "id": "DISC-003",
+      "scope": "intra-document",
+      "type": "inconsistent",
+      "source_section": "systems",
+      "target_section": "systems",
+      "description": "System conflict: Process map references 'Payment Gateway', DTP references 'Treasury Workstation' for payment creation",
+      "source_doc": "Process Map vs DTP",
+      "status": "open",
+      "severity": "MEDIUM",
+      "found_in_step": 2,
+      "resolved_in_step": null
+    },
+    {
+      "id": "DISC-004",
+      "scope": "intra-document",
+      "type": "missing",
+      "source_section": "process_steps",
+      "target_section": "process_steps",
+      "description": "Missing step: DTP includes 'KYC and Sanctions Check' (PS-FRL-003) as separate Compliance step not shown in process map",
+      "source_doc": "DTP only",
+      "status": "open",
+      "severity": "HIGH",
+      "found_in_step": 2,
+      "resolved_in_step": null
+    },
+    {
+      "id": "DISC-005",
+      "scope": "intra-document",
+      "type": "inconsistent",
+      "source_section": "process_steps",
+      "target_section": "process_steps",
+      "description": "Step granularity: Process map shows single 'Dual Authorization' step, DTP splits into two steps (First Approval, Second Approval)",
+      "source_doc": "Process Map vs DTP",
+      "status": "open",
+      "severity": "LOW",
+      "found_in_step": 2,
+      "resolved_in_step": null
+    },
+    {
+      "id": "DISC-006",
+      "scope": "intra-document",
+      "type": "inconsistent",
+      "source_section": "slas",
+      "target_section": "slas",
+      "description": "SLA conflict: Process map states '2pm cut-off', DTP states '1:00 PM cut-off' for same-day release",
+      "source_doc": "Process Map vs DTP",
+      "status": "open",
+      "severity": "HIGH",
+      "found_in_step": 2,
+      "resolved_in_step": null
+    },
+    {
+      "id": "DISC-007",
+      "scope": "intra-document",
+      "type": "inconsistent",
+      "source_section": "process_steps",
+      "target_section": "process_steps",
+      "description": "Performer conflict at PS-FRL-010 (Client Notification): Process map says 'Operations', DTP says 'Relationship Manager'",
+      "source_doc": "Process Map vs DTP",
+      "status": "open",
+      "severity": "MEDIUM",
+      "found_in_step": 2,
+      "resolved_in_step": null
+    }
+  ]
+}

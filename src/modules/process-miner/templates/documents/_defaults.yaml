@@ -1,0 +1,305 @@
+# ProcessMiner Document Schema — Shared Defaults
+# Imported by all per-document schema files.
+# Single source of truth for confidence thresholds, incomplete markers,
+# ID format conventions, and document statuses.
+#
+# USAGE: Each per-document schema references this file and inherits these
+# defaults. Per-document schemas may override specific values (e.g. DILO
+# adds "[PREFILLED" and "[EXPECTED" to incomplete_markers).
+
+schema_format_version: "3.0"
+
+# ──────────────────────────────────────────────
+# Document Status Values
+# ──────────────────────────────────────────────
+document_statuses:
+  - "DRAFT"
+  - "IN_PROGRESS"
+  - "REVIEW"
+  - "APPROVED"
+  - "ARCHIVED"
+
+# ──────────────────────────────────────────────
+# Confidence Scoring
+# ──────────────────────────────────────────────
+confidence_rules:
+  high_threshold: 90
+  medium_threshold: 70
+  low_threshold: 40
+
+  levels:
+    - level: "HIGH"
+      min_score: 90
+      description: "Comprehensive coverage, validated by multiple sources"
+    - level: "MEDIUM"
+      min_score: 70
+      description: "Good coverage, some details may need validation"
+    - level: "LOW"
+      min_score: 40
+      description: "Preliminary capture, requires additional SME input"
+    - level: "STUB"
+      min_score: 0
+      description: "Section placeholder only, no substantive content captured yet"
+
+  # Display format for section footers
+  display_format: "**Section Confidence:** {level} ({score}%) | **Basis:** {basis}"
+  evidence_format: "**Evidence Sources:** {sources}"
+
+  # Approval gate: section must reach this confidence to be approvable
+  approval_threshold: 80
+
+# ──────────────────────────────────────────────
+# Incomplete Content Markers
+# ──────────────────────────────────────────────
+incomplete_markers:
+  - "[TBD]"
+  - "[Unknown]"
+  - "[TODO]"
+  - "{{.*}}"
+  - "..."
+
+# ──────────────────────────────────────────────
+# Structured ID Format Convention
+# ──────────────────────────────────────────────
+# All IDs follow: {PREFIX}-{PROCESS_ABBREV}-{SEQ}
+# - PREFIX: see registry below
+# - PROCESS_ABBREV: 2-4 uppercase letters (e.g., ONB, KYC, CRO)
+# - SEQ: 3-digit zero-padded number
+id_format:
+  pattern: "[A-Z]{1,4}-[A-Z]{2,4}-\\d{3}"
+  example: "PS-ONB-001"
+
+# ──────────────────────────────────────────────
+# Global ID Prefix Registry
+# ──────────────────────────────────────────────
+# Tier 1: Cross-document prefixes (referenced across multiple docs)
+# Tier 2: Document-local prefixes (scoped to one document type)
+id_prefixes:
+  # ── Tier 1: AS-IS Core (cross-document) ──
+  PS:
+    name: "Process Step"
+    tier: 1
+    origin: "as-is"
+  PP:
+    name: "Pain Point"
+    tier: 1
+    origin: "as-is"
+  EX:
+    name: "Exception"
+    tier: 1
+    origin: "as-is"
+  CP:
+    name: "Control Point"
+    tier: 1
+    origin: "as-is"
+  SYS:
+    name: "System"
+    tier: 1
+    origin: "as-is"
+  BR:
+    name: "Business Rule"
+    tier: 1
+    origin: "as-is"
+  DP:
+    name: "Decision Point"
+    tier: 1
+    origin: "as-is"
+  DOC:
+    name: "Document/Data Artifact"
+    tier: 1
+    origin: "as-is"
+  HO:
+    name: "Handoff Point"
+    tier: 1
+    origin: "as-is"
+  SLA:
+    name: "Service Level Agreement"
+    tier: 1
+    origin: "as-is"
+  PGAP:
+    name: "Process Gap"
+    tier: 1
+    origin: "as-is"
+  INT:
+    name: "Integration Point"
+    tier: 1
+    origin: "as-is"
+
+  # ── Tier 1: CX Journey (cross-document) ──
+  JT:
+    name: "Journey Touchpoint"
+    tier: 1
+    origin: "cx-journey"
+  FP:
+    name: "Friction Point"
+    tier: 1
+    origin: "cx-journey"
+  CH:
+    name: "Channel"
+    tier: 1
+    origin: "cx-journey"
+  EI:
+    name: "Enhancement Idea"
+    tier: 1
+    origin: "cx-journey"
+
+  # ── Tier 1: Compliance (cross-document) ──
+  REG:
+    name: "Regulation"
+    tier: 1
+    origin: "compliance"
+  GAP:
+    name: "Compliance Gap"
+    tier: 1
+    origin: "compliance"
+  CEA:
+    name: "Control Effectiveness Assessment"
+    tier: 1
+    origin: "compliance"
+  ATR:
+    name: "Audit Trail Requirement"
+    tier: 1
+    origin: "compliance"
+  RCM:
+    name: "Risk & Compliance Matrix Entry"
+    tier: 1
+    origin: "compliance"
+  RCI:
+    name: "Regulatory Change Impact"
+    tier: 1
+    origin: "compliance"
+  OAF:
+    name: "Open Audit Finding"
+    tier: 1
+    origin: "compliance"
+  CIR:
+    name: "Control Improvement Recommendation"
+    tier: 1
+    origin: "compliance"
+
+  # ── Tier 1: Innovation (cross-document) ──
+  TR:
+    name: "Market Trend"
+    tier: 1
+    origin: "innovation"
+  II:
+    name: "Innovation Idea"
+    tier: 1
+    origin: "innovation"
+  IR:
+    name: "Innovation Risk"
+    tier: 1
+    origin: "innovation"
+
+  # ── Tier 1: Target State (cross-document) ──
+  TS:
+    name: "Target Step"
+    tier: 1
+    origin: "target-state"
+  TC:
+    name: "Target Control"
+    tier: 1
+    origin: "target-state"
+  TJ:
+    name: "Target Journey Touchpoint"
+    tier: 1
+    origin: "target-state"
+  TD:
+    name: "Transformation Decision"
+    tier: 1
+    origin: "target-state"
+  VG:
+    name: "Validation Gap"
+    tier: 1
+    origin: "target-state"
+  SOD:
+    name: "Segregation of Duties Entry"
+    tier: 1
+    origin: "control-points-detail"
+
+  # ── Tier 2: SIPOC (document-local) ──
+  SUP:
+    name: "Supplier"
+    tier: 2
+    origin: "sipoc"
+  INP:
+    name: "Input"
+    tier: 2
+    origin: "sipoc"
+  OUT:
+    name: "Output"
+    tier: 2
+    origin: "sipoc"
+  CUS:
+    name: "Customer"
+    tier: 2
+    origin: "sipoc"
+  IF:
+    name: "Interface Issue"
+    tier: 2
+    origin: "sipoc"
+  BD:
+    name: "Boundary Discrepancy"
+    tier: 2
+    origin: "sipoc"
+
+  # ── Tier 2: DILO (document-local) ──
+  ACT:
+    name: "Activity"
+    tier: 2
+    origin: "dilo"
+  # Note: INT is Tier 1 (Integration Point in AS-IS).
+  # DILO Interruptions use INT prefix within DILO context only.
+  # Disambiguation: DILO INT# items exist only in DILO documents;
+  # AS-IS INT# items exist only in system integration tables.
+  WA:
+    name: "Workaround"
+    tier: 2
+    origin: "dilo"
+  UD:
+    name: "Undocumented Step"
+    tier: 2
+    origin: "dilo"
+  DIS:
+    name: "Discrepancy (DILO)"
+    tier: 2
+    origin: "dilo"
+
+  # ── Tier 2: Specialist detail (document-local) ──
+  TD:
+    name: "Transformation Decision"
+    tier: 2
+    origin: "various"
+  II:
+    name: "Innovation Idea"
+    tier: 2
+    origin: "innovation-ideas-detail"
+
+# ──────────────────────────────────────────────
+# Diagram Generation Rules
+# ──────────────────────────────────────────────
+diagrams:
+  process_flow:
+    type: mermaid_flowchart
+    source: "as_is.process_steps"
+    include_systems: true
+    include_control_points: true
+
+  swimlane:
+    type: mermaid_swimlane
+    source: "as_is.process_steps"
+    lanes_by: "actor"
+
+  journey_map:
+    type: mermaid_journey
+    source: "cx_journey.touchpoints"
+
+  system_architecture:
+    type: mermaid_c4
+    source: "as_is.systems"
+
+# ──────────────────────────────────────────────
+# Change Log Format
+# ──────────────────────────────────────────────
+change_log:
+  table_format: "| Version | Date | Contributor | Role | Changes |"

@@ -1,0 +1,130 @@
+meta:
+  process_id: "003"
+  process_name: "Funds Release"
+  description: "Funds Release process documentation — All segments"
+  schema_version: "1.0"
+  created: "2026-02-06T10:00:00Z"
+  last_updated: "2026-02-06T10:25:00Z"
+
+documents:
+  as_is:
+    path: "./as-is-documentation.md"
+    overall_status: in_progress
+    sections:
+      executive_summary:
+        status: draft
+        word_count: 112
+        min_words: 100
+        confidence: 75
+      process_overview:
+        status: draft
+        word_count: 180
+        min_words: 150
+        confidence: 75
+      process_steps:
+        status: draft
+        count: 10
+        min_count: 3
+        confidence: 75
+        has_discrepancies: true
+      pain_points:
+        status: draft
+        count: 5
+        expected_range: [3, 15]
+        confidence: 75
+      exceptions:
+        status: draft
+        count: 2
+        confidence: 60
+      control_points:
+        status: draft
+        count: 5
+        confidence: 75
+        has_discrepancies: true
+      systems:
+        status: draft
+        count: 11
+        min_count: 1
+        confidence: 70
+        has_discrepancies: true
+      organizational_mapping:
+        status: not_started
+        confidence: 0
+      existing_documentation:
+        status: not_started
+        confidence: 0
+      process_gaps:
+        status: not_started
+        confidence: 0
+      slas:
+        status: draft
+        count: 4
+        confidence: 65
+        has_discrepancies: true
+
+  cx_journey:
+    path: "./cx-journey.md"
+    overall_status: not_started
+    sections:
+      touchpoints:
+        count: 0
+      friction_points:
+        count: 0
+
+  transformation:
+    path: "./transformation.md"
+    overall_status: not_started
+    sections:
+      recommendations:
+        count: 0
+
+  innovation:
+    path: "./innovation.md"
+    overall_status: not_started
+    sections:
+      opportunities:
+        count: 0
+
+  architecture:
+    path: "./architecture.md"
+    overall_status: not_started
+
+agent_sessions:
+  pda:
+    last_run: "2026-02-06T10:25:00Z"
+    status: active
+  companion:
+    last_run: "2026-02-06T10:00:00Z"
+    status: waiting
+  transformation:
+    last_run: null
+    status: waiting
+  cx_journey:
+    last_run: null
+    status: waiting
+  control:
+    last_run: null
+    status: waiting
+  innovation:
+    last_run: null
+    status: waiting
+  it_architect:
+    last_run: null
+    status: waiting
+  qa:
+    last_run: null
+    status: waiting
+
+milestones:
+  as_is_started: true
+  as_is_complete: false
+  specialists_engaged: false
+  qa_validated: false
+  process_complete: false
+
+validation:
+  last_validated: "2026-02-06T10:25:00Z"
+  score: 62
+  errors: 0
+  warnings: 7
+  discrepancies: 6

@@ -1,0 +1,19 @@
+meta:
+  process_id: '004'
+  created: '2026-02-06T11:05:00Z'
+uploads:
+  - filename: '2026-02-06_loan-disbursement-process-chart.md'
+    original_name: 'loan-disbursement-process-chart.md'
+    uploaded: '2026-02-06T11:05:00Z'
+    source_type: 'procedure-manual'
+    summary: 'Comprehensive loan disbursement process chart covering 10 steps from approved loan package receipt through post-disbursement processing, including systems, controls, SLAs, pain points, and exceptions across all business segments.'
+    sections_extracted:
+      - executive_summary
+      - process_overview
+      - process_steps
+      - exceptions
+      - control_points
+      - systems
+      - process_gaps
+      - pain_points
+      - slas

@@ -1,0 +1,347 @@
+{
+  "$schema": "process-miner-structured-data-v1",
+  "schema_version": "1.0.0",
+  "template_id": "as-is-process-documentation",
+  "session": {
+    "started": "2026-02-09T05:08:00Z",
+    "last_updated": "2026-02-09T05:13:00Z",
+    "contributor": {
+      "name": "Markus",
+      "role": "CEO"
+    },
+    "process": {
+      "id": "005",
+      "name": "KYC"
+    },
+    "client_groups": "All segments",
+    "checkpoint": {
+      "step": 2,
+      "last_item_id": "PS-KYC-010"
+    }
+  },
+  "metadata": {
+    "purpose": "Verify customer identity and assess risk for regulatory compliance",
+    "trigger": "New customer application received via Client Portal or email",
+    "frequency": "Per customer onboarding + periodic reviews",
+    "volume": null,
+    "process_category": "Compliance / Regulatory",
+    "scope": "All business segments — new customer onboarding and periodic KYC reviews",
+    "process_owner": "Sue Smith"
+  },
+  "process_steps": [
+    {
+      "id": "PS-KYC-001",
+      "name": "Customer Application Received",
+      "description": "Relationship Manager receives new customer application via Client Portal or email. Log in Salesforce within 2 hours.",
+      "actor": "Relationship Manager",
+      "systems": ["SYS-KYC-001", "SYS-KYC-006"],
+      "sla": "2 hours",
+      "sequence": 1
+    },
+    {
+      "id": "PS-KYC-002",
+      "name": "Initial Document Collection",
+      "description": "RM requests identification documents (passport/ID, proof of address, corporate docs). Documents must be received within 5 business days.",
+      "actor": "Relationship Manager",
+      "systems": ["SYS-KYC-004", "SYS-KYC-005"],
+      "sla": "5 business days",
+      "sequence": 2
+    },
+    {
+      "id": "PS-KYC-003",
+      "name": "Data Entry into CRM",
+      "description": "RM enters customer details into Salesforce CRM, completes mandatory fields, attaches scanned documents.",
+      "actor": "Relationship Manager",
+      "systems": ["SYS-KYC-001"],
+      "sla": "1 business day",
+      "sequence": 3
+    },
+    {
+      "id": "PS-KYC-004",
+      "name": "AML Screening",
+      "description": "Compliance Officer runs customer through World-Check ONE screening. Screen all beneficial owners >25% shareholding.",
+      "actor": "Compliance Officer",
+      "systems": ["SYS-KYC-002"],
+      "sla": "Same day",
+      "sequence": 4
+    },
+    {
+      "id": "PS-KYC-005",
+      "name": "Risk Assessment",
+      "description": "CO assigns risk rating (Low/Medium/High/Prohibited) based on Risk Rating Matrix.",
+      "actor": "Compliance Officer",
+      "systems": ["SYS-KYC-001"],
+      "sequence": 5
+    },
+    {
+      "id": "PS-KYC-006",
+      "name": "Enhanced Due Diligence",
+      "description": "For High-risk customers: gather additional documentation per EDD checklist, verify source of funds/wealth, obtain sign-off from Compliance Manager AND Head of Compliance.",
+      "actor": "Compliance Officer",
+      "systems": ["SYS-KYC-001", "SYS-KYC-005"],
+      "sla": "3 business days",
+      "sequence": 6
+    },
+    {
+      "id": "PS-KYC-007",
+      "name": "Approval Decision",
+      "description": "Low/Medium risk: Compliance Officer approval. High risk: Compliance Manager + Head of Compliance. Rejections require written justification.",
+      "actor": "Compliance Manager",
+      "systems": ["SYS-KYC-001"],
+      "sequence": 7
+    },
+    {
+      "id": "PS-KYC-008",
+      "name": "Customer Notification",
+      "description": "Send approval/rejection letter within 24 hours using standard templates. Do not disclose screening findings for rejections.",
+      "actor": "Relationship Manager",
+      "systems": ["SYS-KYC-004"],
+      "sla": "24 hours",
+      "sequence": 8
+    },
+    {
+      "id": "PS-KYC-009",
+      "name": "Account Activation",
+      "description": "Operations team activates account in T24 Core Banking System.",
+      "actor": "Operations",
+      "systems": ["SYS-KYC-003"],
+      "sequence": 9
+    },
+    {
+      "id": "PS-KYC-010",
+      "name": "Periodic Review Scheduling",
+      "description": "System schedules next KYC review and enables transaction monitoring alerts.",
+      "actor": "System",
+      "systems": ["SYS-KYC-001"],
+      "sequence": 10
+    }
+  ],
+  "process_exceptions": [],
+  "pain_points": [
+    {
+      "id": "PP-KYC-001",
+      "description": "Manual data re-entry between systems",
+      "impact": "Inefficiency and potential for data errors",
+      "affected_steps": ["PS-KYC-003"],
+      "severity": "Medium"
+    },
+    {
+      "id": "PP-KYC-002",
+      "description": "World-Check ONE integration sometimes times out",
+      "impact": "Delays in processing, need to retry screening",
+      "affected_steps": ["PS-KYC-004"],
+      "severity": "High"
+    },
+    {
+      "id": "PP-KYC-003",
+      "description": "EDD process takes too long",
+      "impact": "Customer dissatisfaction, delayed onboarding",
+      "affected_steps": ["PS-KYC-006"],
+      "severity": "High"
+    },
+    {
+      "id": "PP-KYC-004",
+      "description": "No automated reminder for periodic reviews",
+      "impact": "Risk of missed compliance deadlines",
+      "affected_steps": ["PS-KYC-010"],
+      "severity": "Medium"
+    },
+    {
+      "id": "PP-KYC-005",
+      "description": "SharePoint sync delays causing duplicate uploads",
+      "impact": "Data quality issues, wasted storage",
+      "affected_steps": ["PS-KYC-002"],
+      "severity": "Low",
+      "source": "DTP"
+    },
+    {
+      "id": "PP-KYC-006",
+      "description": "T24 batch processing causes overnight activation delays",
+      "impact": "Customers cannot use account until next business day",
+      "affected_steps": ["PS-KYC-009"],
+      "severity": "Medium",
+      "source": "DTP"
+    },
+    {
+      "id": "PP-KYC-007",
+      "description": "No automated notification to RM when screening/approval completes",
+      "impact": "RM spends ~20 min/day on informal Compliance coordination with no audit trail",
+      "affected_steps": ["PS-KYC-004", "PS-KYC-007"],
+      "severity": "Medium",
+      "source": "DILO-RM"
+    },
+    {
+      "id": "PP-KYC-008",
+      "description": "CRM pipeline dashboard too slow, driving Excel shadow tracker",
+      "impact": "RM maintains shadow Excel tracker at ~30 min/day; data duplication risk, single point of failure",
+      "affected_steps": ["PS-KYC-003"],
+      "severity": "Medium",
+      "source": "DILO-RM"
+    },
+    {
+      "id": "PP-KYC-009",
+      "description": "No self-service application status for clients, creating RM call overhead",
+      "impact": "3-4 client status calls/day (~15-20 min); Client Portal lacks status tracking",
+      "affected_steps": ["PS-KYC-001"],
+      "severity": "Medium",
+      "source": "DILO-RM"
+    },
+    {
+      "id": "PP-KYC-010",
+      "description": "Borderline risk rating cases require informal CO→CM escalation with no documented criteria",
+      "impact": "Potential delays and inconsistent ratings; no documented escalation path for ambiguous cases",
+      "affected_steps": ["PS-KYC-005"],
+      "severity": "Medium",
+      "source": "SME"
+    }
+  ],
+  "controls": [
+    {
+      "id": "CP-KYC-001",
+      "name": "Four-eyes principle on high-risk approvals",
+      "description": "High-risk customer approvals require review by Compliance Manager AND Head of Compliance",
+      "type": "Approval Control",
+      "affected_steps": ["PS-KYC-006", "PS-KYC-007"]
+    },
+    {
+      "id": "CP-KYC-002",
+      "name": "Audit trail in CRM",
+      "description": "All status changes logged in CRM for audit purposes",
+      "type": "Audit Control",
+      "affected_steps": ["PS-KYC-003", "PS-KYC-005", "PS-KYC-007"]
+    },
+    {
+      "id": "CP-KYC-003",
+      "name": "Mandatory fields validation",
+      "description": "System validates all required fields before submission",
+      "type": "Input Validation",
+      "affected_steps": ["PS-KYC-003"]
+    },
+    {
+      "id": "CP-KYC-004",
+      "name": "Screening results archival",
+      "description": "All screening results archived for 7 years",
+      "type": "Retention Control",
+      "affected_steps": ["PS-KYC-004"],
+      "source": "DTP"
+    },
+    {
+      "id": "CP-KYC-005",
+      "name": "Monthly reconciliation",
+      "description": "Monthly reconciliation of pending applications",
+      "type": "Reconciliation Control",
+      "affected_steps": ["PS-KYC-007"],
+      "source": "DTP"
+    }
+  ],
+  "systems": [
+    {
+      "id": "SYS-KYC-001",
+      "name": "Salesforce CRM",
+      "description": "Customer relationship management and KYC data entry",
+      "type": "CRM"
+    },
+    {
+      "id": "SYS-KYC-002",
+      "name": "World-Check ONE",
+      "description": "AML/PEP screening tool (upgraded from World-Check)",
+      "type": "Screening"
+    },
+    {
+      "id": "SYS-KYC-003",
+      "name": "T24 Core Banking",
+      "description": "Account activation and management (migrated from legacy CBS in 2025)",
+      "type": "Core Banking"
+    },
+    {
+      "id": "SYS-KYC-004",
+      "name": "Outlook Email",
+      "description": "Customer communication",
+      "type": "Communication"
+    },
+    {
+      "id": "SYS-KYC-005",
+      "name": "SharePoint DMS",
+      "description": "Document storage and management",
+      "type": "Document Management"
+    },
+    {
+      "id": "SYS-KYC-006",
+      "name": "Client Portal",
+      "description": "External application intake portal",
+      "type": "Portal",
+      "source": "DTP"
+    }
+  ],
+  "validation": {
+    "status": "DRAFT",
+    "completed_at": null
+  },
+  "discrepancies": [
+    {
+      "id": "DISC-001",
+      "scope": "intra-document",
+      "type": "inconsistent",
+      "source_section": "systems",
+      "target_section": "systems",
+      "description": "Screening tool name differs: Flowchart says 'World-Check', DTP says 'World-Check ONE' (upgraded version)",
+      "status": "open",
+      "found_in_step": 2,
+      "resolved_in_step": null,
+      "source_doc": "Process Chart",
+      "target_doc": "DTP"
+    },
+    {
+      "id": "DISC-002",
+      "scope": "intra-document",
+      "type": "inconsistent",
+      "source_section": "systems",
+      "target_section": "systems",
+      "description": "Core banking system name differs: Flowchart says 'CBS', DTP says 'T24' (migrated in 2025)",
+      "status": "open",
+      "found_in_step": 2,
+      "resolved_in_step": null,
+      "source_doc": "Process Chart",
+      "target_doc": "DTP"
+    },
+    {
+      "id": "DISC-003",
+      "scope": "intra-document",
+      "type": "inconsistent",
+      "source_section": "process_steps",
+      "target_section": "process_steps",
+      "description": "Periodic review frequencies differ: Flowchart says '1yr/6mo/3mo', DTP says '36mo/12mo/6mo' (updated policy). Resolved: DTP values confirmed as correct by Process Owner.",
+      "status": "resolved",
+      "found_in_step": 2,
+      "resolved_in_step": 4,
+      "source_doc": "Process Chart",
+      "target_doc": "DTP"
+    },
+    {
+      "id": "DISC-004",
+      "scope": "intra-document",
+      "type": "inconsistent",
+      "source_section": "process_steps",
+      "target_section": "process_steps",
+      "description": "EDD target differs: Flowchart says 'avg 5 days', DTP says 'target 3 days' (improved SLA)",
+      "status": "open",
+      "found_in_step": 2,
+      "resolved_in_step": null,
+      "source_doc": "Process Chart",
+      "target_doc": "DTP"
+    },
+    {
+      "id": "DISC-005",
+      "scope": "intra-document",
+      "type": "inconsistent",
+      "source_section": "process_steps",
+      "target_section": "process_steps",
+      "description": "Risk categories differ: Flowchart shows 3 levels (Low/Medium/High), DTP shows 4 levels (added 'Prohibited' in Q3 2025)",
+      "status": "open",
+      "found_in_step": 2,
+      "resolved_in_step": null,
+      "source_doc": "Process Chart",
+      "target_doc": "DTP"
+    }
+  ]
+}

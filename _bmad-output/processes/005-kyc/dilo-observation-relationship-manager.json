@@ -1,0 +1,132 @@
+{
+  "$schema": "process-miner-structured-data-v1",
+  "schema_version": "1.0.0",
+  "template_id": "dilo-observation",
+  "session": {
+    "started": "2026-02-09T06:45:00Z",
+    "last_updated": "2026-02-09T06:45:00Z",
+    "contributor": {
+      "name": "Markus",
+      "role": "CEO"
+    },
+    "process": {
+      "id": "005",
+      "name": "KYC"
+    }
+  },
+  "observation": {
+    "role": "Relationship Manager",
+    "subject_name": "Anna Kowalski (mock)",
+    "experience_level": "Senior (8 years)",
+    "observation_date": "2026-02-09",
+    "day_type": "Typical",
+    "method": "Simulated (mock)",
+    "document_id": "DILO-005-KYC-RM-v0.1"
+  },
+  "role_profile": {
+    "department": "Client Services",
+    "reports_to": "Head of Client Services",
+    "team_size": "6-8 (estimated)",
+    "client_portfolio": "~80 active clients (BizBanking, MidCap)",
+    "process_steps_owned": [
+      {"id": "PS-KYC-001", "name": "Customer Application Received", "raci": "R, A"},
+      {"id": "PS-KYC-002", "name": "Initial Document Collection", "raci": "R, A"},
+      {"id": "PS-KYC-003", "name": "Data Entry into CRM", "raci": "R, A"},
+      {"id": "PS-KYC-008", "name": "Customer Notification", "raci": "R, A"}
+    ],
+    "time_comparison": {
+      "expected_per_application_min": 90,
+      "expected_per_application_max": 120,
+      "actual_per_application_min": 150,
+      "actual_per_application_max": 180,
+      "pct_day_kyc": 60,
+      "pct_day_non_kyc": 25,
+      "pct_day_admin": 15
+    }
+  },
+  "timeline": {
+    "total_activities": 29,
+    "total_duration_min": 535,
+    "activities": [
+      {"id": "ACT-RM-001", "time": "08:00", "duration_min": 15, "description": "Check overnight emails", "ps": null, "system": "SYS-KYC-004", "value_class": "necessary"},
+      {"id": "ACT-RM-002", "time": "08:15", "duration_min": 10, "description": "Check Client Portal dashboard", "ps": "PS-KYC-001", "system": "SYS-KYC-006", "value_class": "value_add"},
+      {"id": "ACT-RM-003", "time": "08:25", "duration_min": 15, "description": "Log new application in Salesforce", "ps": "PS-KYC-001", "system": "SYS-KYC-001", "value_class": "value_add"},
+      {"id": "ACT-RM-004", "time": "08:40", "duration_min": 10, "description": "Send document request email to new client", "ps": "PS-KYC-002", "system": "SYS-KYC-004", "value_class": "value_add"},
+      {"id": "ACT-RM-005", "time": "08:50", "duration_min": 20, "description": "Follow-up: Chase 2 clients with outstanding documents", "ps": "PS-KYC-002", "system": "SYS-KYC-004", "value_class": "necessary"},
+      {"id": "ACT-RM-006", "time": "09:10", "duration_min": 15, "description": "Interruption: Client status enquiry call", "ps": null, "system": "Phone", "value_class": "necessary"},
+      {"id": "ACT-RM-007", "time": "09:25", "duration_min": 45, "description": "Data entry — Client A into CRM", "ps": "PS-KYC-003", "system": "SYS-KYC-001", "value_class": "value_add"},
+      {"id": "ACT-RM-008", "time": "10:10", "duration_min": 10, "description": "Workaround: Copy details into personal Excel tracker", "ps": null, "system": "Excel", "value_class": "waste"},
+      {"id": "ACT-RM-009", "time": "10:20", "duration_min": 15, "description": "Upload scanned documents to SharePoint", "ps": "PS-KYC-002", "system": "SYS-KYC-005", "value_class": "value_add"},
+      {"id": "ACT-RM-010", "time": "10:35", "duration_min": 10, "description": "Interruption: SharePoint sync delay — retry upload", "ps": null, "system": "SYS-KYC-005", "value_class": "waste"},
+      {"id": "ACT-RM-011", "time": "10:45", "duration_min": 15, "description": "Coffee break", "ps": null, "system": null, "value_class": "break"},
+      {"id": "ACT-RM-012", "time": "11:00", "duration_min": 30, "description": "Team meeting — weekly pipeline review", "ps": null, "system": "Teams", "value_class": "necessary"},
+      {"id": "ACT-RM-013", "time": "11:30", "duration_min": 50, "description": "Data entry — Client B (corporate, complex)", "ps": "PS-KYC-003", "system": "SYS-KYC-001", "value_class": "value_add"},
+      {"id": "ACT-RM-014", "time": "12:20", "duration_min": 10, "description": "Undocumented: Ping Compliance on Teams re Client A screening", "ps": null, "system": "Teams", "value_class": "necessary"},
+      {"id": "ACT-RM-015", "time": "12:30", "duration_min": 45, "description": "Lunch break", "ps": null, "system": null, "value_class": "break"},
+      {"id": "ACT-RM-016", "time": "13:15", "duration_min": 15, "description": "Check emails — client responses", "ps": null, "system": "SYS-KYC-004", "value_class": "necessary"},
+      {"id": "ACT-RM-017", "time": "13:30", "duration_min": 10, "description": "Rework: Client C sent wrong document — send clarification", "ps": "PS-KYC-002", "system": "SYS-KYC-004", "value_class": "waste"},
+      {"id": "ACT-RM-018", "time": "13:40", "duration_min": 15, "description": "Send approval notification to Client D", "ps": "PS-KYC-008", "system": "SYS-KYC-004", "value_class": "value_add"},
+      {"id": "ACT-RM-019", "time": "13:55", "duration_min": 10, "description": "Undocumented: Update Excel tracker with Client D status", "ps": null, "system": "Excel", "value_class": "waste"},
+      {"id": "ACT-RM-020", "time": "14:05", "duration_min": 20, "description": "Send rejection notification to Client E", "ps": "PS-KYC-008", "system": "SYS-KYC-004", "value_class": "value_add"},
+      {"id": "ACT-RM-021", "time": "14:25", "duration_min": 15, "description": "Interruption: Manager status request on high-risk client", "ps": null, "system": "Teams", "value_class": "necessary"},
+      {"id": "ACT-RM-022", "time": "14:40", "duration_min": 25, "description": "Non-KYC: Existing client relationship call", "ps": null, "system": "Phone, SYS-KYC-001", "value_class": "necessary"},
+      {"id": "ACT-RM-023", "time": "15:05", "duration_min": 10, "description": "Follow-up: Check Salesforce for pending tasks/SLA breaches", "ps": null, "system": "SYS-KYC-001", "value_class": "necessary"},
+      {"id": "ACT-RM-024", "time": "15:15", "duration_min": 30, "description": "Data entry — Client F (high-risk, EDD)", "ps": "PS-KYC-003", "system": "SYS-KYC-001, SYS-KYC-005", "value_class": "value_add"},
+      {"id": "ACT-RM-025", "time": "15:45", "duration_min": 15, "description": "Undocumented: Walk to Compliance desk re Client F EDD", "ps": null, "system": null, "value_class": "necessary"},
+      {"id": "ACT-RM-026", "time": "16:00", "duration_min": 15, "description": "Non-KYC: Admin — timesheet, expense claim", "ps": null, "system": "Internal systems", "value_class": "admin"},
+      {"id": "ACT-RM-027", "time": "16:15", "duration_min": 20, "description": "End-of-day email review", "ps": null, "system": "SYS-KYC-004", "value_class": "necessary"},
+      {"id": "ACT-RM-028", "time": "16:35", "duration_min": 10, "description": "Undocumented: End-of-day Excel tracker reconciliation", "ps": null, "system": "Excel", "value_class": "waste"},
+      {"id": "ACT-RM-029", "time": "16:45", "duration_min": 15, "description": "Undocumented: Prepare handover notes", "ps": null, "system": "SYS-KYC-004", "value_class": "necessary"}
+    ],
+    "time_distribution": {
+      "value_add": {"minutes": 225, "pct": 42},
+      "necessary": {"minutes": 175, "pct": 33},
+      "waste": {"minutes": 55, "pct": 10},
+      "break_admin": {"minutes": 80, "pct": 15}
+    }
+  },
+  "interruptions": [
+    {"id": "INT-RM-001", "time": "09:10", "duration_min": 15, "source": "Client", "type": "Phone call — status enquiry", "frequency": "3-4x daily", "related_ps": "PS-KYC-001"},
+    {"id": "INT-RM-002", "time": "10:35", "duration_min": 10, "source": "System", "type": "SharePoint sync delay", "frequency": "2-3x weekly", "related_ps": "PS-KYC-002"},
+    {"id": "INT-RM-003", "time": "14:25", "duration_min": 15, "source": "Manager", "type": "Ad-hoc status request", "frequency": "1-2x daily", "related_ps": "PS-KYC-006"}
+  ],
+  "workarounds": [
+    {"id": "WA-RM-001", "description": "Personal Excel tracker for application status", "reason": "CRM dashboard too slow", "frequency": "Daily, 3x/day", "time_spent_min": 30, "related_pp": "PP-KYC-001", "risk": "Data out of sync; single point of failure"},
+    {"id": "WA-RM-002", "description": "Informal Teams/in-person check with Compliance on screening status", "reason": "No automated notification when screening completes", "frequency": "2-3x daily", "time_spent_min": 20, "related_pp": null, "risk": "No audit trail"},
+    {"id": "WA-RM-003", "description": "Copy-paste client details from email into CRM", "reason": "No auto-populate from portal submission", "frequency": "Per application", "time_spent_min": 5, "related_pp": "PP-KYC-001", "risk": "Copy errors"}
+  ],
+  "undocumented_steps": [
+    {"id": "UD-RM-001", "description": "End-of-day Excel tracker reconciliation", "duration_min": 10, "related_ps": "PS-KYC-003", "should_document": true},
+    {"id": "UD-RM-002", "description": "Informal Compliance coordination", "duration_min": 20, "related_ps": ["PS-KYC-004", "PS-KYC-007"], "should_document": true},
+    {"id": "UD-RM-003", "description": "Handover notes for colleague coverage", "duration_min": 15, "related_ps": "All", "should_document": true},
+    {"id": "UD-RM-004", "description": "Client status enquiry handling", "duration_min": 20, "related_ps": "PS-KYC-001", "should_document": true}
+  ],
+  "shadow_systems": [
+    {"name": "Microsoft Excel", "purpose": "Personal application status tracker", "used_by": "Individual RMs", "risk": "Data duplication, no backup"},
+    {"name": "Microsoft Teams", "purpose": "Informal process coordination", "used_by": "RMs + Compliance", "risk": "No audit trail"}
+  ],
+  "discrepancies": [
+    {"id": "DIS-RM-001", "category": "Duration", "as_is": "PS-KYC-003 takes 30-60 min", "dilo_reveals": "~40-50 min per client, 2-3 clients/day = 2-2.5 hrs total", "severity": "HIGH"},
+    {"id": "DIS-RM-002", "category": "Activity", "as_is": "Document collection is single step", "dilo_reveals": "Involves initial request + multiple follow-ups + rework", "severity": "MEDIUM"},
+    {"id": "DIS-RM-003", "category": "System", "as_is": "4 systems documented for RM", "dilo_reveals": "Actually uses 6 (adds Excel, Teams)", "severity": "HIGH"},
+    {"id": "DIS-RM-004", "category": "Activity", "as_is": "No coordination step between RM and Compliance", "dilo_reveals": "Informal coordination 2-3x daily", "severity": "MEDIUM"},
+    {"id": "DIS-RM-005", "category": "Activity", "as_is": "No client status enquiry handling documented", "dilo_reveals": "Status enquiries consume ~15-20 min/day", "severity": "MEDIUM"},
+    {"id": "DIS-RM-006", "category": "Activity", "as_is": "No handover procedure documented", "dilo_reveals": "RMs create ad-hoc handover notes before absence", "severity": "LOW"}
+  ],
+  "proposed_pain_points": [
+    {"id": "PP-KYC-007", "description": "No automated notification to RM when screening/approval completes", "source": ["WA-RM-002", "DIS-RM-004"], "severity": "Medium"},
+    {"id": "PP-KYC-008", "description": "CRM pipeline dashboard too slow, driving Excel shadow tracker", "source": ["WA-RM-001", "DIS-RM-003"], "severity": "Medium"},
+    {"id": "PP-KYC-009", "description": "No self-service application status for clients, creating RM call overhead", "source": ["UD-RM-004", "DIS-RM-005"], "severity": "Medium"}
+  ],
+  "recommendations": [
+    {"id": 1, "description": "Implement CRM dashboard for application pipeline tracking", "addresses": ["WA-RM-001", "DIS-RM-003"], "priority": "High", "quick_win": false},
+    {"id": 2, "description": "Add automated CRM notification when screening/approval completes", "addresses": ["WA-RM-002", "DIS-RM-004"], "priority": "High", "quick_win": true},
+    {"id": 3, "description": "Investigate Client Portal → CRM auto-populate", "addresses": ["WA-RM-003", "PP-KYC-001"], "priority": "Medium", "quick_win": false},
+    {"id": 4, "description": "Add client-facing application status tracker to Client Portal", "addresses": ["UD-RM-004", "DIS-RM-005"], "priority": "Medium", "quick_win": false},
+    {"id": 5, "description": "Create standardised handover template for RM absences", "addresses": ["UD-RM-003", "DIS-RM-006"], "priority": "Low", "quick_win": true}
+  ],
+  "validation": {
+    "status": "DRAFT",
+    "completed_at": null
+  }
+}

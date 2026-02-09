@@ -1,0 +1,750 @@
+# Schema for SIPOC Analysis
+# Merged schema v3.0 — single source of truth for this document type.
+# Inherits shared defaults from _defaults.yaml.
+#
+# ARCHITECTURE: This replaces the former 2-layer split (master document-schema.yaml
+# + per-doc companion). All section definitions, validation rules, field types,
+# sync config, and cross-references for SIPOC live here.
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "sipoc-analysis"
+template_file: "sipoc-analysis.md"
+template_description: "SIPOC ecosystem mapping — Suppliers, Inputs, Process, Outputs, Customers with interface and boundary analysis"
+required: false
+
+# Extra incomplete markers beyond _defaults.yaml standard set.
+# SIPOC uses [PREFILLED to mark AI-generated content awaiting SME validation.
+incomplete_markers_extra:
+  - "[PREFILLED"
+
+# ──────────────────────────────────────────────
+# Document Info
+# ──────────────────────────────────────────────
+document_info:
+  parent_documents:
+    - "as-is-process-documentation.md"
+  prerequisites:
+    - "AS-IS process documentation at ≥60% completion"
+    - "At least 5 PS# items documented"
+
+# ──────────────────────────────────────────────
+# Sections
+# ──────────────────────────────────────────────
+sections:
+  # ── Section 1: SIPOC Overview Diagram ──
+  - id: sipoc_overview
+    heading: "1. SIPOC Overview Diagram"
+    section_number: 1
+    content_type: overview
+    sync_enabled: false
+    guidance: |
+      The classic SIPOC table — a one-page view of the entire ecosystem.
+      MUST include: summary table mapping suppliers to inputs to process steps
+      to outputs to customers, and a Mermaid visual flow diagram.
+      The summary table is the most important artifact — it should be
+      understandable by a stakeholder with no other context.
+      FORBIDDEN: re-documenting process step details (reference AS-IS),
+      including every minor supplier (aggregate where sensible).
+    subsections:
+      - id: sipoc_summary_table
+        heading: "1.1 SIPOC Summary Table"
+        content_type: summary_table
+        guidance: |
+          One row per end-to-end flow linking SUP# → INP# → PS# range → OUT#
+          → CUS#. Keep the table scannable — use the detail sections for depth.
+          Every ID must be traceable to its detail section. Where one supplier
+          feeds multiple inputs, use multiple rows rather than comma-separating.
+      - id: sipoc_visual_flow
+        heading: "1.2 SIPOC Visual Flow"
+        content_type: diagram
+        guidance: |
+          Mermaid diagram showing the flow from suppliers through the process
+          to customers. Group suppliers on the left, process in the center (as
+          a single box or abbreviated phase summary referencing the AS-IS), and
+          customers on the right. Label edges with input/output names. Use
+          distinct node styles for internal vs external entities.
+
+  # ── Section 2: Suppliers Detail ──
+  - id: suppliers
+    heading: "2. Suppliers Detail"
+    section_number: 2
+    content_type: detail_entries
+    item_prefix: "SUP"
+    sync_enabled: false
+    summary_table_header: "| SUP# | Supplier Name | Type | Category | Provides (INP#) | Interface Method | Reliability | SLA |"
+    entry_template: true
+    guidance: |
+      Who or what feeds into this process? Internal teams, external parties,
+      systems, regulatory bodies.
+      MUST include: supplier registry table, detailed entries with unique SUP#
+      IDs, and a dependency matrix assessing criticality.
+      Supplier types: Internal Team, External Partner, Regulatory Body,
+      System/Automated, Client/Self-Service.
+      Every supplier must link to at least one INP# they provide.
+      Reliability rating: High (>95% on-time, complete), Medium (80-95%),
+      Low (<80%). Estimate when not measured.
+      FORBIDDEN: listing suppliers with no connection to this process,
+      omitting internal suppliers because they seem "obvious".
+    subsections:
+      - id: supplier_registry
+        heading: "2.1 Supplier Registry"
+        content_type: summary_table
+        guidance: |
+          Summary table with SUP# ID, name, type (from standard list), category,
+          which INP# items they provide, interface method (email, API, portal,
+          in-person, phone, etc.), reliability rating (High/Medium/Low), and SLA
+          if applicable. This is the quick-reference view.
+      - id: supplier_details
+        heading: "2.2 Supplier Details"
+        content_type: detail_entries
+        guidance: |
+          One detailed block per SUP# using the entry template. MUST include:
+          what they supply (narrative), quality issues observed, dependency
+          strength (Critical/High/Medium/Low), impact if unavailable or late,
+          related PS# process steps, and related PP# pain points. For external
+          suppliers, include contract/SLA details where available.
+      - id: supplier_dependency_matrix
+        heading: "2.3 Supplier Dependency Matrix"
+        content_type: summary_table
+        guidance: |
+          Summary table assessing each supplier's criticality, whether a
+          substitute exists, failure impact description, and failure frequency.
+          This matrix highlights single-point-of-failure risks. Criticality:
+          Critical = process stops if supplier fails, High = significant delays,
+          Medium = degraded quality, Low = minimal impact.
+    validation:
+      min_count: 1
+
+  # ── Section 3: Inputs Detail ──
+  - id: inputs
+    heading: "3. Inputs Detail"
+    section_number: 3
+    content_type: detail_entries
+    item_prefix: "INP"
+    sync_enabled: false
+    summary_table_header: "| INP# | Input Name | Type | From (SUP#) | Format | Quality Req | Validation | Used By (PS#) |"
+    entry_template: true
+    guidance: |
+      What enters the process? Documents, data, decisions, triggers, materials.
+      MUST include: input registry table, detailed entries with unique INP#
+      IDs, and an input quality matrix.
+      Input types: Document, Data/Record, Decision/Approval, Trigger/Event,
+      Material/Physical, Information/Verbal.
+      Every input must reference its source SUP# and the PS# step(s) that
+      consume it.
+      Quality requirements should state what "good" looks like (e.g.,
+      "All fields populated, valid ID number format, photo < 30 days old").
+      FORBIDDEN: listing outputs as inputs, inventing inputs not actually
+      consumed by any PS# step.
+    subsections:
+      - id: input_registry
+        heading: "3.1 Input Registry"
+        content_type: summary_table
+        guidance: |
+          Summary table with INP# ID, name, type (from standard list), source
+          SUP#, format (PDF, Excel, system record, verbal, etc.), quality
+          requirements (brief), validation method (manual check, system
+          validation, none), and consuming PS# step(s).
+      - id: input_details
+        heading: "3.2 Input Details"
+        content_type: detail_entries
+        guidance: |
+          One detailed block per INP# using the entry template. MUST include:
+          description of what the input contains, quality issues observed in
+          practice, what happens when the input is missing or late, data
+          sensitivity level (Public/Internal/Confidential/Restricted), any
+          regulatory requirements governing the input, and related CP# controls
+          that validate this input.
+      - id: input_quality_matrix
+        heading: "3.3 Input Quality Matrix"
+        content_type: summary_table
+        guidance: |
+          Compare expected quality vs actual quality for each input. State the
+          gap and its downstream impact on process performance. This matrix
+          identifies the "garbage in" risk — poor-quality inputs that degrade
+          the quality of process outputs.
+    validation:
+      min_count: 1
+
+  # ── Section 4: Process (Summary from AS-IS) ──
+  - id: process_mapping
+    heading: "4. Process"
+    section_number: 4
+    content_type: mapping
+    sync_enabled: false
+    guidance: |
+      The process column is NOT re-documented here — it references the AS-IS
+      documentation. This section maps which steps consume which inputs and
+      produce which outputs.
+      MUST include: step-to-input/output mapping table and process boundary
+      definition (start trigger, end condition, in/out of scope).
+      The boundary definition is critical — it determines what is inside the
+      SIPOC and what is another process's responsibility.
+      FORBIDDEN: re-documenting step details already in the AS-IS, changing
+      step sequences or owners (that is an AS-IS update, not a SIPOC task).
+    subsections:
+      - id: step_io_mapping
+        heading: "4.1 Step-to-Input/Output Mapping"
+        content_type: summary_table
+        guidance: |
+          Table with one row per PS# step showing which INP# items it consumes,
+          which OUT# items it produces, and a brief "transformation" note
+          describing what the step does to turn inputs into outputs (e.g.,
+          "Validates client identity documents against watchlist databases").
+          Steps with no external input or output should state "Internal only".
+      - id: process_boundary
+        heading: "4.2 Process Boundary Definition"
+        content_type: prose
+        guidance: |
+          Define: process start trigger (event that initiates), start condition
+          (prerequisites that must be true), end trigger (event that signals
+          completion), and end condition (what "done" looks like). List in-scope
+          and out-of-scope items explicitly. Document boundary ambiguities —
+          handoff points where ownership is unclear (e.g., "Unclear whether
+          data cleansing belongs to this process or the upstream data entry
+          process"). Each ambiguity is a candidate boundary discrepancy for
+          Section 7.
+
+  # ── Section 5: Outputs Detail ──
+  - id: outputs
+    heading: "5. Outputs Detail"
+    section_number: 5
+    content_type: detail_entries
+    item_prefix: "OUT"
+    sync_enabled: false
+    summary_table_header: "| OUT# | Output Name | Type | Produced By (PS#) | Format | Delivered To (CUS#) | SLA | Quality Metric |"
+    entry_template: true
+    guidance: |
+      What does this process produce? Documents, decisions, data records,
+      notifications, physical deliverables.
+      MUST include: output registry table, detailed entries with unique OUT#
+      IDs, and an output quality matrix.
+      Output types: Document, Data/Record, Decision/Status, Notification,
+      Deliverable/Physical, Handoff/Trigger.
+      Every output must reference the PS# step that produces it and the CUS#
+      customer(s) that receive it.
+      SLAs on outputs are particularly important — they define the process's
+      external commitments.
+      FORBIDDEN: listing intermediate work products that never leave the
+      process as outputs (those are internal artifacts, not deliverables).
+    subsections:
+      - id: output_registry
+        heading: "5.1 Output Registry"
+        content_type: summary_table
+        guidance: |
+          Summary table with OUT# ID, name, type (from standard list), producing
+          PS# step, format (PDF, email notification, system status update, etc.),
+          receiving CUS# customer(s), SLA if applicable, and quality metric
+          used to measure output quality (e.g., "error rate <2%", "delivered
+          within 24h").
+      - id: output_details
+        heading: "5.2 Output Details"
+        content_type: detail_entries
+        guidance: |
+          One detailed block per OUT# using the entry template. MUST include:
+          description of the output, quality requirements, what happens when
+          the output is defective or late, downstream dependencies (who/what
+          is blocked if this output is delayed), delivery method, and any
+          regulatory requirements governing the output.
+      - id: output_quality_matrix
+        heading: "5.3 Output Quality Matrix"
+        content_type: summary_table
+        guidance: |
+          Compare quality target vs actual quality for each output. State the
+          gap and its customer impact. This matrix identifies where the process
+          is failing its customers — quality shortfalls that should feed into
+          pain point analysis and transformation planning.
+    validation:
+      min_count: 1
+
+  # ── Section 6: Customers Detail ──
+  - id: customers
+    heading: "6. Customers Detail"
+    section_number: 6
+    content_type: detail_entries
+    item_prefix: "CUS"
+    sync_enabled: false
+    summary_table_header: "| CUS# | Customer Name | Type | Segment | Receives (OUT#) | Channel | Satisfaction | Feedback Method |"
+    entry_template: true
+    guidance: |
+      Who receives the outputs? Internal teams, external clients, regulators,
+      downstream processes.
+      MUST include: customer registry table, detailed entries with unique CUS#
+      IDs, and a customer satisfaction matrix.
+      Customer types: Internal Team, External Client, Regulatory Body,
+      Downstream Process, Management/Reporting.
+      Every customer must link to at least one OUT# they receive.
+      Capture the gap between what customers NEED and what they ACTUALLY GET —
+      this is the Voice of Customer insight.
+      FORBIDDEN: surveying customers without consent, fabricating satisfaction
+      scores, conflating customer satisfaction with process efficiency.
+    subsections:
+      - id: customer_registry
+        heading: "6.1 Customer Registry"
+        content_type: summary_table
+        guidance: |
+          Summary table with CUS# ID, name, type (from standard list), segment
+          (e.g., "Retail clients", "Corporate clients", "Risk team"), which
+          OUT# items they receive, delivery channel (email, portal, API, phone,
+          etc.), satisfaction level (High/Medium/Low/Unknown), and feedback
+          method (survey, complaints, informal, none).
+      - id: customer_details
+        heading: "6.2 Customer Details"
+        content_type: detail_entries
+        guidance: |
+          One detailed block per CUS# using the entry template. MUST include:
+          what they need (expectations), what they actually get (current
+          experience), the gap between need and reality, voice of customer
+          quotes (if available from interviews or surveys), and related
+          friction points and pain points from the AS-IS.
+      - id: customer_satisfaction_matrix
+        heading: "6.3 Customer Satisfaction Matrix"
+        content_type: summary_table
+        guidance: |
+          Compare customer expectations vs current performance for each CUS#.
+          State the gap and assign a priority (Critical/High/Medium/Low) based
+          on business impact. Critical = regulatory non-compliance or major
+          client loss risk, High = measurable revenue or reputation impact,
+          Medium = service degradation, Low = minor inconvenience.
+    validation:
+      min_count: 1
+
+  # ── Section 7: Interface & Boundary Analysis ──
+  - id: interface_boundary
+    heading: "7. Interface & Boundary Analysis"
+    section_number: 7
+    content_type: analysis
+    item_prefix: "IF"
+    additional_id_prefixes:
+      - "BD"
+    sync_enabled: false
+    guidance: |
+      This is the SIPOC value-add — analyzing the interfaces between suppliers,
+      customers, and the process reveals issues invisible in the AS-IS.
+      MUST include: interface issues table with unique IF# IDs, boundary
+      discrepancy table with BD# IDs, missing stakeholders analysis, and
+      hidden dependencies analysis.
+      Interface types: Supplier→Process, Process→Customer, System→System,
+      Team→Team.
+      FORBIDDEN: repeating pain points already in the AS-IS without adding
+      new SIPOC-specific insight, inventing issues not supported by evidence.
+    subsections:
+      - id: interface_issues
+        heading: "7.1 Interface Issues"
+        content_type: summary_table
+        guidance: |
+          Table with IF# ID, interface description, type (from standard list),
+          issue description, impact on process performance, related PP# (if
+          already captured) or "NEW" (if discovered here), and recommendation.
+          Focus on handoff failures, quality degradation at boundaries, and
+          communication breakdowns between suppliers/customers and the process.
+      - id: boundary_discrepancies
+        heading: "7.2 Boundary Discrepancies"
+        content_type: summary_table
+        guidance: |
+          Compare what the AS-IS documents about process boundaries vs what the
+          SIPOC analysis reveals. Each BD# entry must state the discrepancy,
+          what AS-IS says, what SIPOC reveals, impact, and recommended
+          resolution. Common examples: steps claimed by two processes, steps
+          owned by neither, scope creep, or missing handoff protocols.
+      - id: missing_stakeholders
+        heading: "7.3 Missing Stakeholders"
+        content_type: prose
+        guidance: |
+          Suppliers or customers discovered through SIPOC mapping that are not
+          captured in the AS-IS documentation (Section 1.4 Key Stakeholders or
+          Section 6 Organizational Mapping). For each, explain their role in
+          the ecosystem, why they were likely missed, and what impact their
+          omission has on process understanding and completeness.
+      - id: hidden_dependencies
+        heading: "7.4 Hidden Dependencies"
+        content_type: prose
+        guidance: |
+          Dependencies that only become visible through the ecosystem lens —
+          e.g., a downstream process that silently depends on this process's
+          timing, a supplier whose reliability affects multiple inputs, or a
+          regulatory body whose policy changes ripple through multiple
+          suppliers. For each, describe the dependency, who is affected, and
+          the risk if the dependency is disrupted.
+
+  # ── Section 8: Cross-Reference Reconciliation ──
+  - id: cross_reference_reconciliation
+    heading: "8. Cross-Reference Reconciliation"
+    section_number: 8
+    content_type: reconciliation
+    sync_enabled: false
+    guidance: |
+      Maps SIPOC findings back to AS-IS items for traceability and ensures
+      no insight is lost.
+      MUST include: new pain points discovered, new system dependencies
+      discovered, and enrichments to existing AS-IS items.
+      Every new item must have a proposed ID following the AS-IS ID patterns
+      and a clear SIPOC reference showing where it was discovered.
+      FORBIDDEN: duplicating items already in the AS-IS, proposing new items
+      without evidence from the SIPOC analysis.
+    subsections:
+      - id: new_pain_points
+        heading: "8.1 New Pain Points Discovered"
+        content_type: summary_table
+        guidance: |
+          Table of pain points revealed by SIPOC that are not yet in the AS-IS
+          or pain-points-detail.md. Include a proposed PP# ID (following AS-IS
+          patterns), description, how it was discovered (which SIPOC section),
+          and the originating SIPOC reference (SUP#, INP#, OUT#, CUS#, IF#,
+          or BD#).
+      - id: new_systems
+        heading: "8.2 New System Dependencies Discovered"
+        content_type: summary_table
+        guidance: |
+          Systems identified through supplier/customer mapping that are not in
+          AS-IS Section 5. Include proposed SYS# ID, system name, its role in
+          the ecosystem (supplier-side, customer-side, integration layer), and
+          the SIPOC reference that revealed it.
+      - id: enrichments
+        heading: "8.3 Enrichments to Existing Items"
+        content_type: summary_table
+        guidance: |
+          Existing AS-IS items (PS#, PP#, EX#, CP#, SYS#) that should be
+          updated with information learned during SIPOC analysis. State the
+          existing ID, what enrichment to add (e.g., "Add supplier dependency
+          note", "Update input description with quality issues"), and the
+          SIPOC source reference.
+
+# ──────────────────────────────────────────────
+# Completeness Rules (validation gates)
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "suppliers.count >= 1"
+    - "inputs.count >= 1"
+    - "outputs.count >= 1"
+    - "customers.count >= 1"
+  recommended:
+    - "interface_boundary.word_count >= 50"
+    - "cross_reference_reconciliation.populated == true"
+
+# ──────────────────────────────────────────────
+# Section Prompts (continue-session integration)
+# ──────────────────────────────────────────────
+section_prompts:
+  1:
+    title: "SIPOC Overview Diagram"
+    prompts:
+      - "Does the summary table capture the full ecosystem? Any suppliers or customers missing?"
+      - "Is the flow diagram accurate? Any connections that should be added or removed?"
+    enrichment_fields:
+      - sipoc_summary_table
+      - sipoc_flow_diagram
+
+  2:
+    title: "Suppliers Detail"
+    prompts:
+      - "Are there other teams, systems, or external parties that feed into this process?"
+      - "How reliable is this supplier? Any SLA? What happens when they're late?"
+      - "Are there seasonal or event-driven suppliers that only appear sometimes?"
+      - "Who provides the regulatory or compliance inputs?"
+    enrichment_fields:
+      - reliability_rating
+      - sla
+      - dependency_strength
+      - supply_description
+      - quality_issues
+
+  3:
+    title: "Inputs Detail"
+    prompts:
+      - "Any documents, data, or approvals needed that I missed?"
+      - "What quality issues do you see with inputs? How often are they incomplete or wrong?"
+      - "What happens when this input is missing or arrives late?"
+      - "Are there informal inputs (verbal instructions, emails) that aren't documented?"
+    enrichment_fields:
+      - quality_requirements
+      - missing_impact
+      - validation_method
+      - data_sensitivity
+      - regulatory_requirements
+
+  4:
+    title: "Process (Summary from AS-IS)"
+    prompts:
+      - "Does the input/output mapping per step look correct?"
+      - "Are there any steps that consume inputs I haven't listed?"
+      - "Where exactly does this process start and end? Are the boundaries clear?"
+      - "Is anything in scope that shouldn't be, or out of scope that should be in?"
+    enrichment_fields:
+      - step_io_mapping_table
+      - process_start_trigger
+      - process_end_trigger
+      - boundary_ambiguities
+
+  5:
+    title: "Outputs Detail"
+    prompts:
+      - "What does this process produce? Documents, decisions, data records, notifications?"
+      - "Are there any informal outputs (emails, verbal confirmations) not captured?"
+      - "What happens when an output is defective or late?"
+      - "Are there SLAs on any of these outputs? What quality metrics are tracked?"
+    enrichment_fields:
+      - quality_requirements
+      - defective_impact
+      - sla
+      - quality_metric
+      - downstream_dependencies
+
+  6:
+    title: "Customers Detail"
+    prompts:
+      - "Who receives the outputs of this process? Internal teams, external clients, regulators?"
+      - "What do your customers expect? What do they actually get?"
+      - "How do customers provide feedback? What's their satisfaction level?"
+      - "Are there downstream processes that depend on this process's output?"
+    enrichment_fields:
+      - expectations
+      - satisfaction
+      - gap_description
+      - voice_of_customer
+      - feedback_method
+
+  7:
+    title: "Interface & Boundary Analysis"
+    prompts:
+      - "Where do handoffs break down between suppliers and your process?"
+      - "Where do handoffs break down between your process and customers?"
+      - "Are there stakeholders we discovered in SIPOC that aren't in the AS-IS documentation?"
+      - "Are there hidden dependencies that only become visible when you think about the full ecosystem?"
+    enrichment_fields:
+      - interface_issues_table
+      - boundary_discrepancy_table
+      - missing_stakeholders
+      - hidden_dependencies
+
+  8:
+    title: "Cross-Reference Reconciliation"
+    prompts:
+      - "Did the SIPOC analysis reveal any new pain points not captured in the AS-IS?"
+      - "Are there system dependencies we discovered that should be added?"
+      - "Should any existing AS-IS items be enriched with SIPOC findings?"
+    enrichment_fields:
+      - new_pain_points
+      - new_systems
+      - enrichments
+
+# ──────────────────────────────────────────────
+# Entry Field Structures
+# ──────────────────────────────────────────────
+supplier_entry_fields:
+  overview:
+    - supplier_id
+    - name
+    - type
+    - category
+    - entity
+    - contact
+    - provides
+    - interface_method
+    - frequency
+    - reliability
+    - sla
+  sections:
+    - supply_description
+    - quality_issues
+    - dependency_strength
+    - dependency_impact
+    - related_pain_points
+    - related_steps
+
+input_entry_fields:
+  overview:
+    - input_id
+    - name
+    - type
+    - source_supplier
+    - format
+    - quality_requirements
+    - validation_method
+    - used_by_steps
+    - frequency
+    - volume
+  sections:
+    - description
+    - quality_issues
+    - missing_impact
+    - data_sensitivity
+    - regulatory_requirements
+    - related_controls
+
+output_entry_fields:
+  overview:
+    - output_id
+    - name
+    - type
+    - produced_by
+    - format
+    - delivered_to
+    - delivery_method
+    - sla
+    - quality_metric
+    - frequency
+    - volume
+  sections:
+    - description
+    - quality_requirements
+    - defective_impact
+    - downstream_dependencies
+    - regulatory_requirements
+
+customer_entry_fields:
+  overview:
+    - customer_id
+    - name
+    - type
+    - segment
+    - receives
+    - channel
+    - expectations
+    - satisfaction
+    - feedback_method
+  sections:
+    - needs
+    - actual_experience
+    - gap_description
+    - voice_of_customer
+    - related_friction_points
+    - related_pain_points
+
+# ──────────────────────────────────────────────
+# Cross-Reference Validation
+# ──────────────────────────────────────────────
+cross_references:
+  intra_document:
+    - description: "All INP# source_supplier must reference valid SUP#"
+      source: "inputs.source_supplier"
+      target: "suppliers"
+    - description: "All OUT# delivered_to must reference valid CUS#"
+      source: "outputs.delivered_to"
+      target: "customers"
+    - description: "All SUP# provides must reference valid INP#"
+      source: "suppliers.provides"
+      target: "inputs"
+    - description: "All CUS# receives must reference valid OUT#"
+      source: "customers.receives"
+      target: "outputs"
+
+  inter_document:
+    - description: "All INP# used_by_steps must reference valid PS# in AS-IS"
+      source: "inputs.used_by_steps"
+      target: "as-is-process-documentation.process_steps"
+    - description: "All OUT# produced_by must reference valid PS# in AS-IS"
+      source: "outputs.produced_by"
+      target: "as-is-process-documentation.process_steps"
+    - description: "All related_pain_points must reference valid PP# in AS-IS"
+      source: "*.related_pain_points"
+      target: "pain-points-detail.pain_points"
+    - description: "All related_controls must reference valid CP# in AS-IS"
+      source: "inputs.related_controls"
+      target: "control-points-detail.control_points"
+
+  required_references_by_section:
+    1:  # SIPOC Overview
+      - "SUP#"
+      - "INP#"
+      - "OUT#"
+      - "CUS#"
+    2:  # Suppliers
+      - "SUP#"
+      - "INP#"
+    3:  # Inputs
+      - "INP#"
+      - "SUP#"
+      - "PS#"
+    4:  # Process
+      - "PS#"
+      - "INP#"
+      - "OUT#"
+    5:  # Outputs
+      - "OUT#"
+      - "PS#"
+      - "CUS#"
+    6:  # Customers
+      - "CUS#"
+      - "OUT#"
+    7:  # Interface & Boundary
+      - "IF#"
+      - "BD#"
+
+# ──────────────────────────────────────────────
+# ID Patterns (document-specific subset)
+# ──────────────────────────────────────────────
+id_patterns:
+  supplier: "SUP-[A-Z]{2,4}-\\d{3}"
+  input: "INP-[A-Z]{2,4}-\\d{3}"
+  output: "OUT-[A-Z]{2,4}-\\d{3}"
+  customer: "CUS-[A-Z]{2,4}-\\d{3}"
+  interface_issue: "IF-[A-Z]{2,4}-\\d{3}"
+  boundary_discrepancy: "BD-[A-Z]{2,4}-\\d{3}"
+  # Cross-referenced from AS-IS
+  process_step: "PS-[A-Z]{2,4}-\\d{3}"
+  pain_point: "PP-[A-Z]{2,4}-\\d{3}"
+  exception: "EX-[A-Z]{2,4}-\\d{3}"
+  control_point: "CP-[A-Z]{2,4}-\\d{3}"
+  system: "SYS-[A-Z]{2,4}-\\d{3}"
+
+# ──────────────────────────────────────────────
+# Companion Documents
+# ──────────────────────────────────────────────
+companion_documents:
+  - name: "AS-IS Process Documentation"
+    file: "as-is-process-documentation.md"
+    relationship: "parent"
+
+  - name: "Pain Points Detail"
+    file: "pain-points-detail.md"
+    relationship: "sibling"
+
+  - name: "Exceptions Detail"
+    file: "exceptions-detail.md"
+    relationship: "sibling"
+
+  - name: "Control Points Detail"
+    file: "control-points-detail.md"
+    relationship: "sibling"
+
+# ──────────────────────────────────────────────
+# Type Classifications
+# ──────────────────────────────────────────────
+supplier_types:
+  - "Internal Team"
+  - "External Partner"
+  - "Regulatory Body"
+  - "System/Automated"
+  - "Client/Self-Service"
+
+input_types:
+  - "Document"
+  - "Data/Record"
+  - "Decision/Approval"
+  - "Trigger/Event"
+  - "Material/Physical"
+  - "Information/Verbal"
+
+output_types:
+  - "Document"
+  - "Data/Record"
+  - "Decision/Status"
+  - "Notification"
+  - "Deliverable/Physical"
+  - "Handoff/Trigger"
+
+customer_types:
+  - "Internal Team"
+  - "External Client"
+  - "Regulatory Body"
+  - "Downstream Process"
+  - "Management/Reporting"
+
+interface_types:
+  - "Supplier→Process"
+  - "Process→Customer"
+  - "System→System"
+  - "Team→Team"

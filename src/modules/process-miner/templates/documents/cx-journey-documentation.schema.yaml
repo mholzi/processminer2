@@ -1,0 +1,481 @@
+# Schema for CX Journey Documentation
+# Merged schema v3.0 — single source of truth for this document type.
+# Inherits shared defaults from _defaults.yaml.
+#
+# ARCHITECTURE: This replaces the former 2-layer split (master document-schema.yaml
+# + per-doc companion). All section definitions, validation rules, field types,
+# sync config, and cross-references for CX Journey live here.
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "cx-journey-documentation"
+template_file: "cx-journey-documentation.md"
+template_description: "Client experience journey documentation with touchpoints, friction analysis, and CES scoring"
+required: false
+
+# ──────────────────────────────────────────────
+# Sections
+# ──────────────────────────────────────────────
+sections:
+  # ── Section 1: Journey Overview ──
+  - id: journey_overview
+    heading: "1. Journey Overview"
+    section_number: 1
+    content_type: mixed
+    sync_enabled: false
+    validation:
+      min_words: 100
+    guidance: |
+      This section defines the client's journey, their goals, and the overall context from their perspective.
+    subsections:
+      - id: journey_identification
+        heading: "1.1 Journey Identification"
+        content_type: key_value_table
+        guidance: |
+          Key-value table with: Journey Name, Process ID, Client Goal, Journey Trigger, Success Outcome, Typical Duration.
+      - id: client_persona
+        heading: "1.2 Client Persona"
+        content_type: key_value_table
+        guidance: |
+          Key-value table with: Segment, Typical Profile, Key Motivations, Expected Experience.
+      - id: journey_context
+        heading: "1.3 Journey Context"
+        content_type: prose
+        guidance: |
+          Narrative context describing the broader journey circumstances, market context, and any relevant background.
+
+  # ── Section 2: Client Touchpoints ──
+  - id: touchpoints
+    heading: "2. Client Touchpoints"
+    section_number: 2
+    content_type: mixed
+    sync_enabled: true
+    guidance: |
+      This section documents every interaction point where the client engages, broken down into summary, table, diagram, and statistics.
+    subsections:
+      - id: touchpoint_summary_narrative
+        heading: "2.1 Touchpoint Summary"
+        content_type: prose
+        guidance: |
+          A brief narrative overview of the key touchpoints, including overall client interaction patterns and any high-level insights.
+      - id: touchpoint_summary_table
+        heading: "2.2 Touchpoint Summary Table"
+        content_type: item_list
+        item_prefix: "JT"
+        detail_document: "client-touchpoints-detail.md"
+        summary_table_header: "| JT# | Touchpoint Name | Stage | Channel | What Client SEES | What Client DOES | CES Contribution |"
+        item_fields:
+          - name: name
+            required: true
+          - name: stage
+            required: true
+          - name: channel
+            type: reference
+            prefix: "CH"
+            required: true
+          - name: at_step
+            type: reference
+            prefix: "PS"
+            required: true
+            description: "Maps to AS-IS process step"
+          - name: customer_action
+            required: true
+          - name: emotion
+            type: enum
+            values: [Delighted, Satisfied, Neutral, Frustrated, Angry]
+            required: true
+          - name: moment_of_truth
+            type: enum
+            values: [Standard, "Moment of Truth", "Moment of Pain"]
+            required: true
+          - name: ces_contribution
+            type: number
+            required: false
+        validation:
+          min_count: 1
+        guidance: |
+          A detailed table listing each client touchpoint, its stage, channel, client actions, emotional impact, and contribution to the Client Effort Score (CES).
+      - id: journey_flow_diagram
+        heading: "2.3 Journey Flow Diagram"
+        content_type: diagram
+        guidance: |
+          Mermaid diagram showing the client journey flow with touchpoints as nodes, stages as groups, and channel transitions.
+      - id: touchpoint_statistics
+        heading: "2.4 Touchpoint Statistics"
+        content_type: key_value_table
+        guidance: |
+          Summary statistics: Total Touchpoints, Digital Touchpoints, Human-Assisted Touchpoints, Self-Service Touchpoints, Wait Points.
+
+  # ── Section 3: Moments That Matter ──
+  - id: moments_that_matter
+    heading: "3. Moments That Matter"
+    section_number: 3
+    content_type: mixed
+    sync_enabled: false
+    guidance: |
+      This section identifies critical touchpoints that disproportionately define client perception. It helps understand which experiences are most impactful and must be protected or enhanced during any transformation.
+    subsections:
+      - id: identified_moments
+        heading: "3.1 Identified Moments"
+        content_type: prose
+        guidance: |
+          Detailed analysis of each moment that matters, with structured attributes: stage, why critical, current experience, emotional impact, and degradation risk. References specific JT# touchpoints.
+      - id: moments_summary
+        heading: "3.2 Moments Summary"
+        content_type: summary_table
+        summary_table_header: "| Moment | Touchpoint | Current State | Enhancement Priority |"
+        guidance: |
+          Summary table of all identified moments with touchpoint references and enhancement priority.
+
+  # ── Section 4: Friction Point Analysis ──
+  - id: friction_points
+    heading: "4. Friction Point Analysis"
+    section_number: 4
+    content_type: mixed
+    sync_enabled: true
+    guidance: |
+      This section summarizes points of difficulty or frustration for the client, broken down into summary, table, type analysis, and statistics.
+    subsections:
+      - id: friction_summary_narrative
+        heading: "4.1 Friction Summary"
+        content_type: prose
+        guidance: |
+          A brief narrative overview of the key friction points, including their overall impact on the client experience and any high-level insights.
+      - id: friction_summary_table
+        heading: "4.2 Friction Point Summary Table"
+        content_type: item_list
+        item_prefix: "FP"
+        detail_document: "friction-points-detail.md"
+        summary_table_header: "| FP# | Friction Point | Stage | Touchpoint | Severity | CES Impact | Client Emotion |"
+        item_fields:
+          - name: name
+            required: true
+          - name: stage
+            required: true
+          - name: related_touchpoint
+            type: reference
+            prefix: "JT"
+            required: true
+          - name: related_pain_point
+            type: reference
+            prefix: "PP"
+            required: false
+            description: "Maps to AS-IS pain point"
+          - name: severity
+            type: enum
+            values: [Critical, High, Medium, Low]
+            required: true
+          - name: ces_impact
+            type: number
+            required: true
+          - name: client_emotion
+            type: enum
+            values: [Delighted, Satisfied, Neutral, Frustrated, Angry]
+            required: true
+        validation:
+          min_count: 0
+        guidance: |
+          A detailed table listing each client friction point, its stage, related touchpoint, severity, impact on CES, and the client's emotional response.
+      - id: friction_by_type
+        heading: "4.3 Friction by Type"
+        content_type: summary_table
+        summary_table_header: "| Friction Type | Count | Combined CES Impact | Priority Items |"
+        guidance: |
+          Aggregated friction analysis grouped by type, showing count and combined CES impact per category.
+      - id: friction_statistics
+        heading: "4.4 Friction Statistics"
+        content_type: key_value_table
+        guidance: |
+          Summary statistics: Total Friction Points, High-Severity (P1), Medium-Severity (P2), Low-Severity (P3), Quick Win Opportunities.
+
+  # ── Section 5: Client Effort Score (CES) ──
+  - id: client_effort_score
+    heading: "5. Client Effort Score"
+    section_number: 5
+    content_type: mixed
+    sync_enabled: false
+    guidance: |
+      This section provides a quantified measurement of client effort across the journey, serving as a baseline for comparison against target states after transformation.
+    subsections:
+      - id: ces_by_stage
+        heading: "5.1 CES Breakdown by Stage"
+        content_type: summary_table
+        summary_table_header: "| Journey Stage | Actions | Documents | Info Requests | Follow-ups | Channel Switches | Wait Time | Stage CES |"
+        guidance: |
+          CES broken down by journey stage, showing contribution of each effort dimension per stage.
+      - id: ces_by_touchpoint
+        heading: "5.2 CES Breakdown by Touchpoint"
+        content_type: summary_table
+        summary_table_header: "| Touchpoint | CES Contribution | % of Total | Reduction Priority |"
+        guidance: |
+          CES contribution per touchpoint, sorted by impact, with reduction priority assessment.
+      - id: benchmark_comparison
+        heading: "5.3 Benchmark Comparison"
+        content_type: summary_table
+        summary_table_header: "| Benchmark | Score | Our Gap |"
+        guidance: |
+          Comparison of CES against industry average, best-in-class, and internal targets.
+      - id: ces_baseline_statement
+        heading: "5.4 CES Baseline Statement"
+        content_type: prose
+        guidance: |
+          Formal baseline statement establishing the AS-IS CES score for TO-BE comparison. References the standard 30-40% reduction transformation target.
+
+  # ── Section 6: Channel Analysis ──
+  - id: channels
+    heading: "6. Channel Analysis"
+    section_number: 6
+    content_type: mixed
+    sync_enabled: false
+    guidance: |
+      This section analyzes how clients interact across different communication channels throughout their journey.
+    subsections:
+      - id: channel_usage
+        heading: "6.1 Channel Usage"
+        content_type: item_list
+        item_prefix: "CH"
+        summary_table_header: "| CH# | Channel | Touchpoints Using | Primary Purpose | Client Preference |"
+        item_fields:
+          - name: channel_name
+            required: true
+          - name: touchpoints_using
+            required: false
+          - name: primary_purpose
+            required: false
+          - name: client_preference
+            required: false
+        guidance: |
+          A table listing each channel, the touchpoints that utilize it, its primary purpose, and assessed client preference.
+      - id: channel_switching_analysis
+        heading: "6.2 Channel Switching Analysis"
+        content_type: prose
+        guidance: |
+          Analysis of channel switching patterns, frequency, and impact on client effort. Identifies forced vs. voluntary switches.
+      - id: channel_gaps
+        heading: "6.3 Channel Gaps"
+        content_type: prose
+        guidance: |
+          Identified gaps in channel coverage or capability that impact client experience, with recommendations for channel strategy.
+
+  # ── Section 7: Enhancement Ideas ──
+  - id: enhancement_ideas
+    heading: "7. Enhancement Ideas"
+    section_number: 7
+    content_type: mixed
+    sync_enabled: false
+    guidance: |
+      This section catalogs captured ideas for improving the client experience, with a detailed catalog and summary statistics.
+    subsections:
+      - id: enhancement_catalog
+        heading: "7.1 Enhancement Catalog"
+        content_type: item_list
+        item_prefix: "EI"
+        summary_table_header: "| EI# | Target Friction | Enhancement Idea | Est. CES Reduction | Complexity | Priority |"
+        item_fields:
+          - name: target_friction
+            required: true
+          - name: enhancement_idea
+            required: true
+          - name: est_ces_reduction
+            type: number
+            required: false
+          - name: complexity
+            type: enum
+            values: [Low, Medium, High]
+            required: false
+          - name: priority
+            type: enum
+            values: [Low, Medium, High, Critical]
+            required: false
+        guidance: |
+          A detailed catalog of enhancement ideas, including their target friction points, estimated CES reduction, complexity, and priority.
+      - id: enhancement_statistics
+        heading: "7.2 Enhancement Statistics"
+        content_type: key_value_table
+        guidance: |
+          Summary statistics: Total Enhancement Ideas, Quick Wins (Low Effort), Strategic (High Effort), Automation Opportunities, Total Est. CES Reduction.
+
+  # ── Section 8: Industry Research ──
+  - id: industry_research
+    heading: "8. Industry Research"
+    section_number: 8
+    content_type: mixed
+    sync_enabled: false
+    guidance: |
+      This section compares the client journey to industry standards and emerging trends, including benchmarks and competitive analysis.
+    subsections:
+      - id: industry_benchmarks
+        heading: "8.1 Industry Benchmarks"
+        content_type: summary_table
+        summary_table_header: "| Metric | Industry Average | Best-in-Class | Our AS-IS | Gap |"
+        guidance: |
+          Benchmark comparison table across key CX metrics against industry standards.
+      - id: relevant_trends
+        heading: "8.2 Relevant Trends"
+        content_type: summary_table
+        summary_table_header: "| Trend | Relevance | Assessment | Enhancement Alignment |"
+        guidance: |
+          Validated industry trends relevant to this journey with assessment of applicability and alignment to enhancement ideas.
+      - id: competitive_landscape
+        heading: "8.3 Competitive Landscape"
+        content_type: prose
+        guidance: |
+          Analysis of competitor approaches to similar client journeys, identifying differentiators and improvement opportunities.
+
+  # ── Section 9: Inputs for TO-BE Design ──
+  - id: tobe_inputs
+    heading: "9. Inputs for TO-BE Design"
+    section_number: 9
+    content_type: mixed
+    sync_enabled: false
+    guidance: |
+      This section consolidates key inputs and recommendations for the Transformation Agent to use when designing the target state.
+    subsections:
+      - id: ces_baseline_summary
+        heading: "9.1 CES Baseline Summary"
+        content_type: summary_table
+        summary_table_header: "| Metric | AS-IS Value | Target (30% Reduction) |"
+        guidance: |
+          Key CES metrics with AS-IS values and calculated transformation targets for the Transformation Agent.
+      - id: critical_success_factors
+        heading: "9.2 Critical Success Factors"
+        content_type: prose
+        guidance: |
+          Key factors that must be preserved or achieved in the TO-BE design for CX success.
+      - id: experience_degradation_risks
+        heading: "9.3 Experience Degradation Risks"
+        content_type: prose
+        guidance: |
+          Changes that would worsen client experience and must be avoided in TO-BE design. Explicit DO-NOT list for the Transformation Agent.
+      - id: enhancement_ideas_available
+        heading: "9.4 Enhancement Ideas Available"
+        content_type: prose
+        guidance: |
+          Summary reference to enhancement ideas catalog (Section 7) for Transformation Agent consideration, with count and key themes.
+
+  # ── Section 10: Discovery Logging Summary ──
+  - id: discovery_logging
+    heading: "10. Discovery Logging Summary"
+    section_number: 10
+    content_type: mixed
+    sync_enabled: false
+    guidance: |
+      This section summarizes new items discovered during the CX analysis that should be integrated into the AS-IS process documentation.
+    subsections:
+      - id: new_items_logged
+        heading: "10.1 New Items Logged"
+        content_type: summary_table
+        summary_table_header: "| Type | Count | Files Updated |"
+        item_fields:
+          - name: type
+            required: true
+          - name: count
+            type: number
+            required: true
+          - name: files_updated
+            required: true
+        guidance: |
+          A table logging new items (pain points, exceptions, controls) identified during CX analysis, indicating their type, count, and the files that would be updated.
+      - id: cross_references
+        heading: "10.2 Cross-References"
+        content_type: prose
+        guidance: |
+          Links to companion documents updated with discovered items, including pain-points-detail.md, exceptions-detail.md, control-points-detail.md, and as-is-process-documentation.md.
+
+# ──────────────────────────────────────────────
+# Completeness Rules (validation gates)
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "journey_overview.word_count >= 100"
+    - "touchpoints.count >= 1"
+  recommended:
+    - "friction_points.count >= 1"
+    - "channels.count >= 1"
+    - "enhancement_ideas.count >= 1"
+
+# ──────────────────────────────────────────────
+# Cross-Reference Validation
+# ──────────────────────────────────────────────
+cross_references:
+  intra_document:
+    - description: "All friction point related_touchpoint must reference valid JT#"
+      source: "friction_points.related_touchpoint"
+      target: "touchpoints"
+    - description: "All enhancement ideas must reference valid FP#"
+      source: "enhancement_ideas.target_friction"
+      target: "friction_points"
+
+  inter_document:
+    - description: "Touchpoint at_step must reference valid PS# in AS-IS"
+      source: "touchpoints.at_step"
+      target: "as-is-process-documentation.process_steps"
+    - description: "Friction point related_pain_point must reference valid PP# in AS-IS"
+      source: "friction_points.related_pain_point"
+      target: "as-is-process-documentation.pain_points"
+
+  required_references_by_section:
+    2:  # Client Touchpoints
+      - "JT#"
+      - "CH#"
+    3:  # Moments That Matter
+      - "JT#"
+    4:  # Friction Points
+      - "FP#"
+      - "JT#"
+    5:  # CES Analysis
+      - "JT#"
+    6:  # Channel Analysis
+      - "CH#"
+      - "JT#"
+    7:  # Enhancement Ideas
+      - "EI#"
+      - "FP#"
+
+# ──────────────────────────────────────────────
+# ID Patterns (document-specific subset)
+# ──────────────────────────────────────────────
+id_patterns:
+  journey_touchpoint: "JT-[A-Z]{2,4}-\\d{3}"
+  friction_point: "FP-[A-Z]{2,4}-\\d{3}"
+  channel: "CH-[A-Z]{2,4}-\\d{3}"
+  enhancement_idea: "EI-[A-Z]{2,4}-\\d{3}"
+
+# ──────────────────────────────────────────────
+# Companion Documents
+# ──────────────────────────────────────────────
+companion_documents:
+  - name: "Client Touchpoints Detail"
+    file: "client-touchpoints-detail.md"
+    sync_section: 2
+    relationship: "detail"
+
+  - name: "Friction Points Detail"
+    file: "friction-points-detail.md"
+    sync_section: 4
+    relationship: "detail"
+
+  - name: "AS-IS Process Documentation"
+    file: "as-is-process-documentation.md"
+    relationship: "upstream"
+
+# ──────────────────────────────────────────────
+# CES Scoring Configuration
+# ──────────────────────────────────────────────
+ces_scoring:
+  weights:
+    client_actions: 1.0
+    documents_required: 1.5
+    information_requests: 1.0
+    follow_ups: 2.0
+    channel_switches: 1.5
+    active_time_minutes: 0.5
+
+  interpretation:
+    low_threshold: 20
+    low_label: "Excellent client experience, minimal effort"
+    medium_threshold: 40
+    medium_label: "Acceptable experience, improvement opportunities exist"
+    high_label: "Poor experience, significant transformation required"
+
+  transformation_target: 0.30  # 30% reduction standard

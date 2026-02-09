@@ -1,0 +1,36 @@
+{
+  "$schema": "process-miner-structured-data-v1",
+  "schema_version": "1.0.0",
+  "session": {
+    "started": "2026-02-04T12:00:00Z",
+    "last_updated": "2026-02-04T12:00:00Z",
+    "contributor": {
+      "name": "Markus",
+      "role": "CEO"
+    },
+    "process": {
+      "id": "001",
+      "name": "Client Onboarding"
+    },
+    "client_groups": ["BizBanking", "MidCap", "LargeCap"],
+    "checkpoint": {
+      "step": 1,
+      "last_item_id": null
+    }
+  },
+  "metadata": {
+    "purpose": null,
+    "trigger": null,
+    "frequency": null,
+    "volume": null
+  },
+  "process_steps": [],
+  "process_exceptions": [],
+  "pain_points": [],
+  "controls": [],
+  "systems": [],
+  "validation": {
+    "status": "DRAFT",
+    "completed_at": null
+  }
+}

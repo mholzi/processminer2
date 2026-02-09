@@ -1,0 +1,359 @@
+# Standalone Schema for Management Summary — PROCESS variant
+# Derived from the unified management-summary.schema.yaml (v3.0).
+# This file flattens the unified schema for the process-documentation domain,
+# eliminating the need for runtime variant resolution.
+#
+# Source: management-summary.schema.yaml → variants.process
+# Template: management-summary-process.md
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "management-summary-process"
+template_description: "Amazon 6-Pager management summary — process documentation variant"
+required: false  # Generated output, not a primary capture document
+
+# ──────────────────────────────────────────────
+# Variant Metadata (flattened from variants.process)
+# ──────────────────────────────────────────────
+source_document: "as-is-process-documentation.md"
+agent_id: "process-documentation-analyst"
+writing_focus: "Lead with operational impact — what's broken, what it costs"
+companion_documents:
+  - "exceptions-detail.md"
+  - "pain-points-detail.md"
+  - "control-points-detail.md"
+comparison_metrics:
+  - { name: "Total Process Steps", source_path: "process_steps.count" }
+  - { name: "Total Exceptions", source_path: "exceptions.count" }
+  - { name: "Total Pain Points", source_path: "pain_points.count" }
+  - { name: "Total Control Points", source_path: "control_points.count" }
+  - { name: "Total Systems", source_path: "systems.count" }
+  - { name: "Overall Confidence", source_path: "confidence.overall" }
+  - { name: "Top 5 Pain Points", source_path: "pain_points.top_5" }
+  - { name: "Strategic Priorities", source_path: "strategic_priorities" }
+appendix_sections:
+  - { id: "process_flow", heading: "Process Flow Diagram", type: "mermaid" }
+  - { id: "pain_points", heading: "Pain Point Summary", ref: "pain-points-detail.md" }
+  - { id: "exceptions", heading: "Exception Summary", ref: "exceptions-detail.md" }
+  - { id: "controls", heading: "Control Point Summary", ref: "control-points-detail.md" }
+  - { id: "systems", heading: "System Dependency Map", type: "table" }
+  - { id: "raci", heading: "RACI Matrix", type: "matrix" }
+
+# ──────────────────────────────────────────────
+# Document Format
+# ──────────────────────────────────────────────
+format:
+  type: "Amazon 6-Pager"
+  reading_time: "20-30 minutes"
+  writing_principles:
+    - "Lead with WHY — first paragraph must hook the reader with business impact"
+    - "Anchor in DATA — every claim needs evidence, not opinions"
+    - "BRUTAL HONESTY — especially in Lessons Learned. No sugar-coating."
+    - "NARRATIVE FLOW — Problem → Context → Solution → Impact"
+    - "CLEAR OWNERSHIP — every action has a name and deadline"
+    - "WRITE INTRODUCTION LAST — after you understand the full picture"
+  anti_patterns:
+    - "Generic descriptions ('This process is designed to...')"
+    - "Passive voice ('It was decided that...')"
+    - "Vague metrics ('Significant improvement expected...')"
+    - "Missing baselines ('Baseline: Not established')"
+    - "Polite criticism ('Some areas could be improved...')"
+    - "Actions without owners ('The team should...')"
+
+# ──────────────────────────────────────────────
+# Sections (6-Pager structure — process variant uses all base subsections)
+# ──────────────────────────────────────────────
+sections:
+  - id: introduction
+    heading: "1. Introduction"
+    section_number: 1
+    content_type: prose
+    page_budget: "½–1"
+    write_order: "LAST"  # Write after all other sections
+    subsections:
+      - id: the_problem
+        heading: "The Problem"
+        content_type: prose
+        guidance: "State the core business problem in 2-3 sentences. Include: What's broken? What's the cost? Why now?"
+      - id: background
+        heading: "Background"
+        content_type: prose
+        guidance: "Brief context for readers unfamiliar with the process. Keep SHORT."
+      - id: purpose
+        heading: "Purpose of This Document"
+        content_type: prose
+        guidance: "State what decision or action this memo supports."
+      - id: scope
+        heading: "Scope"
+        content_type: key_value_table
+        guidance: "Boundaries of the analysis — process category, region, org scope, period."
+      - id: key_definitions
+        heading: "Key Definitions"
+        content_type: key_value_table
+        guidance: "Domain-specific terms the reader must know."
+    validation:
+      min_words: 100
+      max_words: 500
+
+  - id: goals
+    heading: "2. Goals"
+    section_number: 2
+    content_type: mixed
+    page_budget: "½"
+    subsections:
+      - id: success_vision
+        heading: "What Success Looks Like"
+        content_type: prose
+        guidance: "One sentence describing the target state."
+      - id: primary_objectives
+        heading: "Primary Objectives"
+        content_type: summary_table
+        summary_table_header: "| Objective | Baseline | Current | Target | Gap | Status |"
+        guidance: "If baseline is unknown, write 'UNKNOWN ⚠️' not 'Not established'."
+      - id: success_metrics
+        heading: "Success Metrics Summary"
+        content_type: prose
+        guidance: "Primary, secondary, and lagging indicators with current and target values."
+    validation:
+      min_words: 50
+      requires_table: true
+
+  - id: tenets
+    heading: "3. Tenets"
+    section_number: 3
+    content_type: mixed
+    page_budget: "½"
+    subsections:
+      - id: guiding_principles
+        heading: "Guiding Principles"
+        content_type: prose
+        guidance: "Trade-off resolvers, not tactics or goals. Each tenet must answer 'X over Y when they conflict'."
+      - id: hard_constraints
+        heading: "Hard Constraints"
+        content_type: summary_table
+        summary_table_header: "| Constraint | Why Non-Negotiable | Impact If Violated |"
+        guidance: "Non-negotiable boundaries that constrain all decisions."
+    validation:
+      min_words: 50
+
+  - id: state_of_business
+    heading: "4. State of the Business"
+    section_number: 4
+    content_type: mixed
+    page_budget: "1"
+    subsections:
+      - id: executive_summary
+        heading: "Executive Summary"
+        content_type: prose
+        guidance: "3-4 sentences maximum. The headline. Diagnostic, not description."
+      - id: scorecard
+        heading: "Scorecard"
+        content_type: summary_table
+        summary_table_header: "| Metric | Value | Target | Status | Trend |"
+        guidance: "Key performance metrics with traffic-light status."
+      - id: whats_working
+        heading: "What's Working"
+        content_type: prose
+        guidance: "Be specific. Include evidence."
+      - id: whats_not_working
+        heading: "What's NOT Working"
+        content_type: prose
+        guidance: "Be brutally honest. Name problems clearly."
+      - id: top_5_critical
+        heading: "Top 5 Critical Items"
+        content_type: summary_table
+        summary_table_header: "| Rank | Issue | Impact | Evidence | Owner |"
+        guidance: "Top 5 issues prioritized by business impact."
+    validation:
+      min_words: 200
+      requires_table: true
+
+  - id: lessons_learned
+    heading: "5. Lessons Learned"
+    section_number: 5
+    content_type: mixed
+    page_budget: "½–1"
+    subsections:
+      - id: got_right
+        heading: "What We Got Right"
+        content_type: prose
+        guidance: "Specific successes with evidence."
+      - id: got_wrong
+        heading: "What We Got Wrong"
+        content_type: prose
+        guidance: "Be uncomfortable. Name failures. If nothing makes you uncomfortable, you're not being honest enough."
+      - id: root_causes
+        heading: "Root Causes"
+        content_type: summary_table
+        summary_table_header: "| Problem | Root Cause | Evidence | Accountability |"
+        guidance: "Root causes, not symptoms."
+      - id: key_insights
+        heading: "Key Insights"
+        content_type: prose
+        guidance: "Actionable insights, not observations."
+    validation:
+      min_words: 150
+      honesty_check: true  # Flag if language is too soft
+
+  - id: strategic_priorities
+    heading: "6. Strategic Priorities"
+    section_number: 6
+    content_type: mixed
+    page_budget: "2–3"
+    subsections:
+      - id: priority_1
+        heading: "Priority 1"
+        content_type: priority_block
+        guidance: "Highest-impact strategic priority."
+      - id: priority_2
+        heading: "Priority 2"
+        content_type: priority_block
+        guidance: "Second-highest-impact strategic priority."
+      - id: priority_3
+        heading: "Priority 3"
+        content_type: priority_block
+        guidance: "Third-highest-impact strategic priority."
+      - id: quick_wins
+        heading: "Quick Wins (Do This Week)"
+        content_type: summary_table
+        summary_table_header: "| Action | Owner | Effort | Impact | Deadline |"
+        guidance: "Low-effort, high-impact actions that can start immediately."
+      - id: next_steps
+        heading: "Immediate Next Steps"
+        content_type: summary_table
+        summary_table_header: "| Step | Owner | By When | Deliverable |"
+        guidance: "Concrete next actions with owners and deadlines."
+    validation:
+      min_priorities: 3
+      requires_ownership: true
+      requires_deadlines: true
+
+  - id: appendix
+    heading: "Appendix"
+    section_number: 7
+    content_type: mixed
+    page_budget: "unlimited"
+    guidance: "Supporting evidence for the main document. No page limit. No new conclusions."
+    subsections:
+      - id: process_flow_diagram
+        heading: "A.1 Process Flow Diagram"
+        content_type: mermaid
+        guidance: "Visual process flow diagram in Mermaid syntax. Shows the end-to-end process with decision points, swim lanes, and handoffs."
+      - id: pain_point_summary
+        heading: "A.2 Pain Point Summary (Top Items)"
+        content_type: summary_table
+        guidance: "Top pain points with category, impact, priority, and quick-win flag. References pain-points-detail.md for the complete analysis."
+      - id: exception_summary
+        heading: "A.3 Exception Summary (Top Items)"
+        content_type: summary_table
+        guidance: "Top exceptions with trigger, frequency, impact, and handling owner. References exceptions-detail.md for the complete analysis."
+      - id: control_point_summary
+        heading: "A.4 Control Point Summary (Top Items)"
+        content_type: summary_table
+        guidance: "Top control points with type, regulation, effectiveness, and risk level. References control-points-detail.md for the complete analysis."
+      - id: system_dependency_map
+        heading: "A.5 System Dependency Map"
+        content_type: summary_table
+        guidance: "Systems involved in the process with type, purpose, and integration points."
+      - id: raci_matrix
+        heading: "A.6 RACI Matrix"
+        content_type: matrix
+        guidance: "Responsibility assignment matrix for key process activities."
+      - id: document_confidence_analysis
+        heading: "A.7 Document Confidence Analysis"
+        content_type: summary_table
+        guidance: "Per-section confidence rating with key gaps and validation needs."
+      - id: source_documents
+        heading: "A.8 Source Documents"
+        content_type: summary_table
+        guidance: "List of source documents with type, date, and relevance."
+      - id: contributors
+        heading: "A.9 Contributors"
+        content_type: summary_table
+        guidance: "List of contributors with role, contribution, and date."
+
+# ──────────────────────────────────────────────
+# Priority Block Template
+# ──────────────────────────────────────────────
+priority_block:
+  fields:
+    - name: title
+      required: true
+    - name: objective
+      required: true
+    - name: why_now
+      required: true
+      guidance: "Create urgency. Why can't this wait?"
+    - name: actions
+      type: table
+      required: true
+      table_header: "| # | Action | Owner | Deadline | Dependencies |"
+    - name: success_criteria
+      required: true
+    - name: consequences
+      required: true
+      guidance: "Be specific about what happens if we DON'T do this."
+
+# ──────────────────────────────────────────────
+# Auto-Transformation Rules (applied in extraction)
+# ──────────────────────────────────────────────
+auto_transform:
+  weak_to_strong:
+    - pattern: "could be improved"
+      transform: "fails X% at step Y (derive from metrics)"
+    - pattern: "Baseline: Not established"
+      transform: "Baseline: UNKNOWN ⚠️ — Gap requiring action"
+    - pattern: "Some challenges exist"
+      transform: "We have N critical gaps: [list from source]"
+    - pattern: "should consider"
+      transform: "[Role] will deliver [thing] by [date] — or Owner: TBD"
+    - pattern: "room for improvement"
+      transform: "We are X% below target. Impact: €Y (derive from metrics)"
+    - pattern: "Generally compliant"
+      transform: "N of M requirements met. K gaps require remediation."
+
+# ──────────────────────────────────────────────
+# Change Detection Thresholds
+# ──────────────────────────────────────────────
+change_detection:
+  critical_threshold_pct: 20   # Metrics changed >20% → CRITICAL
+  material_threshold_pct: 10   # Metrics changed 10-20% → MATERIAL
+  # Below 10% → MINOR
+  critical_triggers:
+    - "New high-priority items added"
+    - "Removed items that were in priorities"
+    - "Changed strategic recommendations"
+    - "Compliance gaps changed"
+  material_triggers:
+    - "New items added (not high priority)"
+    - "Moderate changes to analysis sections"
+    - "Updated benchmarks or targets"
+
+# ──────────────────────────────────────────────
+# Completeness Rules
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "introduction.word_count >= 100"
+    - "state_of_business.word_count >= 200"
+    - "strategic_priorities.priority_count >= 3"
+    - "lessons_learned.word_count >= 150"
+  recommended:
+    - "goals.has_table == true"
+    - "state_of_business.has_table == true"
+    - "strategic_priorities.has_ownership == true"
+
+# ──────────────────────────────────────────────
+# Document Metadata (frontmatter for output)
+# ──────────────────────────────────────────────
+output_frontmatter:
+  - document_type: "Management Summary (Amazon 6-Pager)"
+  - process_name: "{current_process_name}"
+  - process_id: "{current_process_id}"
+  - variant: "process"
+  - agent_type: "{agent_id}"
+  - generated_date: "{date}"
+  - source_document: "{source_document}"
+  - version: "{version}"
+  - status: "draft|final"
+  - stepsCompleted: "[]"

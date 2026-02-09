@@ -1,0 +1,235 @@
+# Schema for Transformation Decisions Detail
+# Merged schema v3.0 — single source of truth for this document type.
+# Inherits shared defaults from _defaults.yaml.
+#
+# ARCHITECTURE: This replaces the former 2-layer split (master document-schema.yaml
+# + per-doc companion). All section definitions, validation rules, field types,
+# sync config, and cross-references for Transformation Decisions Detail live here.
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "transformation-decisions-detail"
+template_file: "transformation-decisions-detail.md"
+template_description: "Detailed transformation decision log with alternatives analysis, trade-offs, and audit trail"
+required: false
+
+# ──────────────────────────────────────────────
+# Sections
+# ──────────────────────────────────────────────
+sections:
+  # ── Section 1: Decision Catalog ──
+  - id: decision_catalog
+    heading: "1. Decision Catalog"
+    section_number: 1
+    content_type: mixed
+    item_prefix: "TD"
+    sync_enabled: false
+    summary_table_header: "| TD# | Decision Title | Category | AS-IS Impact | Stakeholders | Status |"
+    subsections:
+      - id: decision_summary_table
+        heading: "Decision Summary Table"
+        content_type: summary_table
+        guidance: "Summary table of all transformation decisions with category, impact, stakeholders, and status."
+
+  # ── Section 2: Detailed Decision Records ──
+  - id: detailed_decisions
+    heading: "2. Detailed Decision Records"
+    section_number: 2
+    content_type: detail_entries
+    item_prefix: "TD"
+    sync_enabled: false
+
+  # ── Section 3: Trade-off Analysis ──
+  - id: tradeoff_analysis
+    heading: "3. Trade-off Analysis"
+    section_number: 3
+    content_type: mixed
+    sync_enabled: false
+    summary_table_header: "| Trade-off | Competing Demands | Decision | Rationale |"
+    subsections:
+      - id: tradeoff_summary
+        heading: "Trade-off Summary"
+        content_type: summary_table
+        guidance: "Consolidated summary table of all trade-offs with competing demands, decisions, and rationale."
+      - id: tradeoff_details
+        heading: "Trade-off Details"
+        content_type: detail_entries
+        guidance: "Detailed analysis of each trade-off including competing demands, analysis, decision, and accepted compromise."
+
+  # ── Section 4: Deferred Decisions ──
+  - id: deferred_decisions
+    heading: "4. Deferred Decisions"
+    section_number: 4
+    content_type: mixed
+    item_prefix: "TD"
+    sync_enabled: false
+    summary_table_header: "| TD# | Decision | Reason Deferred | Trigger for Revisit | Target Date |"
+    subsections:
+      - id: deferred_decision_summary
+        heading: "Deferred Decision Summary"
+        content_type: summary_table
+        guidance: "Summary table of deferred decisions with reason, revisit trigger, and target date."
+      - id: deferred_decision_details
+        heading: "Deferred Decision Details"
+        content_type: detail_entries
+        guidance: "Detailed records for each deferred decision including context, deferral reason, prerequisites, and interim approach."
+
+  # ── Section 5: Decision Patterns and Themes ──
+  - id: decision_patterns
+    heading: "5. Decision Patterns and Themes"
+    section_number: 5
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: common_themes
+        heading: "Common Themes"
+        content_type: prose
+        guidance: "Patterns and common themes observed across transformation decisions."
+      - id: design_principles_emerging
+        heading: "Design Principles Emerging"
+        content_type: prose
+        guidance: "Design principles that are emerging from the collective decisions made."
+      - id: consistency_check
+        heading: "Consistency Check"
+        content_type: summary_table
+        guidance: "Table checking alignment of decisions against principles, flagging conflicts and resolutions."
+
+  # ── Section 6: Decision Audit Trail ──
+  - id: decision_audit_trail
+    heading: "6. Decision Audit Trail"
+    section_number: 6
+    content_type: mixed
+    sync_enabled: false
+    summary_table_header: "| Date | TD# | Decision | Category | Outcome |"
+    subsections:
+      - id: decision_timeline
+        heading: "Decision Timeline"
+        content_type: summary_table
+        guidance: "Chronological table of all decisions with date, ID, category, and outcome."
+      - id: decision_revisions
+        heading: "Decision Revisions"
+        content_type: summary_table
+        guidance: "Table tracking decision revisions with original decision, revision date, revised decision, and reason."
+
+# ──────────────────────────────────────────────
+# Completeness Rules (validation gates)
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "decision_catalog.count >= 1"
+    - "detailed_decisions.count >= 1"
+  recommended:
+    - "tradeoff_analysis.populated == true"
+    - "decision_patterns.word_count >= 50"
+
+# ──────────────────────────────────────────────
+# Cross-Reference Validation
+# ──────────────────────────────────────────────
+cross_references:
+  inter_document:
+    - description: "All TD# must correspond to decisions in Target State section 7"
+      source: "detailed_decisions.decision_id"
+      target: "target-state-documentation.transformation_decisions"
+    - description: "AS-IS impact references must reference valid PS# or TS#"
+      source: "detailed_decisions.asis_impact"
+      target: "as-is-process-documentation.process_steps"
+
+  required_references_by_section:
+    1:  # Decision Catalog
+      - "TD#"
+    2:  # Detailed Records
+      - "TD#"
+      - "PS#"
+      - "TS#"
+    4:  # Deferred Decisions
+      - "TD#"
+
+# ──────────────────────────────────────────────
+# ID Patterns (document-specific subset)
+# ──────────────────────────────────────────────
+id_patterns:
+  transformation_decision: "TD-[A-Z]{2,4}-\\d{3}"
+
+# ──────────────────────────────────────────────
+# Companion Documents
+# ──────────────────────────────────────────────
+companion_documents:
+  - name: "Target State Documentation"
+    file: "target-state-documentation.md"
+    relationship: "parent"
+    sync_section: 7
+
+  - name: "Gap Resolution Log"
+    file: "gap-resolution-log.md"
+    relationship: "sibling"
+
+# ──────────────────────────────────────────────
+# Decision Configuration
+# ──────────────────────────────────────────────
+decision_config:
+  categories:
+    - id: "strategic"
+      name: "Strategic"
+      description: "Fundamental design direction affecting multiple areas"
+
+    - id: "tactical"
+      name: "Tactical"
+      description: "Specific implementation choices within a design direction"
+
+    - id: "tradeoff"
+      name: "Trade-off"
+      description: "Balancing competing demands (efficiency vs control, etc.)"
+
+    - id: "deferred"
+      name: "Deferred"
+      description: "Decisions postponed for future consideration"
+
+  status_values:
+    - "Proposed"
+    - "Under Review"
+    - "Approved"
+    - "Implemented"
+    - "Deferred"
+    - "Rejected"
+    - "Superseded"
+
+  required_fields:
+    - "id"
+    - "title"
+    - "category"
+    - "context"
+    - "alternatives"
+    - "rationale"
+    - "impact"
+
+  evaluation_criteria:
+    - "Feasibility"
+    - "Cost"
+    - "Risk"
+    - "Time to Implement"
+    - "Strategic Alignment"
+    - "Client Impact"
+    - "Operational Impact"
+
+# ──────────────────────────────────────────────
+# Trade-off Configuration
+# ──────────────────────────────────────────────
+tradeoff_config:
+  common_tradeoffs:
+    - demand_a: "Efficiency"
+      demand_b: "Control"
+
+    - demand_a: "Speed"
+      demand_b: "Quality"
+
+    - demand_a: "Cost"
+      demand_b: "Client Experience"
+
+    - demand_a: "Innovation"
+      demand_b: "Stability"
+
+    - demand_a: "Automation"
+      demand_b: "Human Oversight"
+
+    - demand_a: "Standardization"
+      demand_b: "Flexibility"
