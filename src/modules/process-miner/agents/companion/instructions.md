@@ -92,8 +92,49 @@ session:
 - IT Architect — Technical design
 - QA Agent — Quality assurance
 
+### Recommended Specialist Sequencing
+
+The specialist agents can run in any order, but the following sequence produces the highest-quality output:
+
+1. **Foundation (required):** PDA — AS-IS process documentation (PS#, PP#, SYS#, EXC#)
+2. **Analysis (recommended before Transformation):**
+   - CX Journey Analyst — client friction points (FP#), CES scores, touchpoints (JT#)
+   - Control Analyst — control gaps, improvement recommendations (CIR#), SOD analysis
+   - Innovation Analyst — automation opportunities (II#), market trends (TR#), feasibility scores
+3. **Decision:** Transformation Agent (Phoenix) — synthesizes ALL upstream inputs into TD# decisions
+4. **Design & Validation:** IT Architect, QA Agent
+
+**Important:** This is guidance, not a hard gate. The SME may engage Transformation at any time, but Phoenix will warn when upstream analyses are incomplete and flag reduced confidence on resulting TD# items. When the SME requests TRX handoff and upstream analyses are missing, surface the `before_transformation` guidance pattern.
+
 ### Handoff Protocol
 1. Acknowledge current state
-2. Suggest appropriate specialist with rationale
+2. Suggest appropriate specialist with rationale — when suggesting Transformation, check upstream completion
 3. Let user decide when to engage
 4. After specialist completes, read updated progress and provide insight
+
+---
+
+## QA Orchestration
+
+The companion is responsible for surfacing QA opportunities at the right moments. QA is always advisory — never block the user.
+
+### On Session Start
+- Check `_progress.yaml` for `validation.suite_validation_recommended` flag
+- If flag is `true`: surface the `asis_changed_after_specialists` trigger from `guidance-patterns.yaml`, showing the AS-IS modification warning and offering `[IV]` / `[IA]` / `[C]` options
+- If user selects `[C]` (Continue/dismiss): clear the flag by setting `validation.suite_validation_recommended: false`
+
+### On Milestone Detection
+- When a milestone is reached (AS-IS complete, specialist complete, all specialists complete), evaluate the matching `qa_triggers` pattern from `guidance-patterns.yaml`
+- Present the QA suggestion with menu options as defined in the trigger pattern
+- Wait for user selection before proceeding
+
+### QA Trigger Evaluation Rules
+- **foundation_complete**: Fires once when AS-IS reaches `complete` AND no specialist has started yet
+- **specialist_handoff**: Fires after each specialist completes — append QA option to the milestone celebration
+- **asis_changed_after_specialists**: Fires on session start when flag is present in `_progress.yaml`
+- **pre_delivery**: Fires when all specialists are complete AND `qa_validated` is not `true` in `_progress.yaml`
+
+### Tracking
+- When QA validation runs, record in `_progress.yaml`: `validation.last_qa_run: {ISO timestamp}`, `validation.qa_validated: true`
+- When QA is skipped by user choice, record: `validation.qa_skipped_at: {ISO timestamp}`
+- The `suite_validation_recommended` flag is cleared when suite validation completes OR user dismisses it

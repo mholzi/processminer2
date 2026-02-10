@@ -380,6 +380,19 @@
 
 {{hidden_dependencies}}
 
+### 7.5 Quick Wins
+
+> Interface improvements that are low-effort and high-value — implementable within 30 days with no external dependencies.
+
+| Opportunity | Effort | Impact | Barrier | Owner |
+|-------------|--------|--------|---------|-------|
+{{quick_wins_table}}
+
+**Quick Win Criteria:**
+- Implementable within 30 days
+- No external dependencies
+- Visible improvement to customers or process performers
+
 > **Section Confidence:** {{section_7_confidence}} | **Basis:** {{section_7_confidence_basis}}
 
 ---
@@ -405,6 +418,20 @@
 | Existing ID | Enrichment | Source |
 |-------------|-----------|--------|
 {{enrichments}}
+
+### 8.4 SIPOC Completeness Assessment
+
+| Section | Confidence | [PREFILLED] Count | Critical Gaps | Readiness |
+|---------|------------|-------------------|---------------|-----------|
+| Suppliers | {{sup_conf}}% | {{sup_prefilled}} | {{sup_gaps}} | {{sup_readiness}} |
+| Inputs | {{inp_conf}}% | {{inp_prefilled}} | {{inp_gaps}} | {{inp_readiness}} |
+| Process | {{proc_conf}}% | {{proc_prefilled}} | {{proc_gaps}} | {{proc_readiness}} |
+| Outputs | {{out_conf}}% | {{out_prefilled}} | {{out_gaps}} | {{out_readiness}} |
+| Customers | {{cus_conf}}% | {{cus_prefilled}} | {{cus_gaps}} | {{cus_readiness}} |
+| Interface Analysis | {{if_conf}}% | {{if_prefilled}} | {{if_gaps}} | {{if_readiness}} |
+
+> **Overall SIPOC Readiness:** {{overall_readiness}}%
+> **Critical Gaps for SME Review:** {{critical_gap_list}}
 
 ---
 

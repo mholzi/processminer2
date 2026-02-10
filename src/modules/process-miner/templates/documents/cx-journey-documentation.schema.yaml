@@ -14,6 +14,14 @@ template_description: "Client experience journey documentation with touchpoints,
 required: false
 
 # ──────────────────────────────────────────────
+# Upstream Dependencies
+# ──────────────────────────────────────────────
+dependencies:
+  - document: "as-is-process-documentation"
+    required_for_validation: true
+    referenced_prefixes: ["PS#", "PP#"]
+
+# ──────────────────────────────────────────────
 # Sections
 # ──────────────────────────────────────────────
 sections:
@@ -105,6 +113,46 @@ sections:
         content_type: key_value_table
         guidance: |
           Summary statistics: Total Touchpoints, Digital Touchpoints, Human-Assisted Touchpoints, Self-Service Touchpoints, Wait Points.
+      - id: alternate_and_exception_paths
+        heading: "2.5 Alternate and Exception Paths"
+        content_type: composite
+        guidance: |
+          Document non-primary journey paths, distinguishing designed branches from unplanned failures.
+        subsections:
+          - id: alternate_paths
+            heading: "2.5.1 Alternate Journey Paths"
+            content_type: item_list
+            item_prefix: "AP"
+            summary_table_header: "| AP# | Branch Trigger | Path Description | Client Impact | Design Intent |"
+            item_fields:
+              - name: branch_trigger
+                required: true
+              - name: path_description
+                required: true
+              - name: client_impact
+                required: true
+              - name: design_intent
+                required: false
+            guidance: |
+              Document expected non-primary paths (rejection, escalation, expedited review).
+              These are designed branches, not failures. Note why the alternate exists and expected frequency.
+          - id: exception_scenarios
+            heading: "2.5.2 Exception Scenarios"
+            content_type: item_list
+            item_prefix: "CXE"
+            summary_table_header: "| CXE# | Exception Type | Trigger Condition | Client Impact | Recovery Mechanism |"
+            item_fields:
+              - name: exception_type
+                required: true
+              - name: trigger_condition
+                required: true
+              - name: client_impact
+                required: true
+              - name: recovery_mechanism
+                required: false
+            guidance: |
+              Document unplanned failures (system errors, client abandonment, data issues).
+              Include recovery mechanisms if they exist, or note absence of recovery path.
 
   # ── Section 3: Moments That Matter ──
   - id: moments_that_matter
@@ -126,6 +174,15 @@ sections:
         summary_table_header: "| Moment | Touchpoint | Current State | Enhancement Priority |"
         guidance: |
           Summary table of all identified moments with touchpoint references and enhancement priority.
+      - id: emotional_arc
+        heading: "3.3 Emotional Journey Arc"
+        content_type: diagram
+        guidance: |
+          Mermaid line chart showing client emotional state (Delighted/Satisfied/Neutral/Frustrated/Angry as Y-axis)
+          across timeline (X-axis). Support both time-based (Day 1, Day 3, Day 7) and stage-based rendering.
+          Annotate recovery moments where the journey has an opportunity to recover from a previous emotional dip.
+          Recovery moments should be visually marked (e.g., with icons) to highlight touchpoints that can restore
+          client confidence after frustration.
 
   # ── Section 4: Friction Point Analysis ──
   - id: friction_points
@@ -256,6 +313,18 @@ sections:
         content_type: prose
         guidance: |
           Identified gaps in channel coverage or capability that impact client experience, with recommendations for channel strategy.
+      - id: orchestration_requirements
+        heading: "6.4 Journey Orchestration Requirements"
+        content_type: summary_table
+        summary_table_header: "| Scenario | Client Expectation | Current State | Gap | Priority |"
+        guidance: |
+          Document cross-channel continuity requirements:
+          - Context preservation when switching channels (Portal → Phone)
+          - Ability to pause/resume journey without losing progress
+          - Consistent status visibility across all channels
+          - Handoff quality from digital to human (does RM have full context?)
+          - Notification consistency across channels
+          Capture client expectations vs. current reality.
 
   # ── Section 7: Enhancement Ideas ──
   - id: enhancement_ideas
@@ -352,6 +421,21 @@ sections:
         content_type: prose
         guidance: |
           Summary reference to enhancement ideas catalog (Section 7) for Transformation Agent consideration, with count and key themes.
+      - id: success_metrics
+        heading: "9.5 Success Metrics for TO-BE"
+        content_type: summary_table
+        summary_table_header: "| Metric | AS-IS Baseline | Target | Measurement Method | Trade-off Considerations |"
+        guidance: |
+          Define success metrics beyond CES for TO-BE journey design:
+          - Task Completion Rate: % of clients who complete the journey
+          - Time-to-Completion: Average duration from start to finish
+          - Client Satisfaction (CSAT/NPS): Survey-based satisfaction score
+          - Abandonment Rate: % who start but don't complete
+          - Support Contact Rate: Frequency of help-seeking behavior
+          - Error/Rework Rate: % requiring correction or resubmission
+          Provide AS-IS baselines where available and transformation targets.
+          Note trade-offs: e.g., reducing CES by eliminating touchpoints could
+          increase abandonment if necessary support is removed.
 
   # ── Section 10: Discovery Logging Summary ──
   - id: discovery_logging
@@ -440,6 +524,7 @@ id_patterns:
   friction_point: "FP-[A-Z]{2,4}-\\d{3}"
   channel: "CH-[A-Z]{2,4}-\\d{3}"
   enhancement_idea: "EI-[A-Z]{2,4}-\\d{3}"
+  cx_exception: "CXE-[A-Z]{2,4}-\\d{3}"
 
 # ──────────────────────────────────────────────
 # Companion Documents
@@ -460,6 +545,33 @@ companion_documents:
     relationship: "upstream"
 
 # ──────────────────────────────────────────────
+# Sync Validation Rules
+# ──────────────────────────────────────────────
+sync_validation:
+  rules:
+    - parent_section: 2  # Client Touchpoints
+      detail_document: "client-touchpoints-detail.md"
+      id_prefix: "JT"
+      checks:
+        - type: id_set_equality
+          description: "Every JT# in CX Journey Section 2 must appear in client-touchpoints-detail, and vice versa"
+        - type: required_field_presence
+          fields: ["name", "stage", "channel", "at_step"]
+          description: "Both sides must have all required fields populated for each JT#"
+
+    - parent_section: 4  # Friction Points
+      detail_document: "friction-points-detail.md"
+      id_prefix: "FP"
+      checks:
+        - type: id_set_equality
+          description: "Every FP# in CX Journey Section 4 must appear in friction-points-detail, and vice versa"
+        - type: required_field_presence
+          fields: ["name", "stage", "related_touchpoint", "severity"]
+          description: "Both sides must have all required fields populated for each FP#"
+
+  text_matching: false
+
+# ──────────────────────────────────────────────
 # CES Scoring Configuration
 # ──────────────────────────────────────────────
 ces_scoring:
@@ -469,7 +581,9 @@ ces_scoring:
     information_requests: 1.0
     follow_ups: 2.0
     channel_switches: 1.5
-    active_time_minutes: 0.5
+    client_active_time_minutes: 0.5      # Time client spends doing things
+    client_wait_time_minutes: 0.3        # Time client waits with control (can prepare)
+    system_imposed_wait_minutes: 0.7     # Time client waits with no visibility/control
 
   interpretation:
     low_threshold: 20

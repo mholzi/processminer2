@@ -1,0 +1,230 @@
+# Schema for Market Trends Detail
+# Merged schema v3.0 — single source of truth for this document type.
+# Inherits shared defaults from _defaults.yaml.
+
+schema_version: "3.0"
+defaults: "_defaults.yaml"
+template_name: "market-trends-detail"
+template_file: "market-trends-detail.md"
+template_description: "Detailed market trend analysis with maturity tracking, competitive response, and innovation linkages"
+required: false
+
+# ──────────────────────────────────────────────
+# Detail Document Info
+# ──────────────────────────────────────────────
+detail_document_info:
+  parent_documents:
+    - "innovation-analysis-documentation.md"
+  sync_section_in_parent: 3
+  structured_id_prefix: "TR"
+
+# ──────────────────────────────────────────────
+# Sections
+# ──────────────────────────────────────────────
+sections:
+  # ── Trend Summary Table ──
+  - id: trend_summary
+    heading: "Market Trends Summary Table"
+    section_number: 1
+    content_type: summary_table
+    structured_id_prefix: "TR"
+    sync_enabled: false
+    summary_table_header: "| TR# | Trend Name | Category | Maturity | Relevance | Impact Potential | Source |"
+
+  # ── Trend Statistics ──
+  - id: trend_statistics
+    heading: "Trend Statistics"
+    section_number: 2
+    content_type: statistics
+    sync_enabled: false
+
+  # ── Trends by Maturity ──
+  - id: trends_by_maturity
+    heading: "Trends by Maturity"
+    section_number: 3
+    content_type: summary_table
+    sync_enabled: false
+
+  # ── Trend Heatmap ──
+  - id: trend_heatmap
+    heading: "Trend Heatmap"
+    section_number: 4
+    content_type: diagram
+    sync_enabled: false
+
+  # ── Detailed Trend Analysis ──
+  - id: detailed_trend_analysis
+    heading: "Detailed Market Trends"
+    section_number: 5
+    content_type: detail_entries
+    structured_id_prefix: "TR"
+    sync_enabled: false
+    entry_template: true
+
+  # ── Trend Clusters ──
+  - id: trend_clusters
+    heading: "Trend Clusters"
+    section_number: 6
+    content_type: prose
+    sync_enabled: false
+
+  # ── Emerging Signals ──
+  - id: emerging_signals
+    heading: "Emerging Signals"
+    section_number: 7
+    content_type: prose
+    sync_enabled: false
+
+  # ── Competitive Landscape ──
+  - id: competitive_landscape
+    heading: "Competitive Landscape Summary"
+    section_number: 8
+    content_type: prose
+    sync_enabled: false
+
+  # ── Research Sources ──
+  - id: research_sources
+    heading: "Research Sources"
+    section_number: 9
+    content_type: summary_table
+    sync_enabled: false
+
+# ──────────────────────────────────────────────
+# Trend Entry Structure
+# ──────────────────────────────────────────────
+trend_entry_fields:
+  overview:
+    - trend_id
+    - trend_name
+    - category
+    - maturity
+    - maturity_trajectory
+    - relevance
+    - impact_potential
+    - source
+    - date_identified
+    - last_reviewed
+    - next_review_date
+
+  sections:
+    - description
+    - drivers
+    - evidence
+    - timeline
+    - applicability
+    - affected_steps
+    - related_innovations
+    - competitive_response
+    - recommended_actions
+
+  required_fields:
+    - trend_id
+    - trend_name
+    - category
+    - maturity
+    - relevance
+
+  required_references:
+    - "TR#"
+
+# ──────────────────────────────────────────────
+# Trend Categories
+# ──────────────────────────────────────────────
+trend_categories:
+  - Technology
+  - Regulatory
+  - Customer Behavior
+  - Industry
+  - Competitive
+
+# ──────────────────────────────────────────────
+# Maturity Levels
+# ──────────────────────────────────────────────
+maturity_levels:
+  - level: "Emerging"
+    description: "Early stage, limited adoption, high uncertainty"
+  - level: "Accelerating"
+    description: "Growing rapidly, increasing adoption and evidence"
+  - level: "Mature"
+    description: "Widely adopted, stable trajectory"
+  - level: "Declining"
+    description: "Losing relevance, being replaced or obsoleted"
+
+# ──────────────────────────────────────────────
+# Maturity Trajectory
+# ──────────────────────────────────────────────
+maturity_trajectory:
+  - Rising
+  - Stable
+  - Declining
+
+# ──────────────────────────────────────────────
+# Relevance Levels
+# ──────────────────────────────────────────────
+relevance_levels:
+  - level: "High"
+    score_range: "8-10"
+    description: "Directly impacts this process, requires action"
+  - level: "Medium"
+    score_range: "4-7"
+    description: "Indirect impact, monitor closely"
+  - level: "Low"
+    score_range: "1-3"
+    description: "Peripheral relevance, awareness only"
+
+# ──────────────────────────────────────────────
+# Cross-Reference Validation
+# ──────────────────────────────────────────────
+cross_references:
+  intra_document:
+    - description: "All trend clusters must reference valid TR#"
+      source: "trend_clusters.trend_references"
+      target: "detailed_trend_analysis"
+
+  inter_document:
+    - description: "Related innovations must reference valid II# in innovation backlog"
+      source: "detailed_trend_analysis.related_innovations"
+      target: "innovation-analysis-documentation.innovation_backlog"
+    - description: "Affected steps must reference valid PS# in AS-IS"
+      source: "detailed_trend_analysis.affected_steps"
+      target: "as-is-process-documentation.process_steps"
+
+  required_references_by_section:
+    1:  # Summary Table
+      - "TR#"
+    5:  # Detailed Analysis
+      - "TR#"
+
+# ──────────────────────────────────────────────
+# ID Patterns
+# ──────────────────────────────────────────────
+id_patterns:
+  market_trend: "TR-[A-Z]{2,4}-\\d{3}"
+
+# ──────────────────────────────────────────────
+# Companion Documents
+# ──────────────────────────────────────────────
+companion_documents:
+  - name: "Innovation Analysis Documentation"
+    file: "innovation-analysis-documentation.md"
+    relationship: "parent"
+
+  - name: "Innovation Ideas Detail"
+    file: "innovation-ideas-detail.md"
+    relationship: "sibling"
+
+  - name: "AS-IS Process Documentation"
+    file: "as-is-process-documentation.md"
+    relationship: "upstream"
+
+# ──────────────────────────────────────────────
+# Completeness Rules
+# ──────────────────────────────────────────────
+completeness:
+  minimum:
+    - "trend_summary.count >= 1"
+    - "detailed_trend_analysis.count >= 1"
+  recommended:
+    - "trend_heatmap.populated == true"
+    - "competitive_landscape.word_count >= 50"
+    - "research_sources.count >= 1"

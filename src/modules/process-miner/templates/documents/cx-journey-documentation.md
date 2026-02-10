@@ -39,7 +39,9 @@
 | Information Requests | {{metrics.info_requests}} | 1.0 | {{metrics.info_requests_weighted}} |
 | Follow-ups Required | {{metrics.follow_ups}} | 2.0 | {{metrics.follow_ups_weighted}} |
 | Channel Switches | {{metrics.channel_switches}} | 1.5 | {{metrics.channel_switches_weighted}} |
-| Active Time (minutes) | {{metrics.active_time}} | 0.5 | {{metrics.active_time_weighted}} |
+| Client Active Time (minutes) | {{metrics.client_active_time}} | 0.5 | {{metrics.client_active_time_weighted}} |
+| Client Wait Time (minutes) | {{metrics.client_wait_time}} | 0.3 | {{metrics.client_wait_time_weighted}} |
+| System-Imposed Wait (minutes) | {{metrics.system_wait_time}} | 0.7 | {{metrics.system_wait_time_weighted}} |
 | **TOTAL CES** | | | **{{ces_score}}** |
 
 ---
@@ -122,6 +124,20 @@
 | Self-Service Touchpoints | {{self_service_touchpoints}} |
 | Wait Points | {{wait_points}} |
 
+### 2.5 Alternate and Exception Paths
+
+#### 2.5.1 Alternate Journey Paths
+
+| AP# | Branch Trigger | Path Description | Client Impact | Design Intent |
+|-----|----------------|------------------|---------------|---------------|
+{{alternate_paths_table}}
+
+#### 2.5.2 Exception Scenarios
+
+| CXE# | Exception Type | Trigger Condition | Client Impact | Recovery Mechanism |
+|------|----------------|-------------------|---------------|-------------------|
+{{exception_scenarios_table}}
+
 > **Full Analysis:** [View Client Touchpoints Detail](./client-touchpoints-detail.md)
 >
 > **Section Confidence:** {{section_2_confidence}} | **Basis:** {{section_2_confidence_basis}}
@@ -152,6 +168,14 @@
 | Moment | Touchpoint | Current State | Enhancement Priority |
 |--------|-----------|---------------|---------------------|
 {{moments_summary_table}}
+
+### 3.3 Emotional Journey Arc
+
+```mermaid
+{{emotional_arc_diagram}}
+```
+
+> Recovery moments (marked with 🔄) indicate touchpoints where the journey can restore client confidence after a frustration dip.
 
 > **Section Confidence:** {{section_3_confidence}} | **Basis:** {{section_3_confidence_basis}}
 
@@ -250,6 +274,12 @@
 
 {{channel_gaps}}
 
+### 6.4 Journey Orchestration Requirements
+
+| Scenario | Client Expectation | Current State | Gap | Priority |
+|----------|-------------------|---------------|-----|----------|
+{{orchestration_requirements_table}}
+
 > **Section Confidence:** {{section_6_confidence}} | **Basis:** {{section_6_confidence_basis}}
 
 ---
@@ -336,6 +366,17 @@ For a successful TO-BE from a CX perspective:
 ### 9.4 Enhancement Ideas Available
 
 The Transformation Agent has **{{total_enhancement_ideas}}** enhancement ideas to consider (see Section 7).
+
+### 9.5 Success Metrics for TO-BE
+
+| Metric | AS-IS Baseline | Target | Measurement Method | Trade-off Considerations |
+|--------|----------------|--------|-------------------|-------------------------|
+| Task Completion Rate | {{completion_rate_baseline}} | {{completion_rate_target}} | {{completion_rate_method}} | {{completion_rate_tradeoffs}} |
+| Time-to-Completion | {{time_to_completion_baseline}} | {{time_to_completion_target}} | {{time_to_completion_method}} | {{time_to_completion_tradeoffs}} |
+| Client Satisfaction (CSAT/NPS) | {{csat_baseline}} | {{csat_target}} | {{csat_method}} | {{csat_tradeoffs}} |
+| Abandonment Rate | {{abandonment_baseline}} | {{abandonment_target}} | {{abandonment_method}} | {{abandonment_tradeoffs}} |
+| Support Contact Rate | {{support_contact_baseline}} | {{support_contact_target}} | {{support_contact_method}} | {{support_contact_tradeoffs}} |
+| Error/Rework Rate | {{error_rate_baseline}} | {{error_rate_target}} | {{error_rate_method}} | {{error_rate_tradeoffs}} |
 
 ---
 

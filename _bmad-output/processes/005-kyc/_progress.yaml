@@ -4,7 +4,7 @@ meta:
   description: "KYC process documentation — All segments"
   schema_version: "1.0"
   created: "2026-02-09T05:08:00Z"
-  last_updated: "2026-02-09T06:45:00Z"
+  last_updated: "2026-02-09T07:30:00Z"
 
 documents:
   as_is:
@@ -174,15 +174,53 @@ documents:
 
   cx_journey:
     path: "./cx-journey-documentation.md"
-    overall_status: draft
+    overall_status: in_progress
     sections:
       journey_overview:
         status: draft
-        confidence: 50
+        confidence: 75
+        subsections:
+          journey_identification:
+            status: approved
+            confidence: 90
+          client_persona:
+            status: reviewed
+            confidence: 75
+          journey_context:
+            status: draft
+            confidence: 70
       touchpoints:
-        count: 0
+        status: draft
+        count: 10
+        confidence: 78
+      moments_that_matter:
+        status: draft
+        confidence: 75
       friction_points:
-        count: 0
+        status: draft
+        count: 7
+        confidence: 75
+      client_effort_score:
+        status: draft
+        confidence: 70
+        total_ces: 61.5
+      channels:
+        status: draft
+        count: 4
+        confidence: 72
+      enhancement_ideas:
+        status: draft
+        count: 6
+        confidence: 70
+      industry_research:
+        status: draft
+        confidence: 60
+      tobe_inputs:
+        status: draft
+        confidence: 72
+      discovery_logging:
+        status: draft
+        confidence: 90
 
   transformation:
     path: "./transformation.md"
@@ -250,8 +288,8 @@ agent_sessions:
     last_run: null
     status: waiting
   cx_journey:
-    last_run: null
-    status: waiting
+    last_run: "2026-02-09T07:30:00Z"
+    status: active
   control:
     last_run: null
     status: waiting

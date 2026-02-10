@@ -109,6 +109,12 @@
 |---------|-------|-----------------|--------------|
 {{process_variants_table}}
 
+### 1.8 Process Dependencies
+
+| DEP# | Direction | Process | Dependency Type | Data/Trigger Exchanged |
+|------|-----------|---------|-----------------|------------------------|
+{{process_dependencies_table}}
+
 > **Section Confidence:** {{section_1_confidence}} ({{section_1_confidence_pct}}%) | **Basis:** {{section_1_confidence_basis}}
 > **Evidence Sources:** {{section_1_evidence_sources}}
 
@@ -186,6 +192,8 @@ flowchart TD
 **Channel:** {{this.channel}}
 **Document Count:** {{this.document_count}}
 **Interaction Count:** {{this.interaction_count}}
+**Error Rate:** {{this.error_rate}}
+**Error Source:** {{this.error_source}}
 
 {{this.description}}
 
@@ -208,6 +216,30 @@ flowchart TD
 | DP# | Decision | At Step | Criteria | Yes Path | No Path |
 |-----|----------|---------|----------|----------|---------|
 {{decision_points_table}}
+
+### 2.7 Rework Analysis
+
+| RW# | From Step | Trigger | Returns To | Frequency | Avg Cycles | Time Cost |
+|-----|-----------|---------|------------|-----------|------------|-----------|
+{{rework_analysis_table}}
+
+> **Total Rework Impact:** {{rework_pct}}% of cases experience at least one rework loop, adding {{avg_rework_time}} to cycle time.
+
+### 2.8 Cycle Time Analysis
+
+| Metric | Value |
+|--------|-------|
+| **Total Cycle Time (Avg)** | {{total_cycle_time}} |
+| **Active Work Time** | {{active_work_time}} ({{active_work_pct}}%) |
+| **Wait/Queue Time** | {{wait_queue_time}} ({{wait_queue_pct}}%) |
+| **Longest Wait Step** | {{bottleneck_step}} ({{bottleneck_wait}}) |
+| **Longest Work Step** | {{longest_work_step}} ({{longest_work_time}}) |
+
+```mermaid
+pie title Time Distribution
+    "Active Work" : {{active_work_pct}}
+    "Wait/Queue" : {{wait_queue_pct}}
+```
 
 > **Section Confidence:** {{section_2_confidence}} ({{section_2_confidence_pct}}%) | **Basis:** {{section_2_confidence_basis}}
 > **Evidence Sources:** {{section_2_evidence_sources}}

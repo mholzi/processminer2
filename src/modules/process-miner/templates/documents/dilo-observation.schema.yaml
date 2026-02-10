@@ -33,6 +33,35 @@ document_info:
   file_pattern: "dilo-observation-{role_slug}.md"
 
 # ──────────────────────────────────────────────
+# Upstream Dependencies
+# ──────────────────────────────────────────────
+dependencies:
+  - document: "as-is-process-documentation"
+    required_for_validation: true
+    referenced_prefixes: ["PS#", "PP#", "EX#", "SYS#"]
+  - document: "pain-points-detail"
+    required_for_validation: false
+    referenced_prefixes: ["PP#"]
+  - document: "exceptions-detail"
+    required_for_validation: false
+    referenced_prefixes: ["EX#"]
+
+# ──────────────────────────────────────────────
+# Prerequisite Enforcement
+# ──────────────────────────────────────────────
+prerequisites:
+  rules:
+    - check: "as-is-process-documentation.completion >= 60"
+      description: "AS-IS must be at least 60% complete before DILO creation"
+      severity: blocking
+    - check: "as-is-process-documentation.process_steps.count >= 5"
+      description: "AS-IS must have at least 5 PS# items documented"
+      severity: blocking
+    - check: "as-is-process-documentation.organizational_mapping.populated == true"
+      description: "AS-IS RACI matrix (Section 6) should be populated"
+      severity: warning
+
+# ──────────────────────────────────────────────
 # Sections
 # ──────────────────────────────────────────────
 sections:
@@ -133,14 +162,14 @@ sections:
     heading: "3. Interruptions & Context Switching"
     section_number: 3
     content_type: detail_entries
-    item_prefix: "INT"
+    item_prefix: "IRQ"
     sync_enabled: false
-    summary_table_header: "| INT# | Time | Source | Type | Duration | Impact | Avoidable? | Related ACT# |"
+    summary_table_header: "| IRQ# | Time | Source | Type | Duration | Impact | Avoidable? | Related ACT# |"
     entry_template: true
     guidance: |
       What derails the work? Interruptions destroy flow and are often invisible
       in process documentation.
-      MUST include: interruption log with unique INT# IDs, interruption analysis
+      MUST include: interruption log with unique IRQ# IDs, interruption analysis
       metrics, and context switching cost analysis.
       Each interruption must reference the ACT# it disrupted.
       "Avoidable?" is a judgment call — mark Yes if the interruption could
@@ -152,7 +181,7 @@ sections:
         heading: "3.1 Interruption Log"
         content_type: summary_table
         guidance: |
-          One row per interruption with INT# ID, time, source (who/what), type
+          One row per interruption with IRQ# ID, time, source (who/what), type
           (from standard list: Phone Call, Email/Chat, Walk-up, System Alert,
           Meeting, Escalation, Question from Colleague), duration, impact
           description, avoidable flag, and related ACT#. Include ALL
@@ -608,7 +637,7 @@ discrepancy_entry_fields:
 # ──────────────────────────────────────────────
 cross_references:
   intra_document:
-    - description: "All INT# related_activity must reference valid ACT#"
+    - description: "All IRQ# related_activity must reference valid ACT#"
       source: "interruptions.related_activity"
       target: "activities"
     - description: "All WA# official_step must reference valid PS#"
@@ -637,7 +666,7 @@ cross_references:
       - "ACT#"
       - "PS#"
     3:  # Interruptions
-      - "INT#"
+      - "IRQ#"
       - "ACT#"
     4:  # Workarounds
       - "WA#"
@@ -654,7 +683,7 @@ cross_references:
 # ──────────────────────────────────────────────
 id_patterns:
   activity: "ACT-[A-Z]{2,4}-\\d{3}"
-  interruption: "INT-[A-Z]{2,4}-\\d{3}"
+  interruption: "IRQ-[A-Z]{2,4}-\\d{3}"
   workaround: "WA-[A-Z]{2,4}-\\d{3}"
   undocumented_step: "UD-[A-Z]{2,4}-\\d{3}"
   discrepancy: "DIS-[A-Z]{2,4}-\\d{3}"

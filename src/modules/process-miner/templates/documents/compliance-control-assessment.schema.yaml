@@ -14,6 +14,17 @@ template_description: "Regulatory compliance and control analysis with gap asses
 required: false
 
 # ──────────────────────────────────────────────
+# Upstream Dependencies
+# ──────────────────────────────────────────────
+dependencies:
+  - document: "as-is-process-documentation"
+    required_for_validation: true
+    referenced_prefixes: ["CP#", "PS#"]
+  - document: "control-points-detail"
+    required_for_validation: false
+    referenced_prefixes: ["CP#"]
+
+# ──────────────────────────────────────────────
 # Sections
 # ──────────────────────────────────────────────
 sections:
@@ -253,6 +264,23 @@ companion_documents:
   - name: "AS-IS Process Documentation"
     file: "as-is-process-documentation.md"
     relationship: "upstream"
+
+# ──────────────────────────────────────────────
+# Sync Validation Rules
+# ──────────────────────────────────────────────
+sync_validation:
+  rules:
+    - parent_section: 2  # Control Point Inventory
+      detail_document: "control-points-detail.md"
+      id_prefix: "CP"
+      checks:
+        - type: id_set_equality
+          description: "Every CP# in Compliance Section 2 must appear in control-points-detail, and vice versa"
+        - type: required_field_presence
+          fields: ["control_name", "type", "regulation", "effectiveness"]
+          description: "Both sides must have all required fields populated for each CP#"
+
+  text_matching: false
 
 # ──────────────────────────────────────────────
 # Risk Rating Configuration

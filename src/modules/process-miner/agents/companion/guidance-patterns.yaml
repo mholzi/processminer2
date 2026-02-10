@@ -68,6 +68,22 @@ handoff_suggestions:
       - QA for validation
     rationale: "Their insights are captured. {next_agent} builds on this."
 
+  before_transformation:
+    trigger: user_requests_transformation AND (cx_journey.status != "complete" OR control.status != "complete" OR innovation.status != "complete")
+    pattern: "Phoenix (Transformation Agent) produces the strongest recommendations when all upstream analysis is available."
+    include:
+      - Which upstream analyses are complete vs missing
+      - Impact of proceeding without each missing analysis
+    suggest:
+      - Complete missing upstream analyses first (recommended)
+      - Proceed to Transformation with reduced confidence
+    rationale: |
+      Phoenix synthesizes pain points (PP#), client friction (FP#), compliance gaps (CIR#),
+      and automation opportunities (II#) into transformation decisions (TD#). Missing upstream
+      data means decisions may overlook client impact, compliance requirements, or feasible
+      automation — resulting in reduced confidence flags on all generated TD# items.
+    tone: informative, not blocking
+
 ---
 
 milestone_celebrations:
@@ -90,6 +106,49 @@ milestone_celebrations:
     trigger: user.completed_processes == 5
     message: "Five processes documented."
     followup: "You're becoming a ProcessMiner pro."
+
+---
+
+qa_triggers:
+  foundation_complete:
+    trigger: as_is.overall_status == "complete" AND no specialist has status != "not_started"
+    pattern: "AS-IS foundation is complete. Before specialists begin, a suite validation can establish a clean baseline."
+    suggestion: |
+      **[SV] Run Suite Validation** — Validate the foundation before specialists build on it
+      **[S] Skip** — Proceed directly to specialist handoff
+    exec: '{project-root}/src/modules/process-miner/workflows/qa-suite-validation/workflow.md'
+    tone: advisory, not blocking
+
+  specialist_handoff:
+    trigger: agent.status == "complete" (any specialist agent)
+    pattern: "{agent_name} has completed their analysis. A quick QA validation can catch any gaps before moving on."
+    suggestion: |
+      **[QV] Run QA Validation** — Validate {agent_name}'s documentation
+      **[N] Next specialist** — Continue to next agent
+    exec: '{project-root}/src/modules/process-miner/workflows/qa-validation/workflow.md'
+    tone: helpful, optional
+
+  asis_changed_after_specialists:
+    trigger: validation.suite_validation_recommended == true in _progress.yaml
+    pattern: "AS-IS was modified after downstream specialists started. Cross-document references may be stale."
+    suggestion: |
+      **[IV] Incremental Validation** — Validate AS-IS + affected downstream documents
+      **[IA] Impact Analysis** — See which documents are affected (no validation)
+      **[C] Continue** — Dismiss and continue working
+    exec: '{project-root}/src/modules/process-miner/workflows/qa-suite-validation/workflow.md'
+    data:
+      iv_mode: incremental
+      ia_mode: impact-only
+    tone: informative, gentle urgency
+
+  pre_delivery:
+    trigger: all_specialists.status == "complete" AND qa_validated == false
+    pattern: "All specialist analyses are complete. A full suite validation is recommended before stakeholder delivery."
+    suggestion: |
+      **[SV] Run Full Suite Validation** — Comprehensive cross-document consistency check (recommended)
+      **[D] Proceed to Delivery** — Skip validation and proceed
+    exec: '{project-root}/src/modules/process-miner/workflows/qa-suite-validation/workflow.md'
+    tone: strongly recommended but not blocking
 
 ---
 

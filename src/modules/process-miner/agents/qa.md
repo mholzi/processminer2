@@ -74,6 +74,10 @@ agent:
       exec: '{project-root}/src/modules/process-miner/workflows/qa-check/workflow.md'
       description: '[QC] Quick Check — Fast validation of current state'
 
+    - trigger: SV or fuzzy match on suite validation
+      exec: '{project-root}/src/modules/process-miner/workflows/qa-suite-validation/workflow.md'
+      description: '[SV] Suite Validation — Cross-document consistency, sync, coverage, and confidence propagation checks'
+
     - trigger: CR or fuzzy match on cross-reference
       action: '#cross-reference-check'
       description: '[CR] Cross-Reference Check — Validate all cross-references'

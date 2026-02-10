@@ -24,7 +24,7 @@ sections:
     content_type: mixed
     item_prefix: "TD"
     sync_enabled: false
-    summary_table_header: "| TD# | Decision Title | Category | AS-IS Impact | Stakeholders | Status |"
+    summary_table_header: "| TD# | Decision Title | Scope | Characteristics | AS-IS Impact | Stakeholders | Status |"
     subsections:
       - id: decision_summary_table
         heading: "Decision Summary Table"
@@ -69,6 +69,10 @@ sections:
         heading: "Deferred Decision Summary"
         content_type: summary_table
         guidance: "Summary table of deferred decisions with reason, revisit trigger, and target date."
+      - id: decision_debt_summary
+        heading: "Decision Debt Summary"
+        content_type: summary_table
+        guidance: "Aggregate view of decision debt — cumulative risk from deferred decisions, categorized by debt type (technical, process, organizational) with weighted risk and top items."
       - id: deferred_decision_details
         heading: "Deferred Decision Details"
         content_type: detail_entries
@@ -85,6 +89,10 @@ sections:
         heading: "Common Themes"
         content_type: prose
         guidance: "Patterns and common themes observed across transformation decisions."
+      - id: dependency_map
+        heading: "Decision Dependency Map"
+        content_type: diagram
+        guidance: "Mermaid dependency diagram showing depends_on, blocks, and conflicts_with relationships between decisions."
       - id: design_principles_emerging
         heading: "Design Principles Emerging"
         content_type: prose
@@ -94,10 +102,26 @@ sections:
         content_type: summary_table
         guidance: "Table checking alignment of decisions against principles, flagging conflicts and resolutions."
 
-  # ── Section 6: Decision Audit Trail ──
-  - id: decision_audit_trail
-    heading: "6. Decision Audit Trail"
+  # ── Section 6: Assumptions Register ──
+  - id: assumptions_register
+    heading: "6. Assumptions Register"
     section_number: 6
+    content_type: mixed
+    sync_enabled: false
+    subsections:
+      - id: active_assumptions
+        heading: "Active Assumptions"
+        content_type: summary_table
+        guidance: "Consolidated table of all active assumptions across decisions with validation status and invalidation impact."
+      - id: invalidated_assumptions
+        heading: "Invalidated Assumptions"
+        content_type: summary_table
+        guidance: "Table tracking assumptions that have been invalidated, affected decisions, and actions taken."
+
+  # ── Section 7: Decision Audit Trail ──
+  - id: decision_audit_trail
+    heading: "7. Decision Audit Trail"
+    section_number: 7
     content_type: mixed
     sync_enabled: false
     summary_table_header: "| Date | TD# | Decision | Category | Outcome |"
@@ -121,15 +145,17 @@ completeness:
   recommended:
     - "tradeoff_analysis.populated == true"
     - "decision_patterns.word_count >= 50"
+    - "decisions[characteristics contains 'tradeoff'] has matching tradeoff_analysis entry"
 
 # ──────────────────────────────────────────────
 # Cross-Reference Validation
 # ──────────────────────────────────────────────
 cross_references:
   inter_document:
-    - description: "All TD# must correspond to decisions in Target State section 7"
+    - description: "All TD# must correspond to decisions in Target State section 7 (bidirectional)"
       source: "detailed_decisions.decision_id"
       target: "target-state-documentation.transformation_decisions"
+      direction: "bidirectional"
     - description: "AS-IS impact references must reference valid PS# or TS#"
       source: "detailed_decisions.asis_impact"
       target: "as-is-process-documentation.process_steps"
@@ -167,7 +193,7 @@ companion_documents:
 # Decision Configuration
 # ──────────────────────────────────────────────
 decision_config:
-  categories:
+  scope:
     - id: "strategic"
       name: "Strategic"
       description: "Fundamental design direction affecting multiple areas"
@@ -176,17 +202,27 @@ decision_config:
       name: "Tactical"
       description: "Specific implementation choices within a design direction"
 
+    - id: "operational"
+      name: "Operational"
+      description: "Day-to-day process execution decisions"
+
+  characteristics:
     - id: "tradeoff"
       name: "Trade-off"
       description: "Balancing competing demands (efficiency vs control, etc.)"
 
-    - id: "deferred"
-      name: "Deferred"
-      description: "Decisions postponed for future consideration"
+    - id: "constrained"
+      name: "Constrained"
+      description: "Decision shaped by external constraints (regulatory, technical, budgetary)"
+
+    - id: "time_bound"
+      name: "Time-bound"
+      description: "Decision driven by a deadline or time-sensitive trigger"
 
   status_values:
     - "Proposed"
     - "Under Review"
+    - "Active"
     - "Approved"
     - "Implemented"
     - "Deferred"
@@ -196,11 +232,30 @@ decision_config:
   required_fields:
     - "id"
     - "title"
-    - "category"
+    - "scope"
     - "context"
     - "alternatives"
     - "rationale"
     - "impact"
+
+  confidence_levels:
+    - id: "high"
+      name: "High"
+      description: "Decision is well-supported by evidence and unlikely to change"
+    - id: "medium"
+      name: "Medium"
+      description: "Decision is reasonable but some uncertainty remains"
+    - id: "low"
+      name: "Low"
+      description: "Decision is a best guess under significant ambiguity"
+
+  uncertainty_sources:
+    - "Requirements unclear"
+    - "Data incomplete"
+    - "Technology evolving"
+    - "Regulatory pending"
+    - "Stakeholder alignment pending"
+    - "Dependency on external decision"
 
   evaluation_criteria:
     - "Feasibility"

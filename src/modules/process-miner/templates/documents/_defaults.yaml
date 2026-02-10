@@ -126,6 +126,10 @@ id_prefixes:
     origin: "as-is"
 
   # ── Tier 1: CX Journey (cross-document) ──
+  CXE:
+    name: "CX Exception Scenario"
+    tier: 1
+    origin: "cx-journey"
   JT:
     name: "Journey Touchpoint"
     tier: 1
@@ -248,10 +252,10 @@ id_prefixes:
     name: "Activity"
     tier: 2
     origin: "dilo"
-  # Note: INT is Tier 1 (Integration Point in AS-IS).
-  # DILO Interruptions use INT prefix within DILO context only.
-  # Disambiguation: DILO INT# items exist only in DILO documents;
-  # AS-IS INT# items exist only in system integration tables.
+  IRQ:
+    name: "Interruption"
+    tier: 2
+    origin: "dilo"
   WA:
     name: "Workaround"
     tier: 2
@@ -274,6 +278,46 @@ id_prefixes:
     name: "Innovation Idea"
     tier: 2
     origin: "innovation-ideas-detail"
+
+# ──────────────────────────────────────────────
+# Confidence Propagation
+# ──────────────────────────────────────────────
+# Downstream document confidence cannot exceed the confidence of the
+# upstream section whose IDs it references. QA suite validation enforces this.
+confidence_propagation:
+  rules:
+    - from: "as-is-process-documentation:process_steps"
+      to:
+        - "dilo-observation:timeline"
+        - "cx-journey-documentation:touchpoints"
+        - "sipoc-analysis:process_mapping"
+        - "target-state-documentation:asis_tobe_reconciliation"
+      effect: "downstream_confidence <= upstream_confidence"
+
+    - from: "as-is-process-documentation:pain_points"
+      to:
+        - "innovation-analysis-documentation:innovation_backlog"
+        - "target-state-documentation:asis_tobe_reconciliation"
+      effect: "downstream_confidence <= upstream_confidence"
+
+    - from: "as-is-process-documentation:control_points"
+      to:
+        - "compliance-control-assessment:control_inventory"
+        - "target-state-documentation:control_design"
+      effect: "downstream_confidence <= upstream_confidence"
+
+    - from: "cx-journey-documentation:touchpoints"
+      to:
+        - "target-state-documentation:cx_design"
+      effect: "downstream_confidence <= upstream_confidence"
+
+    - from: "cx-journey-documentation:friction_points"
+      to:
+        - "target-state-documentation:cx_design"
+      effect: "downstream_confidence <= upstream_confidence"
+
+  # Severity when a downstream section has higher confidence than its upstream source
+  violation_severity: warning
 
 # ──────────────────────────────────────────────
 # Diagram Generation Rules

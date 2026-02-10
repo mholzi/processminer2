@@ -119,6 +119,31 @@ sections:
           - name: shared_steps
             required: false
         summary_table_header: "| Variant | Scope | Key Differences | Shared Steps |"
+      - id: process_dependencies
+        heading: "1.8 Process Dependencies"
+        content_type: item_list
+        item_prefix: "DEP"
+        summary_table_header: "| DEP# | Direction | Process | Dependency Type | Data/Trigger Exchanged |"
+        guidance: |
+          Map all processes that provide inputs to this process (upstream) and
+          processes that consume outputs from this process (downstream). Include
+          the nature of the dependency (data, trigger, approval) and what is
+          exchanged. This enables impact analysis for proposed changes.
+        item_fields:
+          - name: dependency_id
+            required: true
+          - name: direction
+            type: enum
+            values: [Upstream, Downstream]
+            required: true
+          - name: process_name
+            required: true
+          - name: dependency_type
+            type: enum
+            values: [Data, Trigger, Approval, Resource, Time-Bound]
+            required: true
+          - name: exchange_description
+            required: true
     validation:
       min_words: 150
       max_words: 500
@@ -234,6 +259,46 @@ sections:
           - name: no_path
             required: true
         summary_table_header: "| DP# | Decision | At Step | Criteria | Yes Path | No Path |"
+      - id: rework_analysis
+        heading: "2.7 Rework Analysis"
+        content_type: item_list
+        item_prefix: "RW"
+        summary_table_header: "| RW# | From Step | Trigger | Returns To | Frequency | Avg Cycles | Time Cost |"
+        guidance: |
+          Document every point where work loops back to an earlier step. Rework
+          is hidden cost that inflates cycle time. From Step: where rework is
+          detected. Returns To: which earlier step work is sent back to.
+          Frequency: percentage of cases experiencing this rework loop.
+          Avg Cycles: average number of times work loops before completing.
+          Time Cost: average additional time added per rework occurrence.
+        item_fields:
+          - name: rework_id
+            required: true
+          - name: from_step
+            type: reference
+            prefix: "PS"
+            required: true
+          - name: trigger
+            required: true
+          - name: returns_to
+            type: reference
+            prefix: "PS"
+            required: true
+          - name: frequency
+            required: false
+          - name: avg_cycles
+            required: false
+          - name: time_cost
+            required: false
+      - id: cycle_time_analysis
+        heading: "2.8 Cycle Time Analysis"
+        content_type: key_value_table
+        guidance: |
+          Decompose total cycle time into active work vs. wait/queue time.
+          Identify the bottleneck step (longest wait) and longest work step.
+          This analysis supports lean improvement by quantifying waste.
+          Include: Total Cycle Time (Avg), Active Work Time (with %), Wait/Queue
+          Time (with %), Longest Wait Step, Longest Work Step.
     item_template: |
       ### {{id}}: {{name}}
       **Performer:** {{owner}}
@@ -274,6 +339,12 @@ sections:
         required: false
       - name: interaction_count
         required: false
+      - name: error_rate
+        required: false
+        description: "Percentage of cases that have errors at this step requiring correction"
+      - name: error_source
+        required: false
+        description: "Primary cause of errors (data quality, system, human error, etc.)"
     validation:
       min_count: 3
       max_count: 50
@@ -707,6 +778,8 @@ id_patterns:
   service_level: "SLA-[A-Z]{2,4}-\\d{3}"
   process_gap: "PGAP-[A-Z]{2,4}-\\d{3}"
   integration_point: "INT-[A-Z]{2,4}-\\d{3}"
+  process_dependency: "DEP-[A-Z]{2,4}-\\d{3}"
+  rework_loop: "RW-[A-Z]{2,4}-\\d{3}"
 
 # ──────────────────────────────────────────────
 # Companion Documents
@@ -730,6 +803,47 @@ companion_documents:
   - name: "Client Touchpoint Details"
     file: "client-touchpoints-detail.md"
     relationship: "detail"
+
+# ──────────────────────────────────────────────
+# Sync Validation Rules
+# ──────────────────────────────────────────────
+# Enforces bidirectional sync consistency between AS-IS sections and detail documents.
+# QA validation checks these rules to prevent drift.
+sync_validation:
+  rules:
+    - parent_section: 3  # Exceptions
+      detail_document: "exceptions-detail.md"
+      id_prefix: "EX"
+      checks:
+        - type: id_set_equality
+          description: "Every EX# in AS-IS Section 3 must appear in exceptions-detail, and vice versa"
+        - type: required_field_presence
+          fields: ["exception_name", "trigger_condition", "affected_steps", "frequency", "business_impact"]
+          description: "Both sides must have all required fields populated for each EX#"
+
+    - parent_section: 4  # Control Points
+      detail_document: "control-points-detail.md"
+      id_prefix: "CP"
+      checks:
+        - type: id_set_equality
+          description: "Every CP# in AS-IS Section 4 must appear in control-points-detail, and vice versa"
+        - type: required_field_presence
+          fields: ["control_name", "type", "at_step", "effectiveness"]
+          description: "Both sides must have all required fields populated for each CP#"
+
+    - parent_section: 9  # Pain Points
+      detail_document: "pain-points-detail.md"
+      id_prefix: "PP"
+      checks:
+        - type: id_set_equality
+          description: "Every PP# in AS-IS Section 9 must appear in pain-points-detail, and vice versa"
+        - type: required_field_presence
+          fields: ["pain_point_name", "affected_steps", "impact", "frequency"]
+          description: "Both sides must have all required fields populated for each PP#"
+
+  # Sync does NOT enforce text matching — wording can differ between parent and detail doc.
+  # Only IDs and required fields must be consistent.
+  text_matching: false
 
 # ──────────────────────────────────────────────
 # Related Specialist Documents

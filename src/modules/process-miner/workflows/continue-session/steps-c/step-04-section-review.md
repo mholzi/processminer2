@@ -157,12 +157,20 @@ Proceed to section 4 (Review Options).
 
 #### IF [A] Approve:
 
-1. Mark subsection/section status as `approved`
-2. **PERSIST IMMEDIATELY:**
+1. **Run QA Quick Check** before confirming approval:
+   - Execute `qa-check: { type: all, document: {current_document_type}, section: {current_section_id} }`
+   - **IF pass (no errors):** proceed silently to step 2
+   - **IF warnings only:** note warnings inline (e.g., "QA: 2 warnings — {summary}") and proceed to step 2
+   - **IF errors found:** display errors and offer: `[P] Proceed with approval anyway` or `[R] Return to review options`
+     - IF [P]: proceed to step 2
+     - IF [R]: return to section 4 (Review Options) — approval is NOT persisted
+   - **Non-blocking:** the user always has final say on whether to approve
+2. Mark subsection/section status as `approved`
+3. **PERSIST IMMEDIATELY:**
    - Write updated status to MD
    - Write updated status to JSON
    - Update `_progress.yaml`
-3. Proceed to next subsection (section 2f) or section 6 (Next Section Logic)
+4. Proceed to next subsection (section 2f) or section 6 (Next Section Logic)
 
 #### IF [E] Edit (Minor Edits):
 
@@ -244,6 +252,7 @@ Within any QER mode, the user can type **[X] Exit** at any point to cancel and r
 - Auto-fill applied when confidence < 50%, skipped when >= 50%
 - Discrepancies shown for current subsection/section
 - F2B mode advances correctly and **excludes `executive_summary` section only if schema has one**
+- QA quick check runs before confirming [A] Approve — errors shown with [P]/[R] options
 
 ### ❌ SYSTEM FAILURE:
 
@@ -257,5 +266,6 @@ Within any QER mode, the user can type **[X] Exit** at any point to cancel and r
 - Offering [S] Skip after changes were made (should be [D] Done)
 - Auto-filling when confidence >= 50%, or NOT auto-filling when confidence < 50%
 - Including `executive_summary` section in F2B flow when schema defines one
+- Skipping QA quick check on approval or blocking user without offering [P] Proceed option
 
 **Master Rule:** Granular review with immediate persistence. Every approval is durable. Never lose user work.

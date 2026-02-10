@@ -47,7 +47,7 @@ Execute all validation check categories and compile findings.
 
 ### 2. Run Structure Validation
 
-"**[1/6] Structure Validation**"
+"**[1/7] Structure Validation**"
 
 Check:
 - All required sections present
@@ -62,7 +62,7 @@ Check:
 
 ### 3. Run Completeness Validation
 
-"**[2/6] Completeness Validation**"
+"**[2/7] Completeness Validation**"
 
 Check:
 - Minimum counts met for each section
@@ -77,7 +77,7 @@ Check:
 
 ### 4. Run Cross-Reference Validation
 
-"**[3/6] Cross-Reference Validation**"
+"**[3/7] Cross-Reference Validation**"
 
 Check all references point to existing items:
 
@@ -89,7 +89,7 @@ Check all references point to existing items:
 
 ### 5. Run Content Quality Validation
 
-"**[4/6] Content Quality**"
+"**[4/7] Content Quality**"
 
 Check:
 - No duplicate IDs
@@ -104,7 +104,7 @@ Check:
 
 ### 6. Run Schema Compliance
 
-"**[5/6] Schema Compliance**"
+"**[5/7] Schema Compliance**"
 
 Check:
 - Document structure matches schema
@@ -113,11 +113,33 @@ Check:
 
 ### 7. Run Progress Sync
 
-"**[6/6] Progress Sync**"
+"**[6/7] Progress Sync**"
 
 Check _progress.yaml matches actual counts.
 
-### 8. Present Findings Summary
+### 8. Run Inter-Document Reference Check
+
+"**[7/7] Inter-Document References**"
+
+Using the `inter_document` cross-reference block from the document's schema, check that all cross-document references resolve to existing items in their target documents.
+
+For each `inter_document` rule in the schema:
+1. Extract all referenced IDs from the source field in this document
+2. Load the target document specified in the rule
+3. Verify each referenced ID exists in the target document
+
+```
+✓ PP1 → AS-IS PS1, PS4 (valid)
+✓ JT3 → AS-IS PS3 (valid)
+✗ JT7 → AS-IS PS15 (INVALID - PS15 doesn't exist in AS-IS)
+  → Remediation: Verify PS# in AS-IS Section 2 or update reference
+```
+
+**Severity:** Strict blocking if target document confidence is MEDIUM or HIGH. Soft warning if target document confidence is LOW (referenced item might not exist yet).
+
+**Note:** If the document's schema has no `inter_document` block, skip this check and report "N/A — no inter-document references declared".
+
+### 9. Present Findings Summary
 
 "**Validation Complete**
 
@@ -129,6 +151,7 @@ Check _progress.yaml matches actual counts.
 | Content Quality | ⚠️ Warn | {count} |
 | Schema Compliance | ✓ Pass | 0 |
 | Progress Sync | ⚠️ Warn | {count} |
+| Inter-Document Refs | ✓ Pass | {count} |
 
 **Total:** {error_count} errors, {warning_count} warnings"
 
@@ -152,7 +175,7 @@ Display: "**Ready to generate report?** [C] Continue [D] Details on category"
 
 ### ✅ SUCCESS:
 
-- All 6 check categories run
+- All 7 check categories run
 - Findings compiled
 - Summary presented
 - Ready for scoring

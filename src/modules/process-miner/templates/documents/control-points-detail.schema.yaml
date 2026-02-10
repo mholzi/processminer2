@@ -198,7 +198,11 @@ control_entry_fields:
     - segregation_of_duties
     - dependencies
     - exception_handling
+    - exceptions_structured
     - related_controls
+    - control_dependencies
+    - automation_analysis
+    - control_economics
     - improvement_recommendations
     - transformation_considerations
 
@@ -324,6 +328,109 @@ effectiveness_ratings:
   - rating: "Not Operating"
     score: 1
     description: "Control is not being performed"
+
+# ──────────────────────────────────────────────
+# Control Dependencies Structure (Category C)
+# ──────────────────────────────────────────────
+control_dependencies:
+  fields:
+    - name: related_control_id
+      type: reference
+      prefix: "CP"
+      required: true
+      description: "The related control identifier"
+    - name: dependency_type
+      type: enum
+      values: [compensating, sequential, upstream, downstream, redundant]
+      required: true
+      description: "Nature of the relationship between controls"
+    - name: dependency_direction
+      type: enum
+      values: [depends_on, depended_by]
+      required: true
+      description: "Direction of dependency"
+    - name: failure_cascade
+      type: boolean
+      required: false
+      description: "Does this control's failure affect downstream controls?"
+
+# ──────────────────────────────────────────────
+# Exception Management Structure (Category F)
+# ──────────────────────────────────────────────
+exceptions_structured:
+  fields:
+    - name: exception_types
+      type: array
+      values: [planned_deviation, control_failure, temporary_override, permanent_waiver]
+      required: false
+      description: "Types of exceptions applicable to this control"
+    - name: exception_approval_authority
+      type: string
+      required: false
+      description: "Required approval level for exceptions"
+    - name: exception_tracking_prefix
+      type: string
+      required: false
+      description: "EX# prefix for exception register entries"
+    - name: exception_expiry
+      type: date
+      required: false
+      description: "Expiry date for time-bound exceptions"
+    - name: exception_volume_threshold
+      type: number
+      required: false
+      description: "Alert threshold when exceptions exceed X per period"
+
+# ──────────────────────────────────────────────
+# Automation Feasibility (Category I)
+# ──────────────────────────────────────────────
+automation_analysis:
+  fields:
+    - name: automation_potential
+      type: enum
+      values: [high, medium, low, not_feasible]
+      required: false
+      description: "Potential for automating this control"
+    - name: automation_blockers
+      type: array
+      values: [technology, regulatory, cost, complexity, data_quality, integration]
+      required: false
+      description: "Barriers preventing automation"
+    - name: automation_prerequisites
+      type: text
+      required: false
+      description: "Systems or integrations needed for automation"
+    - name: automation_roi_estimate
+      type: text
+      required: false
+      description: "Cost-benefit assessment for automation"
+    - name: fallback_procedure
+      type: text
+      required: false
+      description: "Manual procedure when automated control fails"
+
+# ──────────────────────────────────────────────
+# Control Economics (Category J)
+# ──────────────────────────────────────────────
+control_economics:
+  fields:
+    - name: cost_per_execution
+      type: number
+      required: false
+      description: "FTE hours or system cost per execution"
+    - name: annual_operating_cost
+      type: number
+      required: false
+      description: "Total annual cost to operate this control"
+    - name: risk_reduction_value
+      type: number
+      required: false
+      description: "Annual expected loss prevented by this control"
+    - name: value_score
+      type: computed
+      formula: "risk_reduction_value - annual_operating_cost"
+      required: false
+      description: "Net value of control (positive = value-creating)"
 
 # ──────────────────────────────────────────────
 # Risk Levels

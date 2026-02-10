@@ -12,15 +12,408 @@
       "client_profile": "Business owner or corporate representative applying for banking services. May be an individual (BizBanking) or a corporate officer acting on behalf of a legal entity (MidCap/LargeCap). Submits identity documents, corporate filings, and beneficial ownership declarations.",
       "key_motivations": "Gain access to banking services; meet regulatory requirements efficiently; minimise time spent on administrative paperwork; receive clear communication on application status and next steps.",
       "expected_experience": "A secure, efficient, and transparent process with minimal manual intervention. Clear upfront communication of required documents, predictable timelines, proactive status updates, and no need to chase the bank for progress.",
-      "journey_context": "This section provides an initial high-level overview of the client's journey through the Know Your Customer (KYC) process. It establishes the critical client perspective, identifying the core objectives and expectations of individuals undergoing identity verification. The journey encompasses the initial application or review trigger, navigating through data submission, verification steps, and ultimately achieving compliance to access or continue utilizing banking services. Understanding this journey from the client's viewpoint is crucial for identifying areas of friction and opportunities for enhancing the overall experience. This foundational understanding will guide subsequent detailed analysis of touchpoints and pain points.",
-      "confidence": 55,
+      "journey_context": "The KYC onboarding journey is a regulatory-mandated process that every prospective banking client must complete before accessing services. From the client's perspective, this is a compliance gate — necessary but not valuable in itself. The client's primary goal is access to banking services; KYC is an obstacle to that goal, not a benefit. The market context is significant: digital-first competitors offer onboarding in hours, not weeks. Clients arriving from fintechs or digital banks expect real-time status visibility, minimal document handling, and proactive communication. The current 7–10 day timeline with no self-service tracking and 3–4 daily status calls to the Relationship Manager falls well below these expectations. Three client segments (BizBanking, MidCap, LargeCap) share a common KYC journey but differ in document complexity.",
+      "confidence": 75,
       "status": "draft",
+      "word_count": 180,
       "subsection_status": {
         "journey_identification": "approved",
         "client_persona": "reviewed",
         "journey_context": "draft"
+      }
+    },
+    "touchpoints": {
+      "summary": "The KYC client journey comprises 10 touchpoints across 4 channels. The journey begins digitally with application submission via the Client Portal, then shifts to email for document exchange, and degrades to phone for status enquiries.",
+      "items": [
+        {
+          "id": "JT-KYC-001",
+          "name": "Application Submission",
+          "stage": "Application",
+          "channel": "CH-KYC-001",
+          "at_step": "PS-KYC-001",
+          "customer_action": "Fills in application details, submits",
+          "emotion": "Neutral",
+          "moment_of_truth": "Moment of Truth",
+          "ces_contribution": 3.0
+        },
+        {
+          "id": "JT-KYC-002",
+          "name": "Document Request Received",
+          "stage": "Application",
+          "channel": "CH-KYC-002",
+          "at_step": "PS-KYC-002",
+          "customer_action": "Reads requirements, plans document gathering",
+          "emotion": "Neutral",
+          "moment_of_truth": "Standard",
+          "ces_contribution": 1.0
+        },
+        {
+          "id": "JT-KYC-003",
+          "name": "Document Submission",
+          "stage": "Application",
+          "channel": "CH-KYC-002",
+          "at_step": "PS-KYC-002",
+          "customer_action": "Gathers 3–5 documents, scans, emails to RM",
+          "emotion": "Frustrated",
+          "moment_of_truth": "Standard",
+          "ces_contribution": 12.0
+        },
+        {
+          "id": "JT-KYC-004",
+          "name": "Processing Wait (Black Box)",
+          "stage": "Processing",
+          "channel": null,
+          "at_step": "PS-KYC-003",
+          "customer_action": "Waits; no action possible",
+          "emotion": "Frustrated",
+          "moment_of_truth": "Moment of Pain",
+          "ces_contribution": 4.0
+        },
+        {
+          "id": "JT-KYC-005",
+          "name": "Status Enquiry Calls",
+          "stage": "Processing",
+          "channel": "CH-KYC-003",
+          "at_step": "PS-KYC-004",
+          "customer_action": "Calls RM 3–4 times to check status",
+          "emotion": "Frustrated",
+          "moment_of_truth": "Moment of Pain",
+          "ces_contribution": 10.5
+        },
+        {
+          "id": "JT-KYC-006",
+          "name": "EDD Additional Document Request",
+          "stage": "Verification",
+          "channel": "CH-KYC-002",
+          "at_step": "PS-KYC-006",
+          "customer_action": "Gathers additional documents, responds",
+          "emotion": "Frustrated",
+          "moment_of_truth": "Standard",
+          "ces_contribution": 9.0
+        },
+        {
+          "id": "JT-KYC-007",
+          "name": "Approval Notification",
+          "stage": "Decision",
+          "channel": "CH-KYC-002",
+          "at_step": "PS-KYC-008",
+          "customer_action": "Reads notification, expects account access",
+          "emotion": "Satisfied",
+          "moment_of_truth": "Moment of Truth",
+          "ces_contribution": 1.0
+        },
+        {
+          "id": "JT-KYC-008",
+          "name": "Rejection Notification",
+          "stage": "Decision",
+          "channel": "CH-KYC-002",
+          "at_step": "PS-KYC-008",
+          "customer_action": "Reads rejection; no recourse information provided",
+          "emotion": "Angry",
+          "moment_of_truth": "Moment of Pain",
+          "ces_contribution": 2.0
+        },
+        {
+          "id": "JT-KYC-009",
+          "name": "Account Activation Confirmation",
+          "stage": "Activation",
+          "channel": "CH-KYC-002",
+          "at_step": "PS-KYC-009",
+          "customer_action": "Waits overnight for batch processing; then begins banking",
+          "emotion": "Frustrated",
+          "moment_of_truth": "Moment of Truth",
+          "ces_contribution": 5.0
+        },
+        {
+          "id": "JT-KYC-010",
+          "name": "Periodic Review Notification",
+          "stage": "Ongoing",
+          "channel": "CH-KYC-002",
+          "at_step": "PS-KYC-010",
+          "customer_action": "Prepares updated documents for review cycle",
+          "emotion": "Neutral",
+          "moment_of_truth": "Standard",
+          "ces_contribution": 2.0
+        }
+      ],
+      "statistics": {
+        "total": 10,
+        "digital": 4,
+        "human_assisted": 2,
+        "self_service": 1,
+        "wait_points": 3
       },
-      "word_count": 100
+      "confidence": 78,
+      "status": "draft"
+    },
+    "moments_that_matter": {
+      "moments": [
+        {
+          "name": "First Impression — Application Submission",
+          "touchpoint_id": "JT-KYC-001",
+          "stage": "Application",
+          "reason": "First interaction sets tone for entire relationship",
+          "current_state": "Neutral — portal works but no document checklist",
+          "emotional_impact": "Neutral to mildly frustrated",
+          "degradation_risk": "Client abandonment; negative word-of-mouth",
+          "enhancement_priority": "Medium"
+        },
+        {
+          "name": "The Black Box — Processing Wait",
+          "touchpoint_id": "JT-KYC-004",
+          "stage": "Processing",
+          "reason": "Zero visibility drives 3–4 daily status calls",
+          "current_state": "Frustrated/Angry — no tracking, client must chase",
+          "emotional_impact": "Frustrated to Angry",
+          "degradation_risk": "Application withdrawal or formal complaint",
+          "enhancement_priority": "Critical"
+        },
+        {
+          "name": "The Verdict — Approval/Rejection",
+          "touchpoint_id": "JT-KYC-007",
+          "stage": "Decision",
+          "reason": "Outcome of days of client effort",
+          "current_state": "Satisfied (approval) / Angry (rejection — no explanation)",
+          "emotional_impact": "Satisfied to Angry",
+          "degradation_risk": "Delayed notification amplifies anxiety; reputational risk for rejections",
+          "enhancement_priority": "High"
+        },
+        {
+          "name": "The Last Mile — Account Activation",
+          "touchpoint_id": "JT-KYC-009",
+          "stage": "Activation",
+          "reason": "Overnight delay undermines positive approval moment",
+          "current_state": "Frustrated — overnight batch delay",
+          "emotional_impact": "Frustrated",
+          "degradation_risk": "Client believes approval was rescinded if delayed further",
+          "enhancement_priority": "High"
+        }
+      ],
+      "confidence": 75,
+      "status": "draft"
+    },
+    "friction_points": {
+      "summary": "Seven friction points identified. Three High severity, three Medium, one Low. Combined CES impact: 34.0 (55% of total).",
+      "items": [
+        {
+          "id": "FP-KYC-001",
+          "name": "No real-time application status visibility",
+          "stage": "Processing",
+          "related_touchpoint": "JT-KYC-004",
+          "related_pain_point": "PP-KYC-009",
+          "severity": "High",
+          "ces_impact": 10.5,
+          "client_emotion": "Frustrated"
+        },
+        {
+          "id": "FP-KYC-002",
+          "name": "Heavy document collection burden",
+          "stage": "Application",
+          "related_touchpoint": "JT-KYC-003",
+          "related_pain_point": null,
+          "severity": "Medium",
+          "ces_impact": 6.0,
+          "client_emotion": "Frustrated"
+        },
+        {
+          "id": "FP-KYC-003",
+          "name": "Prolonged EDD wait with no progress updates",
+          "stage": "Verification",
+          "related_touchpoint": "JT-KYC-006",
+          "related_pain_point": "PP-KYC-003",
+          "severity": "High",
+          "ces_impact": 5.0,
+          "client_emotion": "Frustrated"
+        },
+        {
+          "id": "FP-KYC-004",
+          "name": "Overnight batch activation delay",
+          "stage": "Activation",
+          "related_touchpoint": "JT-KYC-009",
+          "related_pain_point": "PP-KYC-006",
+          "severity": "High",
+          "ces_impact": 5.0,
+          "client_emotion": "Frustrated"
+        },
+        {
+          "id": "FP-KYC-005",
+          "name": "Rejection notification lacks explanation",
+          "stage": "Decision",
+          "related_touchpoint": "JT-KYC-008",
+          "related_pain_point": null,
+          "severity": "Medium",
+          "ces_impact": 2.0,
+          "client_emotion": "Angry"
+        },
+        {
+          "id": "FP-KYC-006",
+          "name": "Forced multi-channel switching",
+          "stage": "Cross-journey",
+          "related_touchpoint": "JT-KYC-001",
+          "related_pain_point": null,
+          "severity": "Medium",
+          "ces_impact": 4.5,
+          "client_emotion": "Frustrated"
+        },
+        {
+          "id": "FP-KYC-007",
+          "name": "No proactive communication during processing",
+          "stage": "Processing",
+          "related_touchpoint": "JT-KYC-004",
+          "related_pain_point": null,
+          "severity": "Low",
+          "ces_impact": 1.0,
+          "client_emotion": "Neutral"
+        }
+      ],
+      "statistics": {
+        "total": 7,
+        "high_severity": 3,
+        "medium_severity": 3,
+        "low_severity": 1,
+        "quick_wins": 2
+      },
+      "confidence": 75,
+      "status": "draft"
+    },
+    "client_effort_score": {
+      "total_ces": 61.5,
+      "interpretation": "Poor experience, significant transformation required",
+      "by_stage": {
+        "application": 22.0,
+        "processing": 14.5,
+        "verification": 12.5,
+        "decision": 2.0,
+        "activation": 10.5
+      },
+      "metrics": {
+        "client_actions": 8,
+        "documents": 4,
+        "info_requests": 3,
+        "follow_ups": 2,
+        "channel_switches": 3,
+        "active_time_minutes": 72
+      },
+      "transformation_target_30pct": 43.1,
+      "transformation_target_40pct": 36.9,
+      "confidence": 70,
+      "status": "draft"
+    },
+    "channels": {
+      "items": [
+        {
+          "id": "CH-KYC-001",
+          "channel_name": "Client Portal",
+          "touchpoints_using": ["JT-KYC-001"],
+          "primary_purpose": "Application submission",
+          "client_preference": "Preferred — digital self-service"
+        },
+        {
+          "id": "CH-KYC-002",
+          "channel_name": "Email",
+          "touchpoints_using": ["JT-KYC-002", "JT-KYC-003", "JT-KYC-006", "JT-KYC-007", "JT-KYC-008", "JT-KYC-009", "JT-KYC-010"],
+          "primary_purpose": "Document exchange, notifications",
+          "client_preference": "Acceptable — but overused"
+        },
+        {
+          "id": "CH-KYC-003",
+          "channel_name": "Phone",
+          "touchpoints_using": ["JT-KYC-005"],
+          "primary_purpose": "Status enquiries",
+          "client_preference": "Not preferred — forced by lack of alternatives"
+        },
+        {
+          "id": "CH-KYC-004",
+          "channel_name": "In-Person",
+          "touchpoints_using": [],
+          "primary_purpose": "Document verification (optional)",
+          "client_preference": "Not preferred — convenience barrier"
+        }
+      ],
+      "channel_switches": 3,
+      "forced_switches": 3,
+      "voluntary_switches": 0,
+      "confidence": 72,
+      "status": "draft"
+    },
+    "enhancement_ideas": {
+      "items": [
+        {
+          "id": "EI-KYC-001",
+          "target_friction": "FP-KYC-001",
+          "enhancement_idea": "Self-service application status tracker on Client Portal",
+          "est_ces_reduction": -10.5,
+          "complexity": "Medium",
+          "priority": "Critical"
+        },
+        {
+          "id": "EI-KYC-002",
+          "target_friction": "FP-KYC-007",
+          "enhancement_idea": "Proactive automated notifications at each stage transition",
+          "est_ces_reduction": -3.0,
+          "complexity": "Low",
+          "priority": "High"
+        },
+        {
+          "id": "EI-KYC-003",
+          "target_friction": "FP-KYC-002",
+          "enhancement_idea": "Digital document upload via Client Portal with type-specific checklist",
+          "est_ces_reduction": -4.0,
+          "complexity": "Medium",
+          "priority": "High"
+        },
+        {
+          "id": "EI-KYC-004",
+          "target_friction": "FP-KYC-004",
+          "enhancement_idea": "Real-time account activation via API",
+          "est_ces_reduction": -5.0,
+          "complexity": "High",
+          "priority": "High"
+        },
+        {
+          "id": "EI-KYC-005",
+          "target_friction": "FP-KYC-006",
+          "enhancement_idea": "Unified portal experience — single channel from application to activation",
+          "est_ces_reduction": -4.5,
+          "complexity": "High",
+          "priority": "Medium"
+        },
+        {
+          "id": "EI-KYC-006",
+          "target_friction": "FP-KYC-002",
+          "enhancement_idea": "Document checklist generator based on client type and segment",
+          "est_ces_reduction": -2.0,
+          "complexity": "Low",
+          "priority": "Medium"
+        }
+      ],
+      "statistics": {
+        "total": 6,
+        "quick_wins": 2,
+        "strategic": 2,
+        "automation_opportunities": 3,
+        "total_ces_reduction": -29.0
+      },
+      "confidence": 70,
+      "status": "draft"
+    },
+    "industry_research": {
+      "confidence": 60,
+      "status": "draft"
+    },
+    "tobe_inputs": {
+      "confidence": 72,
+      "status": "draft"
+    },
+    "discovery_logging": {
+      "new_pain_points": 0,
+      "new_exceptions": 0,
+      "new_controls": 0,
+      "new_friction_points": 7,
+      "new_enhancement_ideas": 6,
+      "new_channels": 4,
+      "confidence": 90,
+      "status": "draft"
     }
   },
   "discrepancies": []

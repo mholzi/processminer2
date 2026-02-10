@@ -108,7 +108,52 @@ update-progress:
   check: transformation_complete
 ```
 
-### 4. Confirm Completion
+### 4. Self-Validation Pre-Check
+
+Before presenting completion, run a validation pre-check against specialist criteria:
+
+"**Running validation pre-check against specialist criteria...**"
+
+Load validation focus areas from `target-state-documentation.schema.yaml` `validation.specialists[]` and check:
+
+**Control Check:**
+- Do any TD# items affect control points (CP#)? If so, is control impact documented?
+- Are SOD implications noted for step consolidation/modification decisions?
+- Are regulatory constraints (REG#) respected in all TD# items?
+
+**CX Check:**
+- Do TD# items address documented friction points (FP#)? Cross-check coverage.
+- Is CES improvement potential estimated?
+- Are moments that matter considered in process redesign TD# items?
+
+**Innovation Check:**
+- Are MUST HAVE priority II# items addressed by TD# items?
+- Do automation TD# items align with Innovation feasibility scores?
+
+**Process Check:**
+- Does every PP# have at least one corresponding TD# item?
+- Are all TD# references valid (PP#, PS#, CP#, FP#, II#)?
+
+**IF issues found:**
+"⚠️ **Validation Pre-Check Found {count} Potential Issues:**
+
+| VG# | Severity | Domain | Issue |
+|-----|----------|--------|-------|
+| VG-{PROC}-001 | {Critical/High/Medium/Low} | {Control/CX/Innovation/Process} | {description} |
+...
+
+**[R]** Resolve now — address issues before completing
+**[A]** Accept and continue — issues noted in gap resolution log
+**[E]** Edit recommendations — return to step 2"
+
+**IF [R]:** Walk through each VG# item with SME, resolve inline, update TD# items.
+**IF [A]:** Write VG# items to gap-resolution-log.md, continue to completion.
+**IF [E]:** Return to step-02-generate-recommendations.
+
+**IF no issues found:**
+"✓ Validation pre-check passed — no specialist concerns identified."
+
+### 5. Confirm Completion
 
 "✓ **Transformation Analysis Complete**
 
@@ -116,6 +161,14 @@ update-progress:
 ├── Quick Wins: {count}
 ├── Tactical: {count}
 └── Strategic: {count}
+
+**Upstream Sources Integrated:**
+├── Pain Points (PP#): {count} analyzed
+├── Friction Points (FP#): {count} cross-referenced
+├── Control Recs (CIR#): {count} cross-referenced
+└── Innovation Ideas (II#): {count} cross-referenced
+
+**Validation Pre-Check:** {passed / {count} issues noted}
 
 **Top Recommendations:**
 1. TD1: {title} (Quick Win, High Impact)
@@ -127,6 +180,7 @@ update-progress:
 **What's next?**
 - **[V]** View recommendations
 - **[E]** Edit recommendations
+- **[VT]** Run full Target State validation (deeper check)
 - **[ES]** Generate executive summary
 - **[COMP]** Return to Companion"
 
@@ -134,6 +188,7 @@ update-progress:
 
 - IF V: Display full document
 - IF E: Return to step-02-generate-recommendations
+- IF VT: Execute #target-state-validation prompt (full validation)
 - IF ES: Route to executive-summary workflow
 - IF COMP: End workflow
 

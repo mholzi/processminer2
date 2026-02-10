@@ -14,6 +14,23 @@ template_description: "TO-BE process transformation design with full AS-IS trace
 required: false
 
 # ──────────────────────────────────────────────
+# Upstream Dependencies
+# ──────────────────────────────────────────────
+dependencies:
+  - document: "as-is-process-documentation"
+    required_for_validation: true
+    referenced_prefixes: ["PS#", "CP#", "PP#", "EX#"]
+  - document: "cx-journey-documentation"
+    required_for_validation: true
+    referenced_prefixes: ["JT#", "FP#"]
+  - document: "compliance-control-assessment"
+    required_for_validation: false
+    referenced_prefixes: ["REG#"]
+  - document: "innovation-analysis-documentation"
+    required_for_validation: true
+    referenced_prefixes: ["II#"]
+
+# ──────────────────────────────────────────────
 # Sections
 # ──────────────────────────────────────────────
 sections:
@@ -613,6 +630,33 @@ companion_documents:
   - name: "Innovation Analysis Documentation"
     file: "innovation-analysis-documentation.md"
     relationship: "source"
+
+# ──────────────────────────────────────────────
+# Sync Validation Rules
+# ──────────────────────────────────────────────
+sync_validation:
+  rules:
+    - parent_section: 7  # Transformation Decisions
+      detail_document: "transformation-decisions-detail.md"
+      id_prefix: "TD"
+      checks:
+        - type: id_set_equality
+          description: "Every TD# in Target State Section 7 must appear in transformation-decisions-detail, and vice versa"
+        - type: required_field_presence
+          fields: ["decision", "category", "rationale"]
+          description: "Both sides must have all required fields populated for each TD#"
+
+    - parent_section: 13  # Gap Resolution Log
+      detail_document: "gap-resolution-log.md"
+      id_prefix: "VG"
+      checks:
+        - type: id_set_equality
+          description: "Every VG# in Target State Section 13 must appear in gap-resolution-log, and vice versa"
+        - type: required_field_presence
+          fields: ["gap_description", "severity", "status"]
+          description: "Both sides must have all required fields populated for each VG#"
+
+  text_matching: false
 
 # ──────────────────────────────────────────────
 # Traceability Configuration

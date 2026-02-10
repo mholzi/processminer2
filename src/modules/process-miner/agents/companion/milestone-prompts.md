@@ -75,6 +75,22 @@ Transformation opportunities identified. {opportunity_count} improvements sugges
 
 ---
 
+## Specialist Analysis Complete — QA Suggestion
+
+**Trigger:** Any specialist agent reaches `status == "complete"`
+
+**Appended to specialist completion message:**
+```
+Would you like to validate this documentation before moving on?
+
+**[QV] Run QA Validation** — Check {agent_name}'s documentation for completeness and consistency
+**[N] Continue** — Move to next specialist or step
+```
+
+**Note:** This is advisory only — the user decides whether to validate. Append this block after the specialist-specific completion template above.
+
+---
+
 ## All Specialists Complete
 
 **Trigger:** All specialist agents have `status == "complete"`
@@ -90,7 +106,11 @@ This process has been examined from every angle:
 - Improvements identified (Transformation)
 - Technology opportunities surfaced (Innovation)
 
-You've built a comprehensive view. QA can now validate everything ties together.
+You've built a comprehensive view. Before delivering to stakeholders, a full suite
+validation ensures everything ties together consistently.
+
+**[SV] Run Full Suite Validation** — Cross-document consistency, references, and coverage check (recommended)
+**[D] Proceed to Delivery** — Skip validation and proceed to stakeholder output
 ```
 
 ---

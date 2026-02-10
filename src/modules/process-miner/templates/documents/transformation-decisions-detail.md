@@ -18,9 +18,10 @@
 | Metric | Value |
 |--------|-------|
 | Total Decisions Logged | {{total_decisions}} |
-| Strategic Decisions | {{strategic_decisions}} |
-| Tactical Decisions | {{tactical_decisions}} |
-| Trade-off Decisions | {{tradeoff_decisions}} |
+| Strategic Scope | {{strategic_decisions}} |
+| Tactical Scope | {{tactical_decisions}} |
+| Operational Scope | {{operational_decisions}} |
+| Active Decisions | {{active_decisions}} |
 | Deferred Decisions | {{deferred_decisions}} |
 
 ---
@@ -31,11 +32,20 @@
 >
 > **Parent Document:** [Target State Documentation](./target-state-documentation.md)
 >
-> **Decision Categories:**
-> - **Strategic** - Fundamental design direction affecting multiple areas
-> - **Tactical** - Specific implementation choices within a design direction
-> - **Trade-off** - Balancing competing demands (efficiency vs control, etc.)
-> - **Deferred** - Decisions postponed for future consideration
+> **Decision Classification (Three Dimensions):**
+>
+> *Scope:*
+> - **Strategic** — Fundamental design direction affecting multiple areas
+> - **Tactical** — Specific implementation choices within a design direction
+> - **Operational** — Day-to-day process execution decisions
+>
+> *Characteristics (may apply to any scope):*
+> - **Trade-off** — Balancing competing demands (efficiency vs control, etc.)
+> - **Constrained** — Shaped by external constraints (regulatory, technical, budgetary)
+> - **Time-bound** — Driven by a deadline or time-sensitive trigger
+>
+> *Status:*
+> - **Proposed** / **Under Review** / **Active** / **Approved** / **Implemented** / **Deferred** / **Rejected** / **Superseded**
 
 ---
 
@@ -43,8 +53,8 @@
 
 ### Decision Summary Table
 
-| TD# | Decision Title | Category | AS-IS Impact | Stakeholders | Status |
-|-----|----------------|----------|--------------|--------------|--------|
+| TD# | Decision Title | Scope | Characteristics | AS-IS Impact | Stakeholders | Status |
+|-----|----------------|-------|-----------------|--------------|--------------|--------|
 {{decision_summary_table}}
 
 ---
@@ -60,10 +70,14 @@
 | Attribute | Value |
 |-----------|-------|
 | **Decision ID** | TD#{{this.id}} |
-| **Category** | {{this.category}} |
+| **Scope** | {{this.scope}} |
+| **Characteristics** | {{this.characteristics}} |
 | **Decision Date** | {{this.date}} |
 | **Decision Maker** | {{this.decision_maker}} |
 | **Status** | {{this.status}} |
+| **Confidence** | {{this.confidence}} |
+| **Uncertainty Source** | {{this.uncertainty_source}} |
+| **Revisit Trigger** | {{this.revisit_trigger}} |
 
 #### Context and Problem Statement
 
@@ -94,6 +108,12 @@
 **Rationale:**
 {{this.rationale}}
 
+#### Constraints Applied
+
+| Constraint | Type | Source | Impact on Decision |
+|------------|------|--------|-------------------|
+{{this.constraints_table}}
+
 #### Impact Assessment
 
 | Impact Area | Description | Severity |
@@ -112,6 +132,14 @@
 |-----------|------|-------------|
 {{this.tobe_references}}
 
+#### Consequences
+
+**Positive:**
+{{this.consequences_positive}}
+
+**Negative:**
+{{this.consequences_negative}}
+
 #### Trade-offs Accepted
 
 {{this.tradeoffs_accepted}}
@@ -128,9 +156,21 @@
 |-------------|-------|--------------|
 {{this.stakeholder_input_table}}
 
+#### Decision Dependencies
+
+| Relationship | TD# | Reason |
+|--------------|-----|--------|
+{{this.dependencies_table}}
+
 #### Related Decisions
 
 {{this.related_decisions}}
+
+#### Key Assumptions
+
+| Assumption | Validation Status | Invalidation Impact |
+|------------|-------------------|---------------------|
+{{this.assumptions_table}}
 
 #### Validation Implications
 
@@ -185,6 +225,12 @@
 |-----|----------|-----------------|---------------------|-------------|
 {{deferred_decisions_table}}
 
+### Decision Debt Summary
+
+| Debt Category | Count | Weighted Risk | Top Items |
+|---------------|-------|---------------|-----------|
+{{decision_debt_table}}
+
 ### Deferred Decision Details
 
 {{#each deferred}}
@@ -224,11 +270,33 @@
 
 {{emerging_principles}}
 
+### Decision Dependency Map
+
+{{dependency_mermaid_diagram}}
+
 ### Consistency Check
 
 | Principle | Decisions Aligned | Decisions Conflicting | Resolution |
 |-----------|-------------------|----------------------|------------|
 {{consistency_check_table}}
+
+---
+
+## Assumptions Register
+
+> **About this section:** Consolidated view of all assumptions across decisions for cross-decision tracking.
+
+### Active Assumptions
+
+| Assumption | Source TD# | Validation Status | Invalidation Impact |
+|------------|-----------|-------------------|---------------------|
+{{active_assumptions_table}}
+
+### Invalidated Assumptions
+
+| Assumption | Source TD# | Date Invalidated | Decisions Affected | Action Taken |
+|------------|-----------|------------------|-------------------|--------------|
+{{invalidated_assumptions_table}}
 
 ---
 
@@ -277,10 +345,14 @@
 | Term | Definition |
 |------|------------|
 | TD# | Transformation Decision reference |
-| Strategic | Fundamental design direction decision |
-| Tactical | Specific implementation choice |
+| Scope | Decision classification dimension: Strategic, Tactical, or Operational |
+| Strategic | Fundamental design direction affecting multiple areas |
+| Tactical | Specific implementation choice within a design direction |
+| Operational | Day-to-day process execution decision |
+| Characteristics | Decision attributes: Trade-off, Constrained, or Time-bound |
 | Trade-off | Decision balancing competing demands |
-| Deferred | Decision postponed for future consideration |
+| Constrained | Decision shaped by external constraints |
+| Time-bound | Decision driven by a deadline or time-sensitive trigger |
 
 {{additional_glossary}}
 

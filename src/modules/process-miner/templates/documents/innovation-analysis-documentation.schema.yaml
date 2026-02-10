@@ -14,6 +14,14 @@ template_description: "Innovation analysis with market trends, innovation backlo
 required: false
 
 # ──────────────────────────────────────────────
+# Upstream Dependencies
+# ──────────────────────────────────────────────
+dependencies:
+  - document: "as-is-process-documentation"
+    required_for_validation: true
+    referenced_prefixes: ["PP#", "SYS#"]
+
+# ──────────────────────────────────────────────
 # Sections
 # ──────────────────────────────────────────────
 sections:
@@ -323,6 +331,33 @@ companion_documents:
     relationship: "upstream"
 
 # ──────────────────────────────────────────────
+# Sync Validation Rules
+# ──────────────────────────────────────────────
+sync_validation:
+  rules:
+    - parent_section: 3  # Market Trends
+      detail_document: "market-trends-detail.md"
+      id_prefix: "TR"
+      checks:
+        - type: id_set_equality
+          description: "Every TR# in Innovation Section 3 must appear in market-trends-detail, and vice versa"
+        - type: required_field_presence
+          fields: ["trend_name", "category", "maturity", "relevance"]
+          description: "Both sides must have all required fields populated for each TR#"
+
+    - parent_section: 4  # Innovation Backlog
+      detail_document: "innovation-ideas-detail.md"
+      id_prefix: "II"
+      checks:
+        - type: id_set_equality
+          description: "Every II# in Innovation Section 4 must appear in innovation-ideas-detail, and vice versa"
+        - type: required_field_presence
+          fields: ["innovation_idea", "category", "source", "status"]
+          description: "Both sides must have all required fields populated for each II#"
+
+  text_matching: false
+
+# ──────────────────────────────────────────────
 # Feasibility Scoring Configuration
 # ──────────────────────────────────────────────
 feasibility_scoring:
@@ -351,3 +386,61 @@ feasibility_scoring:
     should_have_threshold: 18
     could_have_threshold: 12
     wont_have_threshold: 0
+
+# ──────────────────────────────────────────────
+# Innovation Lifecycle Tracking
+# ──────────────────────────────────────────────
+innovation_lifecycle:
+  stages:
+    - name: "Concept"
+      description: "Initial idea captured and documented"
+      required_artifacts:
+        - business_case
+        - initial_feasibility
+    - name: "Validated"
+      description: "Idea validated through research or proof-of-concept"
+      required_artifacts:
+        - pilot_plan
+        - success_criteria
+        - budget_estimate
+    - name: "Pilot"
+      description: "Active pilot or experimentation phase"
+      required_artifacts:
+        - pilot_results
+        - scaling_plan
+    - name: "Scaled"
+      description: "Successfully implemented at scale"
+      required_artifacts:
+        - post_implementation_review
+        - roi_analysis
+
+  status_tracking_fields:
+    - name: current_stage
+      type: enum
+      values: [Concept, Validated, Pilot, Scaled, On Hold, Abandoned]
+      required: true
+      description: "Current lifecycle stage of the innovation"
+    - name: stage_entry_date
+      type: date
+      required: true
+      description: "Date when current stage was entered"
+    - name: stage_exit_criteria
+      type: text
+      required: false
+      description: "Criteria that must be met to advance to next stage"
+    - name: assigned_owner
+      type: string
+      required: true
+      description: "Person responsible for advancing this innovation"
+    - name: budget_allocated
+      type: number
+      required: false
+      description: "Budget allocated for current stage"
+    - name: budget_spent
+      type: number
+      required: false
+      description: "Budget consumed to date"
+    - name: decision_history
+      type: array
+      required: false
+      description: "Log of stage transitions with dates, decisions, and rationale"

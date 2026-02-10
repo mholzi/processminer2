@@ -52,7 +52,7 @@
 >
 > **Cross-Reference IDs:**
 > - **ACT#** — Activity observation entry
-> - **INT#** — Interruption entry
+> - **IRQ#** — Interruption entry
 > - **WA#** — Workaround entry
 > - **UD#** — Undocumented step (not in AS-IS)
 > - References: PS# (process steps), PP# (pain points), SYS# (systems)
@@ -152,7 +152,7 @@
 
 ### 3.1 Interruption Log
 
-| INT# | Time | Source | Type | Duration | Impact | Avoidable? | Related ACT# |
+| IRQ# | Time | Source | Type | Duration | Impact | Avoidable? | Related ACT# |
 |------|------|--------|------|----------|--------|------------|--------------|
 {{interruption_log_table}}
 

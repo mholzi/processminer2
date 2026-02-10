@@ -219,6 +219,48 @@
 
 {{this.related_controls}}
 
+#### Control Dependencies
+
+> *Structured relationships with other controls*
+
+| Related Control | Dependency Type | Direction | Failure Cascade |
+|-----------------|-----------------|-----------|-----------------|
+{{this.control_dependencies_table}}
+
+#### Exception Management
+
+> *Structured exception handling for this control*
+
+| Attribute | Value |
+|-----------|-------|
+| **Exception Types** | {{this.exception_types}} |
+| **Approval Authority** | {{this.exception_approval_authority}} |
+| **Tracking Prefix** | {{this.exception_tracking_prefix}} |
+| **Volume Threshold** | {{this.exception_volume_threshold}} |
+
+#### Automation Analysis
+
+> *Feasibility assessment for control automation*
+
+| Attribute | Value |
+|-----------|-------|
+| **Automation Potential** | {{this.automation_potential}} |
+| **Blockers** | {{this.automation_blockers}} |
+| **Prerequisites** | {{this.automation_prerequisites}} |
+| **ROI Estimate** | {{this.automation_roi_estimate}} |
+| **Fallback Procedure** | {{this.fallback_procedure}} |
+
+#### Control Economics
+
+> *Cost-value analysis for this control*
+
+| Metric | Value |
+|--------|-------|
+| **Cost per Execution** | {{this.cost_per_execution}} |
+| **Annual Operating Cost** | {{this.annual_operating_cost}} |
+| **Risk Reduction Value** | {{this.risk_reduction_value}} |
+| **Value Score** | {{this.value_score}} |
+
 #### Related Pain Points
 
 > *Pain points (PP#) that relate to or are affected by this control*

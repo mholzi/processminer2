@@ -115,6 +115,28 @@ process_complete:
   condition: milestones.as_is_complete AND milestones.qa_validated
 ```
 
+### 5b. AS-IS Modification Detection
+
+After any update to `documents.as_is`, check whether downstream specialist documents already exist. If they do, a change to AS-IS means cross-document references may be stale.
+
+**Condition:** The update type is `section_status` AND `document == as_is` AND at least one downstream specialist document has `status != "not_started"` (any of: `cx_journey`, `transformation`, `innovation`, `architecture`, `compliance`).
+
+**Action:** Set a validation flag in `_progress.yaml`:
+
+```yaml
+validation:
+  suite_validation_recommended: true
+  reason: "AS-IS modified after downstream specialists started"
+  triggered_at: "{ISO timestamp}"
+  changed_sections:
+    - "{section_id}"
+```
+
+**Rules:**
+- If `validation.suite_validation_recommended` is already `true`, append the new section to `changed_sections` (deduplicate) and update `triggered_at`
+- Flag is cleared when suite validation runs (`qa_suite_validation.status == complete`) or when the user explicitly dismisses it
+- Include `qa_flags.suite_validation_recommended: true` in the return result so calling workflows are immediately aware
+
 ### 6. Return Result
 
 ```yaml
@@ -123,6 +145,8 @@ updates_applied:
   - section: pain_points, status: in_progress, count: 6
 milestones_achieved:
   - as_is_complete: true
+qa_flags:
+  suite_validation_recommended: true  # only present if flag was set in step 5b
 message: "Progress updated. AS-IS documentation complete!"
 ```
 

@@ -29,6 +29,32 @@ document_info:
     - "At least 5 PS# items documented"
 
 # ──────────────────────────────────────────────
+# Upstream Dependencies
+# ──────────────────────────────────────────────
+dependencies:
+  - document: "as-is-process-documentation"
+    required_for_validation: true
+    referenced_prefixes: ["PS#", "PP#", "EX#", "CP#", "SYS#"]
+  - document: "pain-points-detail"
+    required_for_validation: false
+    referenced_prefixes: ["PP#"]
+  - document: "control-points-detail"
+    required_for_validation: false
+    referenced_prefixes: ["CP#"]
+
+# ──────────────────────────────────────────────
+# Prerequisite Enforcement
+# ──────────────────────────────────────────────
+prerequisites:
+  rules:
+    - check: "as-is-process-documentation.completion >= 60"
+      description: "AS-IS must be at least 60% complete before SIPOC creation"
+      severity: blocking
+    - check: "as-is-process-documentation.process_steps.count >= 5"
+      description: "AS-IS must have at least 5 PS# items documented"
+      severity: blocking
+
+# ──────────────────────────────────────────────
 # Sections
 # ──────────────────────────────────────────────
 sections:
@@ -367,6 +393,15 @@ sections:
           regulatory body whose policy changes ripple through multiple
           suppliers. For each, describe the dependency, who is affected, and
           the risk if the dependency is disrupted.
+      - id: quick_wins
+        heading: "7.5 Quick Wins"
+        content_type: summary_table
+        guidance: |
+          Interface improvements that are low-effort and high-value.
+          Criteria: implementable within 30 days, no external dependencies,
+          visible improvement to customers or process performers. Include
+          opportunity description, effort level, expected impact, barriers,
+          and owner. This builds transformation momentum with early wins.
 
   # ── Section 8: Cross-Reference Reconciliation ──
   - id: cross_reference_reconciliation
@@ -410,6 +445,18 @@ sections:
           existing ID, what enrichment to add (e.g., "Add supplier dependency
           note", "Update input description with quality issues"), and the
           SIPOC source reference.
+      - id: completeness_assessment
+        heading: "8.4 SIPOC Completeness Assessment"
+        content_type: summary_table
+        guidance: |
+          Aggregated completeness view per SIPOC dimension. For each of
+          Suppliers, Inputs, Process, Outputs, Customers, and Interface
+          Analysis: state confidence percentage, count of [PREFILLED] items
+          awaiting SME validation, critical gaps, and readiness (Ready/Needs
+          Work). Include overall SIPOC readiness percentage and list of
+          critical gaps requiring SME review. Enables readers to quickly
+          assess whether the SIPOC is complete enough for transformation
+          planning.
 
 # ──────────────────────────────────────────────
 # Completeness Rules (validation gates)

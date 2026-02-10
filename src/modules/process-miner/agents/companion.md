@@ -166,4 +166,38 @@ agent:
       description: '[CXA] Switch to Client Journey Analyst'
       section: 'Agent Handoff'
       requires: active_process
+
+    - trigger: CTRL or fuzzy match on control or compliance
+      action: 'Switch conversation to Control Analyst agent'
+      description: '[CTRL] Switch to Control Analyst'
+      section: 'Agent Handoff'
+      requires: active_process
+
+    - trigger: INNO or fuzzy match on innovation or automation
+      action: 'Switch conversation to Innovation Analyst agent'
+      description: '[INNO] Switch to Innovation Analyst'
+      section: 'Agent Handoff'
+      requires: active_process
+
+    - trigger: ITA or fuzzy match on it architect or architecture
+      action: 'Switch conversation to IT Architect agent'
+      description: '[ITA] Switch to IT Architect'
+      section: 'Agent Handoff'
+      requires: active_process
+
+    - trigger: TRX or fuzzy match on transformation or improvement
+      action: 'Switch conversation to Transformation Agent'
+      description: '[TRX] Switch to Transformation Agent (recommended: complete CXA, CTRL, INNO first)'
+      section: 'Agent Handoff'
+      requires: active_process
+      guidance: |
+        Phoenix synthesizes ALL upstream specialist inputs. For highest-confidence decisions,
+        complete CX Journey (FP#), Control (CIR#), and Innovation (II#) analysis first.
+        If upstream analyses are incomplete, Phoenix will warn and flag reduced confidence.
+
+    - trigger: QA or fuzzy match on qa or quality
+      action: 'Switch conversation to QA Agent'
+      description: '[QA] Switch to QA Agent'
+      section: 'Agent Handoff'
+      requires: active_process
 ```
