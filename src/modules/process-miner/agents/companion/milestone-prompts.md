@@ -81,10 +81,10 @@ Transformation opportunities identified. {opportunity_count} improvements sugges
 
 **Appended to specialist completion message:**
 ```
-Would you like to validate this documentation before moving on?
+Would you like to run a quick quality check before moving on?
 
-**[QV] Run QA Validation** — Check {agent_name}'s documentation for completeness and consistency
-**[N] Continue** — Move to next specialist or step
+**[QV] Run Quality Check** — Check {agent_name}'s documentation for completeness and consistency
+**[N] Continue** — Move to the next step
 ```
 
 **Note:** This is advisory only — the user decides whether to validate. Append this block after the specialist-specific completion template above.
@@ -100,16 +100,16 @@ Would you like to validate this documentation before moving on?
 All specialist analyses are in.
 
 This process has been examined from every angle:
-- Foundation documented (PDA)
-- Compliance validated (Control)
-- Customer journey mapped (CX)
-- Improvements identified (Transformation)
-- Technology opportunities surfaced (Innovation)
+- Process documented step by step
+- Compliance and controls validated
+- Customer journey mapped
+- Improvement opportunities identified
+- Technology and automation options explored
 
-You've built a comprehensive view. Before delivering to stakeholders, a full suite
-validation ensures everything ties together consistently.
+You've built a comprehensive view. Before sharing with stakeholders, a full quality
+check ensures everything ties together consistently.
 
-**[SV] Run Full Suite Validation** — Cross-document consistency, references, and coverage check (recommended)
+**[SV] Run Full Quality Check** — Check consistency across all documents before delivery (recommended)
 **[D] Proceed to Delivery** — Skip validation and proceed to stakeholder output
 ```
 

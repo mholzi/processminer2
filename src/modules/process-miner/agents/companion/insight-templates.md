@@ -11,9 +11,10 @@ Templates for generating contextual insights based on process state.
 ```
 You're starting fresh with {process_name}.
 
-The first step is capturing how this process works today — the AS-IS state.
-PDA (Process Documentation Analyst) specializes in knowledge extraction.
-Want me to bring them in?
+The first step is capturing how this process works today — walking through it step by step
+to document what happens, who does it, and where things go wrong.
+
+Doc (our Process Documentation Analyst) specializes in this. Want me to bring them in?
 ```
 
 ### Returning to Active Process
@@ -124,20 +125,21 @@ The specialists can now analyze this foundation:
 
 **If pain_points.count >= 3:**
 ```
-With {count} pain points documented, Transformation Agent can identify
-improvement opportunities.
+With {count} pain points documented, Phoenix (our Transformation Agent) can
+identify and prioritize improvement opportunities.
 ```
 
 **If control_points.count < expected:**
 ```
-Control points are sparse. Control Analyst can identify compliance
-checkpoints you might have missed.
+Control points are sparse. Guardian (our Control Analyst) can walk through
+each step to identify compliance checkpoints you might have missed.
 ```
 
 **If customer_touchpoints not started:**
 ```
-No customer touchpoints documented yet. CX Journey can map the customer
-experience through this process.
+No customer touchpoints documented yet. Journey (our Client Journey Analyst)
+can map how customers experience this process — where they interact, where
+they wait, and where they get frustrated.
 ```
 
 ---

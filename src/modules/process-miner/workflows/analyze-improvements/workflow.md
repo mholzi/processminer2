@@ -52,7 +52,7 @@ Before running:
 - Pain points (PP#) documented
 - Process steps (PS#) documented
 
-If not met: "Transformation analysis requires documented pain points. Return to PDA to capture more pain points first."
+If not met: "Transformation analysis requires documented process steps and pain points. Return to Doc (Process Documentation Analyst) to capture these first."
 
 ---
 

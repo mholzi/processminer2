@@ -111,14 +111,14 @@ Calculate weighted quality score and generate validation report.
 
 ### Errors (must fix)
 
-| ID | Category | Item | Issue | Resolution |
-|----|----------|------|-------|------------|
+| ID | VG# | Category | Item | Issue | Resolution |
+|----|------|----------|------|-------|------------|
 {error_table}
 
 ### Warnings (should fix)
 
-| ID | Category | Issue | Recommendation |
-|----|----------|-------|----------------|
+| ID | VG# | Category | Issue | Recommendation |
+|----|------|----------|-------|----------------|
 {warning_table}
 
 ---
@@ -126,6 +126,19 @@ Calculate weighted quality score and generate validation report.
 ## Recommendations
 
 {prioritized_recommendations}
+
+---
+
+## Gap Resolution Log Status
+
+| Metric | Count |
+|--------|-------|
+| New VG# This Run | {new_vg_count} |
+| Auto-Resolved VG# | {auto_resolved_count} |
+| Total Open QA Gaps | {total_open_qa_gaps} |
+| Total Open All Gaps | {total_open_all_gaps} |
+
+**Persistent Log:** [gap-resolution-log.md](./gap-resolution-log.md)
 
 ---
 

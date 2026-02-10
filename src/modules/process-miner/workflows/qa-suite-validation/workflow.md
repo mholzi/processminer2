@@ -7,6 +7,7 @@ web_bundle: true
 processFolder: '{process_output_folder}/{process_id}'
 schemaDir: '{project-root}/src/modules/process-miner/templates/documents'
 defaultsFile: '{project-root}/src/modules/process-miner/templates/documents/_defaults.yaml'
+gapLogTemplate: '{project-root}/src/modules/process-miner/templates/documents/gap-resolution-log.md'
 ---
 
 # QA Suite Validation Workflow

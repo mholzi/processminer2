@@ -178,6 +178,81 @@ Check that key Tier 1 IDs have downstream coverage:
 ✓ CP# coverage: 6/6 control points referenced downstream (100%)
 ```
 
+### 7b. Sync Findings to Gap Resolution Log
+
+"**Syncing suite findings to gap resolution log...**"
+
+#### Bootstrap Check
+
+IF `{processFolder}/gap-resolution-log.md` does not exist:
+1. Create from template at `{schemaDir}/gap-resolution-log.md`
+2. Fill process metadata from `_progress.yaml`
+
+#### Fingerprint and Write
+
+For each finding across all 6 suite check categories, compute a deterministic fingerprint:
+
+```
+qa-suite:suite:{category}:{check_type}:{item}
+```
+
+Where `{category}` is one of: `inter_document_refs`, `sync_consistency`, `prerequisite_compliance`, `id_uniqueness`, `confidence_propagation`, `coverage_completeness`
+
+Examples:
+- `qa-suite:suite:inter_document_refs:missing_ref:CX_Journey->AS-IS:PS-ONB-015`
+- `qa-suite:suite:sync_consistency:id_mismatch:AS-IS_S9<->pain-points-detail:PP-ONB-009`
+- `qa-suite:suite:prerequisite_compliance:not_met:SIPOC:AS-IS_completion_45pct`
+- `qa-suite:suite:confidence_propagation:violation:AS-IS_process_steps->CX_Journey_touchpoints`
+- `qa-suite:suite:coverage_completeness:unreferenced:PP-ONB-007`
+
+#### Deduplication
+
+For each finding:
+1. Search gap-resolution-log.md for existing VG# with matching fingerprint
+2. **IF match found AND status is open/in_progress:** Update "last seen" date only
+3. **IF no match found:** Create new VG# entry:
+   - **Source Agent:** "QA Agent (Suite)"
+   - **Source Workflow:** "qa-suite"
+   - **Severity mapping (category-specific):**
+     - Inter-document refs error / ID uniqueness error → "Critical"
+     - Sync consistency error / Prerequisite compliance error → "High"
+     - Confidence propagation warning / Coverage completeness warning → "Medium"
+   - **Status:** "open"
+   - **Fingerprint:** stored as HTML comment after VG# heading
+   - Add to Section 1.1 (open gaps), Section 2 (detailed records), Section 3.5 (QA Validation Gaps)
+
+#### Auto-Resolution
+
+After processing all current findings:
+1. Load all open/in_progress VG# entries where source workflow = "qa-suite"
+2. For each, check if its fingerprint appears in current findings
+3. **IF fingerprint NOT in current findings:**
+   - Set status to "resolved", resolution_type to "QA Auto-Resolution"
+   - Add resolution history: `{date} | Auto-resolved | QA Agent | Issue no longer detected in qa-suite-validation run`
+   - Move from Section 1.1 (open) to Section 1.3 (resolved)
+
+```
+✓ Gap log synced: {new_count} new VG#, {resolved_count} auto-resolved, {total_open} open suite gaps
+```
+
+#### Progress Update
+
+```yaml
+update-progress:
+  type: gap_log_status
+  gap_log:
+    exists: true
+    total_vg_count: {count}
+    open_count: {count}
+    in_progress_count: {count}
+    resolved_count: {count}
+    deferred_count: {count}
+    qa_document_open: {count}
+    qa_suite_open: {count}
+    specialist_open: {count}
+    last_sync: {timestamp}
+```
+
 ### 8. Present Findings Summary
 
 **IF mode == impact-only:** Present impact analysis instead of validation results:
@@ -205,7 +280,9 @@ Check that key Tier 1 IDs have downstream coverage:
 | Confidence Propagation | ⚠️ Warn | 0 | {count} |
 | Coverage Completeness | ⚠️ Warn | 0 | {count} |
 
-**Total:** {error_count} errors, {warning_count} warnings"
+**Total:** {error_count} errors, {warning_count} warnings
+
+**Gap Resolution Log:** {new_count} new VG# entries, {resolved_count} auto-resolved, {total_open} total open"
 
 ### 9. Present MENU OPTIONS
 

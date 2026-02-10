@@ -77,6 +77,10 @@ sections:
         heading: "3.4 Process Validation Gaps"
         content_type: item_list
         item_prefix: "VG"
+      - id: qa_validation_gaps
+        heading: "3.5 QA Validation Gaps"
+        content_type: item_list
+        item_prefix: "VG"
 
   # ── Section 4: Validation Iteration History ──
   - id: iteration_history
@@ -158,6 +162,10 @@ companion_documents:
     file: "transformation-decisions-detail.md"
     relationship: "sibling"
 
+  - name: "QA Suite Report"
+    file: "_qa-suite-report.md"
+    relationship: "sibling"
+
 # ──────────────────────────────────────────────
 # Gap Configuration
 # ──────────────────────────────────────────────
@@ -178,6 +186,14 @@ gap_config:
     - id: "process"
       name: "Process Documentation Analyst"
       focus: "Traceability and documentation gaps"
+
+    - id: "qa_document"
+      name: "QA Agent (Document)"
+      focus: "Per-document quality, completeness, cross-reference, and schema compliance gaps"
+
+    - id: "qa_suite"
+      name: "QA Agent (Suite)"
+      focus: "Cross-document reference integrity, sync consistency, confidence propagation, and coverage gaps"
 
   severity_levels:
     - level: "Critical"
@@ -229,6 +245,24 @@ gap_config:
     - "Innovation Inclusion"
     - "Scope Adjustment"
     - "Risk Acceptance"
+    - "QA Auto-Resolution"
+
+# ──────────────────────────────────────────────
+# Fingerprint Configuration (QA Deduplication)
+# ──────────────────────────────────────────────
+fingerprint_config:
+  description: "Deterministic fingerprint for QA-originated gaps, used for deduplication and auto-resolution"
+  format: "{source_workflow}:{document}:{category}:{check_type}:{item_id_or_descriptor}"
+  examples:
+    - "qa-validation:as-is-documentation:cross_references:invalid_ref:PP3->PS15"
+    - "qa-suite:suite:sync_consistency:id_mismatch:PP-ONB-009"
+    - "qa-check:as-is-documentation:completeness:min_count:pain_points"
+  stored_as: "HTML comment <!-- fingerprint: {value} --> after VG# heading in detailed records"
+  auto_resolution:
+    description: "Open QA-originated VG# entries whose fingerprints are absent from current validation findings are auto-resolved"
+    scope: "Only touches VG# entries matching the current workflow source — never touches specialist-originated gaps"
+    resolution_type: "QA Auto-Resolution"
+    note_template: "Issue no longer detected in {workflow} run on {date}. Auto-resolved."
 
 # ──────────────────────────────────────────────
 # Metrics Configuration

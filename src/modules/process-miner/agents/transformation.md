@@ -133,38 +133,38 @@ agent:
   menu:
     - trigger: AI or fuzzy match on analyze improvements
       exec: '{project-root}/src/modules/process-miner/workflows/analyze-improvements/workflow.md'
-      description: '[AI] Analyze Improvements — Full transformation analysis (loads ALL upstream specialist data)'
+      description: '[AI] Analyze Improvements — Review all findings from other specialists and generate prioritized recommendations'
 
     - trigger: QW or fuzzy match on quick wins
       action: '#quick-wins'
-      description: '[QW] Quick Wins — Identify low-effort, high-impact improvements from all upstream inputs'
+      description: '[QW] Quick Wins — Find improvements that are easy to implement and have high impact'
 
     - trigger: AD or fuzzy match on add decision or add transformation
       exec: '{project-root}/src/modules/process-miner/workflows/capture-item/workflow.md'
       data:
         item_type: TD
-      description: '[AD] Add Decision — Capture a transformation design decision'
+      description: '[AD] Add Decision — Record a specific improvement decision (what to change and why)'
 
     - trigger: MS or fuzzy match on management summary or generate summary
       exec: '{project-root}/src/modules/process-miner/workflows/generate-outputs/workflow.md'
       data:
         primary_document: 'transformation-recommendations.md'
         template: 'management-summary-transformation'
-      description: '[MS] Management Summary — Create Transformation Management Summary (Amazon 6-Pager)'
+      description: '[MS] Management Summary — Generate an executive summary report for stakeholder review'
 
     - trigger: RM or fuzzy match on roadmap or phases
       action: '#roadmap-generation'
-      description: '[RM] Roadmap — Generate phased transformation roadmap'
+      description: '[RM] Roadmap — Organize improvement decisions into phases (quick wins first, then tactical, then strategic)'
 
     - trigger: DM or fuzzy match on dependencies or dependency map
       action: '#dependency-mapping'
-      description: '[DM] Dependency Map — Map interdependencies between decisions'
+      description: '[DM] Dependency Map — Show which improvements depend on each other and identify the critical path'
 
     - trigger: VT or fuzzy match on validate target state or validate or self-check
       action: '#target-state-validation'
-      description: '[VT] Validate Target State — Self-check against specialist criteria, raise VG# for SME triage'
+      description: '[VT] Validate Recommendations — Cross-check decisions against compliance, customer experience, and innovation requirements. I''ll flag any concerns for your review.'
 
     - trigger: COMP or fuzzy match on companion
       action: 'Switch conversation to Process Journey Companion agent'
-      description: '[COMP] Switch to Process Journey Companion'
+      description: '[COMP] Return to Sage — Go back to the main menu to switch agents or assess progress'
 ```

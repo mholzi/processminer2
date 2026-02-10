@@ -39,11 +39,11 @@ Load _progress.yaml and verify:
 - Pain points documented (count >= 1)
 
 **IF REQUIRED not met:**
-"⚠️ Transformation analysis requires:
-- Process steps documented (found: {count})
-- Pain points documented (found: {count})
+"⚠️ Transformation analysis requires documented process steps and pain points before we can begin:
+- Process steps documented: {count} found (minimum 3 needed)
+- Pain points documented: {count} found (minimum 1 needed)
 
-Please complete AS-IS documentation first."
+Please return to Doc (Process Documentation Analyst) to capture these first."
 Exit workflow.
 
 **RECOMMENDED (warn if not met, allow user to proceed or return):**
@@ -52,18 +52,18 @@ Exit workflow.
 - Innovation analysis complete (II# innovation ideas documented)
 
 **IF any RECOMMENDED not met:**
-"⚠️ **Upstream Analysis Gaps Detected:**
+"⚠️ **Some Specialist Analyses Are Missing:**
 
-| Upstream Agent | Status | Impact if Missing |
-|----------------|--------|-------------------|
-| CX Journey (FP#, CES) | {complete/missing} | Decisions may miss client friction points |
-| Control (CIR#, CP# gaps) | {complete/missing} | Decisions may miss compliance opportunities or violate constraints |
-| Innovation (II#, TR#) | {complete/missing} | Decisions may propose manual solutions when automation is feasible |
+| Specialist | Status | What You Might Miss |
+|------------|--------|---------------------|
+| Customer Journey | {complete/missing} | Recommendations may miss problems that affect your customers |
+| Control & Compliance | {complete/missing} | Recommendations may miss compliance requirements or create new risks |
+| Innovation & Automation | {complete/missing} | Recommendations may propose manual solutions when automation is feasible |
 
-Transformation decisions based on incomplete upstream input will have **reduced confidence**.
+Recommendations based on incomplete input will be flagged with **reduced confidence**.
 
-**[P]** Proceed with available data (reduced confidence)
-**[R]** Return to Companion to complete upstream analysis first"
+**[P]** Proceed anyway — I'll work with what's available, but some recommendations will have lower confidence
+**[R]** Go back — Return to Sage to run the missing analyses first, then come back"
 
 **IF user selects R:** Exit workflow, return to invoking agent menu.
 **IF user selects P:** Continue with warning flag. All TD# items generated will note which upstream analyses were missing in their confidence field.
@@ -169,7 +169,10 @@ Upstream-only opportunities:
 
 ### 6. Present MENU OPTIONS
 
-Display: "**Ready to generate recommendations?** [C] Continue [D] Details on specific item [U] Show upstream-only opportunities"
+Display: "**Ready to generate recommendations?**
+**[C]** Continue to recommendations — I'll generate prioritized improvement suggestions
+**[D]** Drill into details — Ask about any specific pain point or finding (e.g., 'Tell me more about PP3')
+**[U]** Show additional opportunities — Items surfaced by other specialists that aren't tied to existing pain points"
 
 #### Menu Handling Logic:
 

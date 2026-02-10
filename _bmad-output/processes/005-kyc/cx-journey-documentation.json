@@ -62,7 +62,7 @@
           "id": "JT-KYC-004",
           "name": "Processing Wait (Black Box)",
           "stage": "Processing",
-          "channel": null,
+          "channel": "None (wait point — no client channel available)",
           "at_step": "PS-KYC-003",
           "customer_action": "Waits; no action possible",
           "emotion": "Frustrated",

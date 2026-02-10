@@ -139,6 +139,61 @@ For each `inter_document` rule in the schema:
 
 **Note:** If the document's schema has no `inter_document` block, skip this check and report "N/A — no inter-document references declared".
 
+### 8b. Sync Findings to Gap Resolution Log
+
+"**Syncing findings to gap resolution log...**"
+
+#### Bootstrap Check
+
+IF `{processFolder}/gap-resolution-log.md` does not exist:
+1. Create from template at `{schemaDir}/gap-resolution-log.md`
+2. Fill process metadata from `_progress.yaml`
+
+#### Fingerprint and Write
+
+For each finding across all 7 check categories, compute a deterministic fingerprint:
+
+```
+qa-validation:{document}:{category}:{check_type}:{item}
+```
+
+Where `{category}` is one of: `structure`, `completeness`, `cross_references`, `content_quality`, `schema_compliance`, `progress_sync`, `inter_document_refs`
+
+Examples:
+- `qa-validation:as-is-documentation:cross_references:invalid_ref:PP3->PS15`
+- `qa-validation:as-is-documentation:completeness:min_count:exceptions_below_min`
+- `qa-validation:as-is-documentation:structure:missing_heading:Section_3`
+- `qa-validation:as-is-documentation:progress_sync:count_mismatch:pain_points_10_vs_8`
+
+#### Deduplication
+
+For each finding:
+1. Search gap-resolution-log.md for existing VG# with matching fingerprint (in HTML comment `<!-- fingerprint: ... -->`)
+2. **IF match found AND status is open/in_progress:** Update "last seen" date only — do NOT create new VG#
+3. **IF no match found:** Create new VG# entry:
+   - **Source Agent:** "QA Agent (Document)"
+   - **Source Workflow:** "qa-validation"
+   - **Severity mapping:** Error (must fix) → "High", Warning (should fix) → "Medium", Info → "Low"
+   - **Status:** "open"
+   - **Fingerprint:** stored as HTML comment after VG# heading
+   - Add to Section 1.1 (open gaps), Section 2 (detailed records), Section 3.5 (QA Validation Gaps)
+
+#### Auto-Resolution
+
+After processing all current findings:
+1. Load all open/in_progress VG# entries where source workflow = "qa-validation" AND document matches
+2. For each, check if its fingerprint appears in current findings
+3. **IF fingerprint NOT in current findings:**
+   - Set status to "resolved", resolution_type to "QA Auto-Resolution"
+   - Add resolution history: `{date} | Auto-resolved | QA Agent | Issue no longer detected in qa-validation run`
+   - Move from Section 1.1 (open) to Section 1.3 (resolved)
+
+```
+✓ Gap log synced: {new_count} new VG#, {resolved_count} auto-resolved, {total_open} open QA gaps
+```
+
+**Store the VG# list in memory** for use in step-02 (score report) and step-03 (resolve issues).
+
 ### 9. Present Findings Summary
 
 "**Validation Complete**
@@ -153,7 +208,9 @@ For each `inter_document` rule in the schema:
 | Progress Sync | ⚠️ Warn | {count} |
 | Inter-Document Refs | ✓ Pass | {count} |
 
-**Total:** {error_count} errors, {warning_count} warnings"
+**Total:** {error_count} errors, {warning_count} warnings
+
+**Gap Resolution Log:** {new_count} new VG# entries created, {resolved_count} auto-resolved, {total_open} total open"
 
 ### 9. Present MENU OPTIONS
 

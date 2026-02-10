@@ -99,7 +99,10 @@ For each addressable pain point:
 
 ### 5. Present MENU OPTIONS
 
-Display: "**Ready to create document?** [C] Continue [E] Edit recommendations [V] View details"
+Display: "**Ready to create the recommendations document?**
+**[C]** Continue to document — I'll compile the recommendations into a structured report
+**[E]** Edit recommendations — Modify, add, or remove recommendations before creating the document
+**[V]** View details — See the full details of a specific recommendation"
 
 #### Menu Handling Logic:
 

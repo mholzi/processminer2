@@ -18,7 +18,7 @@ The Know Your Customer (KYC) process is a mandatory compliance procedure that ve
 
 The process spans 10 steps involving three primary teams: Relationship Management (customer-facing), Compliance (screening and risk assessment), and Operations (account activation). Six systems support the workflow, with Salesforce CRM serving as the central hub for data management and workflow coordination.
 
-Key findings from this documentation effort include six pain points identified, most notably manual data re-entry between systems and intermittent World-Check ONE integration timeouts that delay processing. Five control points are mapped, including the four-eyes principle for high-risk approvals and mandatory CRM audit trails. No exceptions have been formally documented yet, representing a significant gap requiring SME follow-up. Five discrepancies were identified between the process flowchart and the Desktop Procedure (DTP-KYC-001), primarily reflecting system upgrades and policy changes implemented in 2025 that the flowchart has not been updated to reflect.
+Key findings from this documentation effort include ten pain points identified, most notably manual data re-entry between systems and intermittent World-Check ONE integration timeouts that delay processing. Five control points are mapped, including the four-eyes principle for high-risk approvals and mandatory CRM audit trails. No exceptions have been formally documented yet, representing a significant gap requiring SME follow-up. Five discrepancies were identified between the process flowchart and the Desktop Procedure (DTP-KYC-001), primarily reflecting system upgrades and policy changes implemented in 2025 that the flowchart has not been updated to reflect.
 
 ### Key Metrics at a Glance
 
@@ -26,7 +26,7 @@ Key findings from this documentation effort include six pain points identified, 
 |--------|-------|
 | Process Steps | 10 |
 | Exceptions Identified | 0 |
-| Pain Points Captured | 9 |
+| Pain Points Captured | 10 |
 | Control Points Mapped | 5 |
 | Systems Involved | 6 |
 | Overall Confidence | MEDIUM (66%) |
@@ -432,6 +432,38 @@ System automatically schedules the next KYC review based on the assigned risk ra
 > **Section Confidence:** [MEDIUM] (88%) | **Basis:** 10 steps documented from two corroborating sources; duration/wait times are estimates pending SME validation
 > **Evidence Sources:** DTP-KYC-001 (v2.3, 2025-11-15), KYC Process Flowchart
 
+### 2.8 Cycle Time Analysis
+
+| Metric | Standard Path | High-Risk Path |
+|--------|--------------|----------------|
+| **Total Cycle Time (Avg)** | 7–10 business days | 10–13 business days |
+| **Active Work Time** | ~3.5 hours (6%) | ~11.5–27.5 hours (11–26%) |
+| **Wait/Queue Time** | ~94% of cycle | ~74–89% of cycle |
+| **Longest Wait Step** | PS-KYC-002 Document Collection (up to 5 business days) | PS-KYC-002 Document Collection (up to 5 business days) |
+| **Longest Work Step** | PS-KYC-003 Data Entry (40–50 min) | PS-KYC-006 EDD (1–3 business days) |
+| **Bottleneck** | Customer document response time | EDD verification + customer response |
+
+**Active Work Breakdown (Standard Path):**
+
+| Step | Active Time |
+|------|------------|
+| PS-KYC-001 Application Received | ~15 min |
+| PS-KYC-002 Document Collection | ~30 min |
+| PS-KYC-003 Data Entry into CRM | 40–50 min |
+| PS-KYC-004 AML Screening | 15–30 min |
+| PS-KYC-005 Risk Assessment | 15–30 min |
+| PS-KYC-007 Approval Decision | 30–60 min |
+| PS-KYC-008 Customer Notification | ~15 min |
+| PS-KYC-009 Account Activation | ~15 min |
+| PS-KYC-010 Periodic Review Scheduling | Automated |
+| **Total** | **~175–245 min (~3–4 hours)** |
+
+> **Key Insight:** Only ~6% of the end-to-end cycle is active work. The remaining ~94% is wait time — primarily customer document response (PS-KYC-002) and overnight batch processing (PS-KYC-009). This presents a significant lean improvement opportunity: reducing wait time through digital document upload and real-time activation could halve the cycle.
+
+> **Note:** Wait times at handoff points (HO-KYC-001 through HO-KYC-004) have not been measured. Actual active work percentage may be even lower once queue times are captured.
+
+> **Section Confidence:** [LOW] (50%) | **Basis:** Derived from step-level duration estimates; actual wait times at handoffs not measured; customer response time is highly variable
+
 ---
 
 ## 3. Exception Paths and Variations
@@ -705,7 +737,7 @@ No KPIs or operational metrics have been formally captured for this process. The
 
 ### 9.1 Pain Points Summary
 
-Nine pain points have been identified across the KYC process, sourced from the process flowchart (4), the Desktop Procedure (2), and DILO observation of the Relationship Manager role (3 new). Two are rated High impact (World-Check ONE timeout and EDD delays), six are Medium (manual data re-entry, missing periodic review reminders, T24 batch delays, missing screening notifications, CRM dashboard performance, and client status self-service gap), and one is Low (SharePoint sync issues). The pain points cluster around system integration reliability, manual workarounds, and missing automation triggers, suggesting CRM enhancement, notification automation, and client self-service as key improvement themes.
+Ten pain points have been identified across the KYC process, sourced from the process flowchart (4), the Desktop Procedure (2), DILO observation of the Relationship Manager role (3), and SME session (1). Two are rated High impact (World-Check ONE timeout and EDD delays), seven are Medium (manual data re-entry, missing periodic review reminders, T24 batch delays, missing screening notifications, CRM dashboard performance, client status self-service gap, and undocumented borderline risk escalation), and one is Low (SharePoint sync issues). The pain points cluster around system integration reliability, manual workarounds, and missing automation triggers, suggesting CRM enhancement, notification automation, and client self-service as key improvement themes.
 
 ### 9.2 Pain Point Summary Table
 

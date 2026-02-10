@@ -60,7 +60,13 @@ For each error:
 2. Show fix options
 3. Apply user-chosen fix
 4. Verify fix resolved issue
-5. Return to issue list
+5. Update gap-resolution-log.md:
+   - Find the corresponding VG# entry (by fingerprint match)
+   - Set status to "resolved"
+   - Set resolution_type based on fix applied (e.g., "Documentation Update", "Design Change")
+   - Add resolution history entry: `{date} | Resolved interactively | QA Agent | {fix_description}`
+   - Move VG# from Section 1.1 (open) to Section 1.3 (resolved)
+6. Return to issue list
 
 ### 3. Handle Warning Resolution
 
@@ -70,7 +76,12 @@ For each warning:
 2. Show options (fix/skip)
 3. If fix: apply changes
 4. If skip: document acceptance
-5. Return to issue list
+5. Update gap-resolution-log.md:
+   - Find the corresponding VG# entry (by fingerprint match)
+   - **IF fixed:** Set status to "resolved", add resolution history entry
+   - **IF skipped:** Set status to "deferred" with note "Accepted as-is by user during QA validation"
+   - Move VG# to appropriate summary table (Section 1.3 resolved or Section 1.4 deferred)
+6. Return to issue list
 
 ### 4. Re-run Validation
 
@@ -82,7 +93,12 @@ After fixes:
 |----------|--------|-------|
 | Errors | {before} | {after} |
 | Warnings | {before} | {after} |
-| Score | {before}% | {after}% |"
+| Score | {before}% | {after}% |
+
+**Gap Log Update:**
+- Newly resolved VG#: {resolved_count}
+- Newly deferred VG#: {deferred_count}
+- Still open VG#: {open_count}"
 
 ### 5. Update Progress
 
@@ -97,6 +113,20 @@ update-progress:
 update-progress:
   type: milestone
   check: qa_validated
+
+update-progress:
+  type: gap_log_status
+  gap_log:
+    exists: true
+    total_vg_count: {count}
+    open_count: {count}
+    in_progress_count: {count}
+    resolved_count: {count}
+    deferred_count: {count}
+    qa_document_open: {count}
+    qa_suite_open: {count}
+    specialist_open: {count}
+    last_sync: {timestamp}
 ```
 
 ### 6. Confirm Completion

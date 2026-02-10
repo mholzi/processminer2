@@ -66,31 +66,33 @@ agent:
 
   menu:
     - trigger: CC or fuzzy match on control compliance
-      exec: '{project-root}/src/modules/process-miner/workflows/control-compliance/workflow.md'
-      description: '[CC] Control Compliance — Full control and compliance analysis'
+      exec: '{project-root}/src/modules/process-miner/workflows/continue-session/workflow.md'
+      data:
+        companion_agent: 'Process Journey Companion'
+      description: '[CC] Full Compliance Analysis — Walk through each process step to identify and assess control checkpoints, audit evidence, and regulatory requirements'
 
     - trigger: AC or fuzzy match on add control
       exec: '{project-root}/src/modules/process-miner/workflows/capture-item/workflow.md'
       data:
         item_type: CP
-      description: '[AC] Add Control — Document a control point'
+      description: '[AC] Add Control — Record a specific check, approval, or verification step in the process'
 
     - trigger: CG or fuzzy match on control gaps
       action: '#control-gaps'
-      description: '[CG] Control Gaps — Identify steps without controls'
+      description: '[CG] Find Gaps — Show which process steps don''t have compliance checks and suggest what''s needed'
 
     - trigger: CV or fuzzy match on control validation
       action: '#control-validation'
-      description: '[CV] Control Validation — Validate control effectiveness'
+      description: '[CV] Validate Controls — Check that each documented control has proper evidence requirements, classification, and coverage'
 
     - trigger: MS or fuzzy match on management summary or generate summary
       exec: '{project-root}/src/modules/process-miner/workflows/continue-session/workflow.md'
       data:
         document_type: 'management-summary-compliance'
         skip_import: true
-      description: '[MS] Management Summary — Create Compliance Management Summary (Amazon 6-Pager)'
+      description: '[MS] Management Summary — Generate an executive summary report for stakeholder review'
 
     - trigger: COMP or fuzzy match on companion
       action: 'Switch conversation to Process Journey Companion agent'
-      description: '[COMP] Switch to Process Journey Companion'
+      description: '[COMP] Return to Sage — Go back to the main menu to switch agents or assess progress'
 ```

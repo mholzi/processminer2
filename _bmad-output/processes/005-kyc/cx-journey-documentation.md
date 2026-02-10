@@ -158,6 +158,28 @@ journey
 > **Section Confidence:** [MEDIUM] (78%) | **Basis:** Touchpoints derived from 10 AS-IS process steps and DILO observation; CES contributions are estimates pending client validation
 > **Evidence Sources:** AS-IS documentation (PS-KYC-001 through PS-KYC-010), DILO Observation (RM)
 
+### 2.5 Alternate and Exception Paths
+
+#### 2.5.1 Alternate Journey Paths
+
+| AP# | Branch Trigger | Path Description | Client Impact | Design Intent |
+|-----|----------------|------------------|---------------|---------------|
+| AP-KYC-001 | Risk rating = High at PS-KYC-005 | Client enters Enhanced Due Diligence path (JT-KYC-006) — additional documents requested, 1–3 business day extension | High — extends journey by 1–3 days with additional document burden; limited progress visibility during EDD | Regulatory requirement for high-risk customers; ensures source of funds/wealth verification |
+| AP-KYC-002 | Application rejected at PS-KYC-007 | Client receives rejection notification (JT-KYC-008) — journey terminates with no recourse information | High — client effort invested in documentation yields no outcome; no guidance on reapplication or appeal | Risk mitigation; screening non-disclosure requirement (BR-KYC-005) |
+| AP-KYC-003 | Risk rating = Prohibited at PS-KYC-005 | Immediate mandatory rejection — no EDD path available | High — journey terminates abruptly; client may not understand why "Prohibited" differs from standard rejection | Regulatory compliance; mandatory rejection of prohibited categories |
+
+#### 2.5.2 Exception Scenarios
+
+| CXE# | Exception Type | Trigger Condition | Client Impact | Recovery Mechanism |
+|------|----------------|-------------------|---------------|-------------------|
+| CXE-KYC-001 | Incomplete document submission | Client submits fewer than required documents at JT-KYC-003 | Medium — extends document collection phase; additional email exchanges with RM | RM follows up via email with specific missing items; no self-service checklist to prevent this |
+| CXE-KYC-002 | World-Check ONE timeout | AML screening system timeout during PS-KYC-004 | Medium — processing delay invisible to client; extends wait at JT-KYC-004 | CO retries screening; no client notification of delay |
+| CXE-KYC-003 | Client abandonment | Client stops responding during document collection (JT-KYC-003) | High — application stalls; no automated follow-up or deadline reminder | RM manual follow-up; no formal timeout policy documented |
+| CXE-KYC-004 | Batch processing failure | T24 overnight batch fails at PS-KYC-009 | High — approved client cannot access account; no communication until issue resolved | Operations investigates next business day; client unaware of technical failure |
+
+> **Section Confidence:** [LOW] (55%) | **Basis:** Alternate paths derived from AS-IS process variants and decision points; exception scenarios inferred from pain points and DILO observation, not validated with SMEs
+> **Evidence Sources:** AS-IS variants (§1.7), decision points (DP-KYC-001, DP-KYC-002), pain points (PP-KYC-002, PP-KYC-006)
+
 ---
 
 ## 3. Moments That Matter
@@ -217,6 +239,29 @@ journey
 
 > **Section Confidence:** [MEDIUM] (75%) | **Basis:** Moments identified from touchpoint analysis and DILO observation; emotional states inferred from process data, not validated with clients
 > **Evidence Sources:** Touchpoint analysis (Section 2), DILO Observation (RM), AS-IS pain points (PP-KYC-003, PP-KYC-006, PP-KYC-009)
+
+### 3.3 Emotional Journey Arc
+
+```mermaid
+xychart-beta
+    title "Client Emotional Journey Arc — KYC Onboarding"
+    x-axis ["JT-001 Apply", "JT-002 Doc Req", "JT-003 Submit", "JT-004 Wait", "JT-005 Calls", "JT-006 EDD", "JT-007 Approve", "JT-008 Reject", "JT-009 Activate", "JT-010 Review"]
+    y-axis "Emotional State" 1 --> 5
+    line [3, 3, 2, 1, 1, 2, 5, 1, 2, 3]
+```
+
+**Legend:** 5 = Delighted | 4 = Satisfied | 3 = Neutral | 2 = Frustrated | 1 = Angry
+
+**Arc Interpretation:**
+- **Application phase** (JT-001 → JT-002): Starts neutral — the portal works but sets no positive expectations
+- **Effort trough** (JT-003 → JT-005): Drops to Frustrated/Angry as document burden hits and the "black box" begins. This is the deepest emotional dip, spanning 3 consecutive touchpoints
+- **EDD extension** (JT-006): Partial recovery to Frustrated — client is at least re-engaged, but additional document requests add burden
+- **Recovery moment** (JT-007): Sharp spike to Delighted on approval — this is the strongest positive swing in the journey and the key opportunity to build relationship momentum
+- **Rejection cliff** (JT-008): For rejected clients, the arc drops to Angry with no recovery mechanism — no explanation, no recourse guidance
+- **Last-mile frustration** (JT-009): Approved clients drop back to Frustrated due to overnight batch delay, undermining the approval high
+- **Steady state** (JT-010): Returns to Neutral for periodic reviews
+
+> **Recovery Opportunities:** JT-KYC-007 (approval notification) is the only natural recovery point in the journey. Enhancing this moment — e.g., personalised welcome message, immediate account access, RM congratulatory call — could sustain the emotional high through activation. Adding proactive status notifications during JT-KYC-004/005 would create an earlier recovery point, preventing the deepest trough.
 
 ---
 

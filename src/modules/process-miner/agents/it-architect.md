@@ -79,28 +79,28 @@ agent:
   menu:
     - trigger: AR or fuzzy match on design architecture
       exec: '{project-root}/src/modules/process-miner/workflows/design-architecture/workflow.md'
-      description: '[AR] Design Architecture — Create technical architecture design'
+      description: '[AR] Design Architecture — Create a technical design for the recommended improvements, including system changes and integration approach'
 
     - trigger: SD or fuzzy match on system diagram
       action: '#system-diagram'
-      description: '[SD] System Diagram — Generate system architecture diagram'
+      description: '[SD] System Diagram — Generate a visual diagram showing how systems connect and interact (current or proposed)'
 
     - trigger: IP or fuzzy match on integration points
       action: '#integration-points'
-      description: '[IP] Integration Points — Document integration requirements'
+      description: '[IP] Integration Points — Document how systems exchange data, including patterns and security requirements'
 
     - trigger: TR or fuzzy match on technical requirements
       action: '#technical-requirements'
-      description: '[TR] Technical Requirements — Derive technical requirements'
+      description: '[TR] Technical Requirements — Translate improvement recommendations into specific technical requirements with complexity estimates'
 
     - trigger: MS or fuzzy match on management summary or generate summary
       exec: '{project-root}/src/modules/process-miner/workflows/generate-outputs/workflow.md'
       data:
         primary_document: 'architecture-design.md'
         template: 'management-summary-architecture'
-      description: '[MS] Management Summary — Create Architecture Management Summary (Amazon 6-Pager)'
+      description: '[MS] Management Summary — Generate an executive summary report for stakeholder review'
 
     - trigger: COMP or fuzzy match on companion
       action: 'Switch conversation to Process Journey Companion agent'
-      description: '[COMP] Switch to Process Journey Companion'
+      description: '[COMP] Return to Sage — Go back to the main menu to switch agents or assess progress'
 ```

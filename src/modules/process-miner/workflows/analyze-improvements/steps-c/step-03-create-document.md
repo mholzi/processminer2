@@ -112,7 +112,7 @@ update-progress:
 
 Before presenting completion, run a validation pre-check against specialist criteria:
 
-"**Running validation pre-check against specialist criteria...**"
+"**Running a quick cross-check against compliance, customer experience, and innovation requirements...**"
 
 Load validation focus areas from `target-state-documentation.schema.yaml` `validation.specialists[]` and check:
 
@@ -135,23 +135,23 @@ Load validation focus areas from `target-state-documentation.schema.yaml` `valid
 - Are all TD# references valid (PP#, PS#, CP#, FP#, II#)?
 
 **IF issues found:**
-"⚠️ **Validation Pre-Check Found {count} Potential Issues:**
+"⚠️ **Cross-Check Found {count} Potential Issues:**
 
-| VG# | Severity | Domain | Issue |
-|-----|----------|--------|-------|
-| VG-{PROC}-001 | {Critical/High/Medium/Low} | {Control/CX/Innovation/Process} | {description} |
+| # | Severity | Area | Issue |
+|---|----------|------|-------|
+| 1 | {Critical/High/Medium/Low} | {Compliance/Customer Experience/Innovation/Process} | {description} |
 ...
 
-**[R]** Resolve now — address issues before completing
-**[A]** Accept and continue — issues noted in gap resolution log
-**[E]** Edit recommendations — return to step 2"
+**[R]** Resolve now — We'll go through each issue together and update the recommendations
+**[A]** Accept and continue — I'll record these as known gaps. They can be addressed later.
+**[E]** Edit recommendations — Go back and revise recommendations before finalizing"
 
 **IF [R]:** Walk through each VG# item with SME, resolve inline, update TD# items.
 **IF [A]:** Write VG# items to gap-resolution-log.md, continue to completion.
 **IF [E]:** Return to step-02-generate-recommendations.
 
 **IF no issues found:**
-"✓ Validation pre-check passed — no specialist concerns identified."
+"✓ Cross-check passed — no compliance, customer experience, or innovation concerns identified."
 
 ### 5. Confirm Completion
 
@@ -162,27 +162,27 @@ Load validation focus areas from `target-state-documentation.schema.yaml` `valid
 ├── Tactical: {count}
 └── Strategic: {count}
 
-**Upstream Sources Integrated:**
-├── Pain Points (PP#): {count} analyzed
-├── Friction Points (FP#): {count} cross-referenced
-├── Control Recs (CIR#): {count} cross-referenced
-└── Innovation Ideas (II#): {count} cross-referenced
+**Sources Analyzed:**
+├── Pain points: {count} analyzed
+├── Customer friction points: {count} cross-referenced
+├── Compliance items: {count} cross-referenced
+└── Innovation ideas: {count} cross-referenced
 
-**Validation Pre-Check:** {passed / {count} issues noted}
+**Quality Cross-Check:** {passed / {count} issues noted}
 
 **Top Recommendations:**
-1. TD1: {title} (Quick Win, High Impact)
-2. TD2: {title} (Tactical, High Impact)
-3. TD3: {title} (Strategic, High Impact)
+1. {title} (Quick Win, High Impact)
+2. {title} (Tactical, High Impact)
+3. {title} (Strategic, High Impact)
 
-**Document:** transformation-recommendations.md
+**Document saved:** transformation-recommendations.md
 
 **What's next?**
-- **[V]** View recommendations
-- **[E]** Edit recommendations
-- **[VT]** Run full Target State validation (deeper check)
-- **[ES]** Generate executive summary
-- **[COMP]** Return to Companion"
+- **[V]** View the full recommendations document
+- **[E]** Edit recommendations — revise before finalizing
+- **[VT]** Deep Validation — Run a thorough cross-check against compliance, CX, and innovation requirements
+- **[ES]** Executive Summary — Generate a concise summary for leadership
+- **[COMP]** Return to Sage — Go back to the main menu"
 
 #### Menu Handling Logic:
 

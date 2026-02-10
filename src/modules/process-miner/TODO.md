@@ -36,9 +36,9 @@ Development roadmap for process-miner module.
 
 ### Feature Workflows
 - [x] **analyze-improvements** — `workflows/analyze-improvements/workflow.md`
-- [x] **cx-journey-analysis** — `workflows/cx-journey-analysis/workflow.md`
-- [x] **control-compliance** — `workflows/control-compliance/workflow.md`
-- [x] **innovation-analysis** — `workflows/innovation-analysis/workflow.md`
+- [x] ~~**cx-journey-analysis**~~ (retired — merged into continue-session, Issue #20)
+- [x] ~~**control-compliance**~~ (retired — merged into continue-session, Issue #20)
+- [x] ~~**innovation-analysis**~~ (retired — merged into continue-session, Issue #20)
 - [x] **design-architecture** — `workflows/design-architecture/workflow.md`
 - [x] **qa-validation** — `workflows/qa-validation/workflow.md`
 

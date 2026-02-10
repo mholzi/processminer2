@@ -55,36 +55,36 @@ agent:
         </process>
 
   menu:
-    - trigger: CX or fuzzy match on cx journey analysis
+    - trigger: CX or fuzzy match on cx journey analysis or customer journey
       exec: '{project-root}/src/modules/process-miner/workflows/continue-session/workflow.md'
       data:
-        companion_agent: 'CX Journey Agent'
-      description: '[CX] CX Journey Analysis — Full customer journey mapping'
+        companion_agent: 'Process Journey Companion'
+      description: '[CX] Customer Journey Analysis — Map how customers experience this process, from their first interaction to resolution'
 
     - trigger: JT or fuzzy match on touchpoint
       exec: '{project-root}/src/modules/process-miner/workflows/capture-item/workflow.md'
       data:
         item_type: JT
-      description: '[JT] Journey Touchpoint — Capture a customer touchpoint'
+      description: '[JT] Add Touchpoint — Record a moment where the customer interacts with your process (email, call, portal, in-person)'
 
     - trigger: FP or fuzzy match on friction
       exec: '{project-root}/src/modules/process-miner/workflows/capture-item/workflow.md'
       data:
         item_type: FP
-      description: '[FP] Friction Points — Identify and document friction'
+      description: '[FP] Friction Points — Identify where customers get stuck, confused, frustrated, or have to wait'
 
     - trigger: JM or fuzzy match on journey map
       action: '#journey-map'
-      description: '[JM] Journey Map — Generate visual journey map (Mermaid)'
+      description: '[JM] Journey Map — Generate a visual diagram of the customer journey with emotion indicators'
 
     - trigger: MS or fuzzy match on management summary or generate summary
       exec: '{project-root}/src/modules/process-miner/workflows/continue-session/workflow.md'
       data:
         document_type: 'management-summary-cx'
         skip_import: true
-      description: '[MS] Management Summary — Create CX Management Summary (Amazon 6-Pager)'
+      description: '[MS] Management Summary — Generate an executive summary report for stakeholder review'
 
     - trigger: COMP or fuzzy match on companion
       action: 'Switch conversation to Process Journey Companion agent'
-      description: '[COMP] Switch to Process Journey Companion'
+      description: '[COMP] Return to Sage — Go back to the main menu to switch agents or assess progress'
 ```

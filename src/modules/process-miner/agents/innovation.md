@@ -68,35 +68,37 @@ agent:
 
   menu:
     - trigger: IA or fuzzy match on innovation analysis
-      exec: '{project-root}/src/modules/process-miner/workflows/innovation-analysis/workflow.md'
-      description: '[IA] Innovation Analysis — Full automation opportunity analysis'
+      exec: '{project-root}/src/modules/process-miner/workflows/continue-session/workflow.md'
+      data:
+        companion_agent: 'Process Journey Companion'
+      description: '[IA] Full Innovation Analysis — Guided walkthrough: identify automation opportunities, assess feasibility, and recommend technologies'
 
     - trigger: AO or fuzzy match on automation opportunities
       action: '#automation-opportunities'
-      description: '[AO] Automation Opportunities — Identify automation candidates'
+      description: '[AO] Quick Scan — Automatically identify automation candidates based on documented pain points and manual steps'
 
     - trigger: TC or fuzzy match on technology candidates
       action: '#technology-candidates'
-      description: '[TC] Technology Candidates — Recommend technologies'
+      description: '[TC] Technology Recommendations — Match identified opportunities to specific technologies (RPA, AI, APIs, workflow tools) with feasibility and ROI estimates'
 
     - trigger: AI or fuzzy match on add idea or add innovation
       exec: '{project-root}/src/modules/process-miner/workflows/capture-item/workflow.md'
       data:
         item_type: II
-      description: '[AI] Add Innovation Idea — Capture an automation or improvement opportunity'
+      description: '[AI] Add Idea — Manually capture a specific automation or technology improvement opportunity'
 
     - trigger: ES or fuzzy match on executive summary
       exec: '{project-root}/src/modules/process-miner/workflows/executive-summary/workflow.md'
-      description: '[ES] Executive Summary — Generate innovation summary'
+      description: '[ES] Quick Summary — Generate a concise innovation summary'
 
     - trigger: MS or fuzzy match on management summary or generate summary
       exec: '{project-root}/src/modules/process-miner/workflows/continue-session/workflow.md'
       data:
         document_type: 'management-summary-innovation'
         skip_import: true
-      description: '[MS] Management Summary — Create Innovation Management Summary (Amazon 6-Pager)'
+      description: '[MS] Management Summary — Generate a detailed executive report for stakeholder review'
 
     - trigger: COMP or fuzzy match on companion
       action: 'Switch conversation to Process Journey Companion agent'
-      description: '[COMP] Switch to Process Journey Companion'
+      description: '[COMP] Return to Sage — Go back to the main menu to switch agents or assess progress'
 ```

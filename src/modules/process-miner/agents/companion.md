@@ -89,24 +89,30 @@ agent:
 
             You have an active process:
             ─────────────────────────────
-            Process: {process_name} ({process_id})
+            Process: {process_name}
             Status:  {progress_percent}% complete
             Last updated: {last_updated}
             ─────────────────────────────
 
             {contextual_insight}
 
-            Here's what I can help you with:
+            Based on your current progress, I'd suggest: {recommended_action}
+
+            Here's everything available:
         condition_no_active_process:
           action: 'Display limited menu — only process selection or creation'
           format: |
-            Welcome {contributor_name}! I'm Sage, your Process Journey Companion.
-            As a {contributor_role}, your perspective is invaluable to this documentation journey.
+            Welcome {contributor_name}! I'm Sage, your Process Journey Companion — I'll guide you through
+            documenting your process and connecting you with the right specialist when needed.
+
+            Together we'll document how your process works today, then bring in specialists to analyze
+            compliance, customer experience, innovation opportunities, and transformation options.
 
             No active process found. Let's get started:
 
-            1. [NP] New Process — Start documenting a new process
-            2. [SP] Select Process — Open an existing process
+            1. [NP] New Process — Set up a new process for documentation. I'll ask for the process name,
+               then we'll start capturing how it works today
+            2. [SP] Select Process — Open an existing process to continue working on it
 
             Please select an option to continue.
       - step: 13
@@ -144,60 +150,60 @@ agent:
 
     - trigger: DP or fuzzy match on discontinue process
       exec: '{project-root}/src/modules/process-miner/workflows/discontinue-process/workflow.md'
-      description: '[DP] Discontinue Process — Archive a process with audit trail'
+      description: '[DP] Discontinue Process — Stop working on a process and record why (process files are preserved)'
       section: 'Process Selection'
 
     # ========== Guidance (requires active process) ==========
-    - trigger: AS or fuzzy match on assess or state
+    - trigger: AS or fuzzy match on assess or state or where am i
       exec: '{project-root}/src/modules/process-miner/workflows/assess-state/workflow.md'
-      description: '[AS] Assess State — Read progress and generate insight'
+      description: '[AS] Where Am I? — See what''s complete, what''s missing, and what to work on next'
       section: 'Guidance'
       requires: active_process
 
     # ========== Agent Handoff (requires active process) ==========
     - trigger: PDA or fuzzy match on documentation or pda
       action: 'Switch conversation to Process Documentation Analyst agent'
-      description: '[PDA] Switch to Process Documentation Analyst'
+      description: '[PDA] Document Process — Walk through your process step by step with Doc, our Process Documentation Analyst. They''ll ask about each step, who does it, what systems are used, and where things go wrong.'
       section: 'Agent Handoff'
       requires: active_process
 
     - trigger: CXA or fuzzy match on cx journey or cx analyst
       action: 'Switch conversation to Client Journey Analyst agent'
-      description: '[CXA] Switch to Client Journey Analyst'
+      description: '[CXA] Map Customer Journey — Work with Journey, our Client Journey Analyst, to map how customers experience this process — touchpoints, friction, and moments that matter.'
       section: 'Agent Handoff'
       requires: active_process
 
     - trigger: CTRL or fuzzy match on control or compliance
       action: 'Switch conversation to Control Analyst agent'
-      description: '[CTRL] Switch to Control Analyst'
+      description: '[CTRL] Analyze Controls — Work with Guardian, our Control Analyst, to validate compliance checkpoints, audit evidence, and regulatory requirements in your process.'
       section: 'Agent Handoff'
       requires: active_process
 
     - trigger: INNO or fuzzy match on innovation or automation
       action: 'Switch conversation to Innovation Analyst agent'
-      description: '[INNO] Switch to Innovation Analyst'
+      description: '[INNO] Explore Innovation — Work with Spark, our Innovation Analyst, to identify automation opportunities, technology options, and feasibility of improvements.'
       section: 'Agent Handoff'
       requires: active_process
 
     - trigger: ITA or fuzzy match on it architect or architecture
       action: 'Switch conversation to IT Architect agent'
-      description: '[ITA] Switch to IT Architect'
+      description: '[ITA] Design Architecture — Work with Blueprint, our IT Architect, to translate recommendations into technical architecture and integration designs.'
       section: 'Agent Handoff'
       requires: active_process
 
     - trigger: TRX or fuzzy match on transformation or improvement
       action: 'Switch conversation to Transformation Agent'
-      description: '[TRX] Switch to Transformation Agent (recommended: complete CXA, CTRL, INNO first)'
+      description: '[TRX] Plan Transformation — Work with Phoenix, our Transformation Agent, to synthesize all findings into prioritized improvement recommendations. Best results when Client Journey, Control, and Innovation are complete first.'
       section: 'Agent Handoff'
       requires: active_process
       guidance: |
         Phoenix synthesizes ALL upstream specialist inputs. For highest-confidence decisions,
-        complete CX Journey (FP#), Control (CIR#), and Innovation (II#) analysis first.
+        complete CX Journey, Control, and Innovation analysis first.
         If upstream analyses are incomplete, Phoenix will warn and flag reduced confidence.
 
     - trigger: QA or fuzzy match on qa or quality
       action: 'Switch conversation to QA Agent'
-      description: '[QA] Switch to QA Agent'
+      description: '[QA] Validate Quality — Work with Scrutiny, our QA Agent, to check documentation completeness, cross-references, and consistency before delivery.'
       section: 'Agent Handoff'
       requires: active_process
 ```

@@ -1,0 +1,222 @@
+{
+  "template_id": "innovation-analysis-documentation",
+  "process_id": "005",
+  "process_name": "KYC",
+  "document_id": "INNO-005-KYC",
+  "version": "0.1",
+  "last_updated": "2026-02-10T00:00:00Z",
+  "author": "Markus",
+  "status": "draft",
+  "sections": {
+    "executive_summary": {
+      "status": "not_started",
+      "confidence": 0,
+      "content": null
+    },
+    "innovation_overview": {
+      "status": "draft",
+      "confidence": 68,
+      "subsections": {
+        "analysis_scope": {
+          "status": "draft",
+          "confidence": 72,
+          "in_scope": [
+            "Automation opportunities across 10 process steps and 4 handoff points",
+            "Technology solutions for 10 pain points (PP-KYC-001 through PP-KYC-010)",
+            "System integration improvements for 5 integration points",
+            "Client experience innovation from 7 CX friction points and 6 enhancement ideas",
+            "Compliance technology for 5 control points",
+            "Market trends and competitive benchmarking for KYC/AML technology"
+          ],
+          "out_of_scope": [
+            "Upstream processes (credit assessment, product origination)",
+            "Downstream processes (account servicing, transaction monitoring beyond periodic review)",
+            "Organisational restructuring or headcount changes",
+            "Regulatory policy changes"
+          ],
+          "upstream_dependencies": [
+            {
+              "document": "as-is-process-documentation",
+              "version": "1.0",
+              "confidence": 66,
+              "provides": ["process_steps", "pain_points", "systems", "control_points"]
+            },
+            {
+              "document": "cx-journey-documentation",
+              "version": "0.1",
+              "confidence": 72,
+              "provides": ["touchpoints", "friction_points", "ces_baseline", "enhancement_ideas"]
+            }
+          ]
+        },
+        "innovation_objectives": {
+          "status": "draft",
+          "confidence": 70,
+          "objectives": [
+            {
+              "id": 1,
+              "title": "Reduce Manual Effort in Data Entry and Document Handling",
+              "linked_pain_points": ["PP-KYC-001", "PP-KYC-003"],
+              "target": "Eliminate or substantially reduce manual data entry and document handling"
+            },
+            {
+              "id": 2,
+              "title": "Improve System Integration Reliability",
+              "linked_pain_points": ["PP-KYC-002", "PP-KYC-005", "PP-KYC-006"],
+              "target": "Real-time, reliable system-to-system communication"
+            },
+            {
+              "id": 3,
+              "title": "Reduce Client Effort and Improve Experience",
+              "linked_friction_points": ["FP-KYC-001", "FP-KYC-002", "FP-KYC-006"],
+              "ces_baseline": 61.5,
+              "ces_target": 43.1,
+              "target": "Reduce CES by at least 30%"
+            },
+            {
+              "id": 4,
+              "title": "Strengthen Compliance Through Automation",
+              "linked_control_points": ["CP-KYC-001", "CP-KYC-002", "CP-KYC-003", "CP-KYC-004", "CP-KYC-005"],
+              "target": "Automate control enforcement, audit trails, and regulatory monitoring"
+            },
+            {
+              "id": 5,
+              "title": "Reduce End-to-End Cycle Time",
+              "current_cycle": "7-10 business days",
+              "target": "Compress cycle by reducing wait times"
+            }
+          ]
+        },
+        "strategic_alignment": {
+          "status": "draft",
+          "confidence": 68,
+          "imperatives": [
+            "Client Experience Competitiveness",
+            "Operational Efficiency",
+            "Regulatory Resilience"
+          ]
+        }
+      }
+    },
+    "market_trends": {
+      "status": "draft",
+      "confidence": 65,
+      "items": [
+        { "id": "TR-KYC-001", "name": "Digital Identity Verification (eKYC)", "category": "Technology", "maturity": "Growth", "relevance": "High" },
+        { "id": "TR-KYC-002", "name": "AI-Powered Document Processing (OCR/IDP)", "category": "Technology", "maturity": "Mature", "relevance": "High" },
+        { "id": "TR-KYC-003", "name": "Perpetual KYC (pKYC)", "category": "Process", "maturity": "Emerging", "relevance": "Medium" },
+        { "id": "TR-KYC-004", "name": "Open Banking Data Sharing", "category": "Regulatory/Technology", "maturity": "Growth", "relevance": "Medium" },
+        { "id": "TR-KYC-005", "name": "Real-Time Core Banking APIs", "category": "Technology", "maturity": "Mature", "relevance": "High" },
+        { "id": "TR-KYC-006", "name": "Client Journey Orchestration", "category": "Technology", "maturity": "Growth", "relevance": "Medium" },
+        { "id": "TR-KYC-007", "name": "RegTech & Compliance Automation", "category": "Technology", "maturity": "Growth", "relevance": "High" }
+      ],
+      "subsections": {
+        "trend_summary": { "status": "draft", "confidence": 65 },
+        "trend_analysis": { "status": "draft", "confidence": 65 },
+        "competitive_landscape": { "status": "draft", "confidence": 65 },
+        "technology_radar": { "status": "draft", "confidence": 60 }
+      }
+    },
+    "innovation_backlog": {
+      "status": "draft",
+      "confidence": 72,
+      "items": [
+        { "id": "II-KYC-001", "name": "Client Portal Self-Service Status Tracking", "category": "Client Experience", "source": ["PP-KYC-009", "FP-KYC-001", "EI-KYC-001"], "status": "Concept", "strategic_fit": ["Obj 3", "Obj 5"] },
+        { "id": "II-KYC-002", "name": "Automated Workflow Notifications", "category": "Process Automation", "source": ["PP-KYC-007", "FP-KYC-007", "EI-KYC-002"], "status": "Concept", "strategic_fit": ["Obj 1", "Obj 3"] },
+        { "id": "II-KYC-003", "name": "Digital Document Upload Portal with Smart Checklists", "category": "Client Experience", "source": ["FP-KYC-002", "EI-KYC-003", "EI-KYC-006"], "status": "Concept", "strategic_fit": ["Obj 1", "Obj 3", "Obj 5"] },
+        { "id": "II-KYC-004", "name": "AI-Powered Document Processing (OCR/IDP)", "category": "Technology", "source": ["PP-KYC-001", "TR-KYC-002"], "status": "Concept", "strategic_fit": ["Obj 1", "Obj 5"] },
+        { "id": "II-KYC-005", "name": "Resilient AML Screening Integration", "category": "Technology", "source": ["PP-KYC-002", "TR-KYC-007"], "status": "Concept", "strategic_fit": ["Obj 2", "Obj 4"] },
+        { "id": "II-KYC-006", "name": "Real-Time Account Activation via T24 API", "category": "Technology", "source": ["PP-KYC-006", "FP-KYC-004", "EI-KYC-004"], "status": "Concept", "strategic_fit": ["Obj 2", "Obj 3", "Obj 5"] },
+        { "id": "II-KYC-007", "name": "Automated Periodic Review Reminders", "category": "Compliance Automation", "source": ["PP-KYC-004"], "status": "Concept", "strategic_fit": ["Obj 4"] },
+        { "id": "II-KYC-008", "name": "EDD Process Acceleration", "category": "Process Innovation", "source": ["PP-KYC-003", "FP-KYC-003"], "status": "Concept", "strategic_fit": ["Obj 3", "Obj 5"] },
+        { "id": "II-KYC-009", "name": "CRM Pipeline Dashboard Optimisation", "category": "Technology", "source": ["PP-KYC-008"], "status": "Concept", "strategic_fit": ["Obj 1"] },
+        { "id": "II-KYC-010", "name": "eKYC — Digital Identity Verification", "category": "Technology", "source": ["TR-KYC-001", "FP-KYC-002"], "status": "Concept", "strategic_fit": ["Obj 1", "Obj 3", "Obj 5"] }
+      ],
+      "subsections": {
+        "innovation_ideas_summary": { "status": "draft", "confidence": 72 },
+        "innovation_details": { "status": "draft", "confidence": 72 },
+        "innovation_categories": { "status": "draft", "confidence": 75 }
+      }
+    },
+    "feasibility_matrix": {
+      "status": "draft",
+      "confidence": 68,
+      "subsections": {
+        "six_dimension_scoring": { "status": "draft", "confidence": 68 },
+        "dimension_definitions": { "status": "draft", "confidence": 80 },
+        "feasibility_analysis": { "status": "draft", "confidence": 68 },
+        "priority_matrix": { "status": "draft", "confidence": 65 }
+      }
+    },
+    "innovation_deep_dives": {
+      "status": "draft",
+      "confidence": 65,
+      "subsections": {
+        "top_priority_innovations": { "status": "draft", "confidence": 68 },
+        "technical_architecture": { "status": "draft", "confidence": 62 },
+        "implementation_approach": { "status": "draft", "confidence": 65 }
+      }
+    },
+    "moscow_prioritization": {
+      "status": "draft",
+      "confidence": 70,
+      "must_have": ["II-KYC-001", "II-KYC-002", "II-KYC-007", "II-KYC-003"],
+      "should_have": ["II-KYC-004", "II-KYC-005", "II-KYC-008", "II-KYC-009"],
+      "could_have": ["II-KYC-006"],
+      "defer": ["II-KYC-010"],
+      "subsections": {
+        "must_have": { "status": "draft", "confidence": 72 },
+        "should_have": { "status": "draft", "confidence": 70 },
+        "could_have": { "status": "draft", "confidence": 65 },
+        "defer": { "status": "draft", "confidence": 68 }
+      }
+    },
+    "strategic_recommendations": {
+      "status": "draft",
+      "confidence": 68,
+      "subsections": {
+        "low_complexity_high_value": { "status": "draft", "confidence": 70 },
+        "strategic_bets": { "status": "draft", "confidence": 65 },
+        "future_consideration": { "status": "draft", "confidence": 65 }
+      }
+    },
+    "risk_mitigation": {
+      "status": "draft",
+      "confidence": 65,
+      "items": [
+        { "id": "IR-KYC-001", "description": "Client Portal scope creep", "likelihood": "High", "impact": "Medium" },
+        { "id": "IR-KYC-002", "description": "Salesforce API rate limits", "likelihood": "Medium", "impact": "Medium" },
+        { "id": "IR-KYC-003", "description": "OCR/IDP accuracy insufficient", "likelihood": "Medium", "impact": "High" },
+        { "id": "IR-KYC-004", "description": "T24 API not available", "likelihood": "Medium", "impact": "High" },
+        { "id": "IR-KYC-005", "description": "Notification compliance disclosure risk", "likelihood": "Low", "impact": "High" },
+        { "id": "IR-KYC-006", "description": "Change management resistance", "likelihood": "Medium", "impact": "Medium" },
+        { "id": "IR-KYC-007", "description": "eKYC regulatory restrictions", "likelihood": "Medium", "impact": "High" }
+      ],
+      "subsections": {
+        "innovation_risks": { "status": "draft", "confidence": 65 },
+        "risk_mitigation_plan": { "status": "draft", "confidence": 65 }
+      }
+    },
+    "success_metrics": {
+      "status": "draft",
+      "confidence": 63,
+      "subsections": {
+        "kpi_framework": { "status": "draft", "confidence": 65 },
+        "measurement_plan": { "status": "draft", "confidence": 63 },
+        "target_outcomes": { "status": "draft", "confidence": 60 }
+      }
+    },
+    "appendices": {
+      "status": "draft",
+      "confidence": 70,
+      "subsections": {
+        "research_sources": { "status": "draft", "confidence": 75 },
+        "market_data": { "status": "draft", "confidence": 60 },
+        "technical_specifications": { "status": "draft", "confidence": 55 },
+        "change_log": { "status": "draft", "confidence": 90 },
+        "glossary": { "status": "draft", "confidence": 85 }
+      }
+    }
+  },
+  "discrepancies": []
+}

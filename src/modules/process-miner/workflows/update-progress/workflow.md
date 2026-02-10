@@ -72,6 +72,25 @@ type: milestone
 check: as_is_complete | cx_journey_complete | process_complete
 ```
 
+### Gap Log Status Update
+
+```yaml
+type: gap_log_status
+gap_log:
+  exists: true | false
+  total_vg_count: {number}
+  open_count: {number}
+  in_progress_count: {number}
+  resolved_count: {number}
+  deferred_count: {number}
+  qa_document_open: {number}
+  qa_suite_open: {number}
+  specialist_open: {number}
+  last_sync: {ISO timestamp}
+```
+
+Updates the `validation.gap_log` block in `_progress.yaml` with current gap counts. Called by QA workflows after syncing findings to the gap resolution log.
+
 ---
 
 ## EXECUTION SEQUENCE
@@ -86,6 +105,7 @@ Based on update type:
 - Update section status and counts
 - Record agent session status
 - Recalculate overall document status
+- Update gap log status counts and sync timestamp
 
 ### 3. Validate
 
@@ -172,6 +192,7 @@ What would you like to update?
 - **[S]** Section status
 - **[A]** Agent session
 - **[M]** Check milestones
+- **[G]** Gap log status
 - **[V]** View current progress"
 
 Then gather required parameters and execute update.

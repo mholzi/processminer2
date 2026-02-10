@@ -7,12 +7,13 @@ stepsCompleted:
   - step-e-01-assess-workflow.md
   - step-e-02-discover-edits.md
   - step-e-04-direct-edit.md
-  - step-e-05-apply-edit.md
-completionDate: '2026-02-10'
-validationAfterEdit: skipped
-completionStatus: complete_without_validation
 hasValidationReport: true
-validationStatus: COMPLETE
+validationStatus: 'COMPLETE (0 critical, 1 warning)'
+priorEditSessions:
+  - '2026-02-05 (Issues #1-7)'
+  - '2026-02-06 (Issues #8-14)'
+  - '2026-02-09 (Issues #15-19)'
+  - '2026-02-10 (Template/Schema changes)'
 ---
 
 # Edit Plan: continue-session
@@ -21,7 +22,9 @@ validationStatus: COMPLETE
 
 **Path:** src/modules/process-miner/workflows/continue-session
 **Format:** BMAD Compliant ✅
-**Step Folders:** steps-c/
+**Step Folders:** steps-c/ (7 step files)
+**Data Folder:** data/ (3 files)
+**Templates Folder:** none (external via schema discovery)
 
 ## Validation Status
 
@@ -34,61 +37,39 @@ validationStatus: COMPLETE
 
 ## Edit Goals
 
-### Direct Changes
+### Issue #20: Unify All Agents Under continue-session Workflow
 
-**Category:** Templates (transformation-decisions-detail.md + .schema.yaml)
-**Source:** Agentforce Task 089 critique — `transformation-decisions-template-critique.md`
+**Category:** Agent routing + workflow retirement
+**Priority:** High — Control and Innovation agents use standalone workflows that bypass dual-persistence (MD + JSON), creating a gap in structured data maintenance
 
-**Changes Requested:**
+**Changes:**
 
-**Template + Schema Changes:**
-- [x] 1. Decision Classification Refinement — two-dimensional model (Scope, Characteristics, Status) replacing flat categories
-- [x] 2. Decision Dependencies — add depends_on, blocks, conflicts_with fields + mermaid diagram in Decision Patterns
-- [x] 3. Decision Confidence/Certainty — add confidence level, uncertainty source, revisit trigger fields
-- [x] 6. Implementation Constraints — add constraints table per decision record
-- [x] 7. Assumption Register — per-decision assumptions table + consolidated document-level register
-
-**Template-Only Changes:**
-- [x] F. ADR Consequences Structure — add positive/negative consequences split per decision record
-
-**Schema-Only Changes:**
-- [x] C. Decision Debt Tracking — add decision debt summary to Deferred Decisions section
-- [x] D. Bidirectional Cross-Reference Validation — make cross-ref validation bidirectional
-- [x] E. Trade-off Coverage Completeness Rule — validate trade-off decisions have matching analysis entries
+1. **Control agent** (`control.md`) — reroute `[CC]` from `control-compliance/workflow.md` → `continue-session/workflow.md` with `companion_agent: 'Process Journey Companion'`
+2. **Innovation agent** (`innovation.md`) — reroute `[IA]` from `innovation-analysis/workflow.md` → `continue-session/workflow.md` with `companion_agent: 'Process Journey Companion'`
+3. **CX Journey agent** (`cx-journey.md`) — fix `companion_agent: 'CX Journey Agent'` → `'Process Journey Companion'` (bug fix)
+4. **Delete** `workflows/cx-journey-analysis/` (already unused — CX agent already points to continue-session)
+5. **Delete** `workflows/control-compliance/` (replaced by continue-session)
+6. **Delete** `workflows/innovation-analysis/` (replaced by continue-session)
 
 **Rationale:**
-Enhancements from architectural review (Atlas) to elevate template from decision log to decision management system. Focus on context richness (constraints, assumptions, dependencies) and lifecycle management (confidence, consequences).
+All specialist agents should produce structured JSON alongside MD through the continue-session dual-persistence pipeline. Control and Innovation were the only agents still using standalone workflows that didn't maintain JSON. Templates and schemas already exist for both document types.
 
 ---
 
 ## Edits Applied
 
-### Direct Changes Applied
+### Issue #20: Unify All Agents Under continue-session Workflow
 
-**[Template + Schema]** transformation-decisions-detail.md + .schema.yaml
-- ✅ Change 1: Decision Classification — replaced flat categories with Scope/Characteristics/Status dimensions
-- ✅ Change 2: Decision Dependencies — added dependencies table per decision + mermaid diagram in Patterns section
-- ✅ Change 3: Decision Confidence — added confidence, uncertainty source, revisit trigger to Decision Overview
-- ✅ Change 4: Implementation Constraints — added constraints table per decision record
-- ✅ Change 5: Assumption Register — added per-decision assumptions + new document-level Assumptions Register section (section 6)
-- ✅ Change 6: ADR Consequences — added positive/negative consequences split per decision record
-- ✅ Change 7: Decision Debt Tracking — added decision debt summary table in Deferred Decisions section
-- ✅ Change 8: Bidirectional Cross-Reference — updated TD# cross-reference validation to bidirectional
-- ✅ Change 9: Trade-off Completeness — added completeness rule for trade-off coverage
+**[Agent Routing]** `control.md`
+- ✅ Change 1: Rerouted `[CC]` from `control-compliance/workflow.md` → `continue-session/workflow.md` with `companion_agent: 'Process Journey Companion'`
 
-**Schema section renumbering:** Audit Trail moved from section 6 → section 7 to accommodate new Assumptions Register (section 6)
+**[Agent Routing]** `innovation.md`
+- ✅ Change 2: Rerouted `[IA]` from `innovation-analysis/workflow.md` → `continue-session/workflow.md` with `companion_agent: 'Process Journey Companion'`
 
-**[Template + Schema]** sipoc-analysis.md + .schema.yaml
-- ✅ Change 10: Quick Wins — new Section 7.5 under Interface & Boundary Analysis
-- ✅ Change 11: SIPOC Completeness Assessment — new Section 8.4 under Cross-Reference Reconciliation
+**[Bug Fix]** `cx-journey.md`
+- ✅ Change 3: Fixed `companion_agent` from `'CX Journey Agent'` → `'Process Journey Companion'`
 
-**[No Changes]** cx-journey-documentation — session stopped before applying
-**[No Changes]** dilo-observation — 9/10 critique items already implemented
-
----
-
-## Completion
-
-**Completed:** 2026-02-10
-**Validation:** Skipped per user request
-**Recommendation:** Run validation before using templates in production
+**[Workflow Deletion]** Three retired workflows
+- ✅ Change 4: Deleted `workflows/cx-journey-analysis/` (already unused)
+- ✅ Change 5: Deleted `workflows/control-compliance/` (replaced by continue-session)
+- ✅ Change 6: Deleted `workflows/innovation-analysis/` (replaced by continue-session)

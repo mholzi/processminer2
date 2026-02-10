@@ -108,11 +108,15 @@ Write the report to `{reportFile}` using this structure:
 
 ### Errors (Blocking)
 
-{For each error: ID, category, description, affected documents, remediation}
+| VG# | Category | Description | Affected Documents | Remediation |
+|-----|----------|-------------|--------------------|--------------|
+{For each error: VG# from gap log, category, description, affected documents, remediation}
 
 ### Warnings (Informational)
 
-{For each warning: ID, category, description, affected documents, remediation}
+| VG# | Category | Description | Affected Documents | Remediation |
+|-----|----------|-------------|--------------------|--------------|
+{For each warning: VG# from gap log, category, description, affected documents, remediation}
 
 ---
 
@@ -130,6 +134,20 @@ Write the report to `{reportFile}` using this structure:
 | Upstream Section | Confidence | Downstream Section | Confidence | Status |
 |------------------|------------|--------------------|------------|--------|
 | {section} | {level} | {section} | {level} | {ok/violation} |
+
+---
+
+## Gap Resolution Log Status
+
+| Metric | Count |
+|--------|-------|
+| New VG# This Run | {new_vg_count} |
+| Auto-Resolved VG# | {auto_resolved_count} |
+| Total Open QA Gaps (Document-Level) | {doc_level_open} |
+| Total Open QA Gaps (Suite-Level) | {suite_level_open} |
+| Total Open All Gaps | {total_open_all} |
+
+**Full Gap Log:** [gap-resolution-log.md](./gap-resolution-log.md)
 
 ---
 

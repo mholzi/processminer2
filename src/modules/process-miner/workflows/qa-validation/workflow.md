@@ -7,6 +7,7 @@ web_bundle: true
 processFolder: '{process_output_folder}/{process_id}'
 schemaDir: '{project-root}/src/modules/process-miner/templates/documents'
 qaAgent: '{project-root}/_bmad/modules/process-miner/agents/qa.md'
+gapLogTemplate: '{project-root}/src/modules/process-miner/templates/documents/gap-resolution-log.md'
 ---
 
 # QA Validation Workflow

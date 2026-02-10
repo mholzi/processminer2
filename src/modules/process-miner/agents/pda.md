@@ -37,7 +37,7 @@ agent:
 
   critical_actions:
     - 'Check for active process context in {process_output_folder}'
-    - 'If NO process context exists, HALT activation — do not present menu. Redirect user to Companion agent with message: "No active process found. Please start or select a process through the Companion agent first."'
+    - 'If NO process context exists, HALT activation — do not present menu. Redirect user to Companion agent with message: "No active process found. To get started, switch to Sage (your Process Journey Companion) — they''ll help you create or select a process. Type COMP to switch."'
     - 'If process context exists, load current documentation state'
     - 'Prepare to capture items using structured references'
     - 'SCHEMA IS LAW — when creating or modifying document content, ALWAYS enforce per-document .schema.yaml validation rules (min_words, min_count, required item_fields, enum values, reference validity) as generation constraints'
@@ -118,36 +118,36 @@ agent:
       exec: '{project-root}/src/modules/process-miner/workflows/continue-session/workflow.md'
       data:
         companion_agent: 'Process Journey Companion'
-      description: '[PD] Continue document refinement session'
+      description: '[PD] Work on Documentation — Review and refine your process documentation section by section'
 
     - trigger: CI or fuzzy match on capture item
       exec: '{project-root}/src/modules/process-miner/workflows/capture-item/workflow.md'
-      description: '[CI] Capture Item — Add pain point, exception, control, or system'
+      description: '[CI] Add an Item — Capture something specific: a problem, workaround, control check, system, or exception'
 
     - trigger: IM or fuzzy match on import
       exec: '{project-root}/src/modules/process-miner/workflows/import-existing/workflow.md'
-      description: '[IM] Import Docs — Import existing documentation'
+      description: '[IM] Import Docs — Import existing documentation you already have'
 
     - trigger: SI or fuzzy match on sipoc-analysis
       exec: '{project-root}/src/modules/process-miner/workflows/sipoc-analysis/workflow.md'
-      description: '[SI] SIPOC Analysis — Map suppliers, inputs, process, outputs, customers'
+      description: '[SI] SIPOC Analysis — Map the full picture: who supplies input, what goes in, what the process does, what comes out, and who receives it'
 
     - trigger: DI or fuzzy match on dilo-observation
       exec: '{project-root}/src/modules/process-miner/workflows/dilo-observation/workflow.md'
-      description: '[DI] DILO Observation — Day-in-the-life-of role analysis'
+      description: '[DI] Day-in-the-Life — Observe and document a role''s typical day working this process'
 
     - trigger: QA or fuzzy match on quality-check
       exec: '{project-root}/src/modules/process-miner/workflows/qa-validation/workflow.md'
-      description: '[QA] Quality Check — Validate cross-references and completeness'
+      description: '[QA] Quality Check — Check documentation for gaps, inconsistencies, and missing details'
 
     - trigger: MS or fuzzy match on management summary or generate summary
       exec: '{project-root}/src/modules/process-miner/workflows/continue-session/workflow.md'
       data:
         document_type: 'management-summary-process'
         skip_import: true
-      description: '[MS] Management Summary — Create Process Management Summary (Amazon 6-Pager)'
+      description: '[MS] Management Summary — Generate an executive summary report for stakeholder review'
 
     - trigger: COMP or fuzzy match on companion
       action: 'Switch conversation to Process Journey Companion agent'
-      description: '[COMP] Switch to Process Journey Companion'
+      description: '[COMP] Return to Sage — Go back to the main menu to switch agents or assess progress'
 ```
