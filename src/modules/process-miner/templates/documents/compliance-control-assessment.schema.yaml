@@ -28,6 +28,23 @@ dependencies:
 # Sections
 # ──────────────────────────────────────────────
 sections:
+  # ── Executive Summary ──
+  - id: executive_summary
+    heading: "Executive Summary"
+    section_number: 0  # Unnumbered preamble
+    content_type: prose
+    sync_enabled: false
+    validation:
+      min_words: 100
+      max_words: 400
+    guidance: |
+      Synthesise the compliance posture into a concise executive summary. Include:
+      key metrics table (regulations mapped, control points, compliance gaps,
+      critical/high risk gaps, open audit findings, average control effectiveness,
+      controls needing improvement, improvement recommendations), confidence summary
+      table per section, and a narrative paragraph highlighting the most critical
+      findings, overall risk posture, and top remediation priorities.
+
   # ── Section 1: Regulatory Framework Mapping ──
   - id: regulatory_framework
     heading: "1. Regulatory Framework Mapping"

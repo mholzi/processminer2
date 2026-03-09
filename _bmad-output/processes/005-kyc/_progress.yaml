@@ -4,7 +4,7 @@ meta:
   description: "KYC process documentation — All segments"
   schema_version: "1.0"
   created: "2026-02-09T05:08:00Z"
-  last_updated: "2026-02-09T07:30:00Z"
+  last_updated: "2026-02-10T00:00:00Z"
 
 documents:
   as_is:
@@ -250,8 +250,8 @@ documents:
     overall_status: in_progress
     sections:
       executive_summary:
-        status: not_started
-        confidence: 0
+        status: draft
+        confidence: 72
       innovation_overview:
         status: draft
         confidence: 68
@@ -285,6 +285,105 @@ documents:
       appendices:
         status: draft
         confidence: 70
+
+  compliance:
+    path: "./compliance-control-assessment.md"
+    overall_status: in_progress
+    sections:
+      executive_summary:
+        status: draft
+        confidence: 64
+      regulatory_framework:
+        status: draft
+        count: 6
+        confidence: 68
+        subsections:
+          applicable_regulations:
+            status: draft
+            confidence: 68
+          regional_requirements:
+            status: draft
+            confidence: 62
+          industry_standards:
+            status: draft
+            confidence: 60
+      control_inventory:
+        status: draft
+        count: 5
+        confidence: 75
+        subsections:
+          mandatory_controls:
+            status: draft
+            confidence: 75
+          internal_policies:
+            status: draft
+            confidence: 72
+          audit_requirements:
+            status: draft
+            confidence: 72
+      compliance_gaps:
+        status: draft
+        count: 7
+        confidence: 65
+        subsections:
+          current_vs_required:
+            status: draft
+            confidence: 65
+          risk_exposure:
+            status: draft
+            confidence: 65
+          remediation_needs:
+            status: draft
+            confidence: 62
+      control_effectiveness:
+        status: draft
+        confidence: 62
+        subsections:
+          control_strengths:
+            status: draft
+            confidence: 65
+          control_weaknesses:
+            status: draft
+            confidence: 60
+          improvement_opportunities:
+            status: draft
+            confidence: 62
+      audit_trail:
+        status: draft
+        count: 5
+        confidence: 65
+      risk_compliance_matrix:
+        status: draft
+        count: 8
+        confidence: 60
+      regulatory_change:
+        status: draft
+        count: 4
+        confidence: 55
+      open_audit_findings:
+        status: draft
+        count: 3
+        confidence: 55
+      control_improvements:
+        status: draft
+        count: 8
+        confidence: 68
+        subsections:
+          critical_priority:
+            status: draft
+            confidence: 70
+          high_priority:
+            status: draft
+            confidence: 68
+          medium_priority:
+            status: draft
+            confidence: 65
+          low_priority:
+            status: draft
+            confidence: 65
+          transformation_considerations:
+            status: draft
+            confidence: 68
 
   architecture:
     path: "./architecture.md"
@@ -341,8 +440,8 @@ agent_sessions:
     last_run: "2026-02-09T07:30:00Z"
     status: active
   control:
-    last_run: null
-    status: waiting
+    last_run: "2026-02-10T00:00:00Z"
+    status: active
   innovation:
     last_run: "2026-02-10T00:00:00Z"
     status: active

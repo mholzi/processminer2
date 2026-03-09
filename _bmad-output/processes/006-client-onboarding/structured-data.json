@@ -1,0 +1,249 @@
+{
+  "$schema": "process-miner-structured-data-v1",
+  "schema_version": "1.0.0",
+  "template_id": "as-is-process-documentation",
+  "session": {
+    "started": "2026-03-03T00:00:00Z",
+    "last_updated": "2026-03-03T00:00:00Z",
+    "contributor": {
+      "name": "Markus",
+      "role": "CEO"
+    },
+    "process": {
+      "id": "006",
+      "name": "Client Onboarding"
+    },
+    "client_groups": "All segments",
+    "checkpoint": {
+      "step": 2,
+      "last_item_id": "PS-ONB-008"
+    }
+  },
+  "metadata": {
+    "purpose": "Onboard new clients across all business segments, from initial inquiry through account activation",
+    "trigger": "Client inquiry or referral received",
+    "frequency": "[TBD]",
+    "volume": "[TBD]"
+  },
+  "process_steps": [
+    {
+      "id": "PS-ONB-001",
+      "name": "Client Inquiry Received",
+      "owner": "Relationship Manager",
+      "systems": ["SYS-ONB-001"],
+      "description": "Initial client inquiry is received and logged in the CRM. Relationship Manager captures basic client information and intent.",
+      "input": "Client inquiry (email, phone, referral)",
+      "output": "Client record created in CRM",
+      "business_rules": "[TBD]",
+      "duration": "[TBD]",
+      "wait_time": "[TBD]",
+      "channel": "[TBD]"
+    },
+    {
+      "id": "PS-ONB-002",
+      "name": "Collect Client Documentation",
+      "owner": "Relationship Manager",
+      "systems": ["SYS-ONB-002"],
+      "description": "Required onboarding documents are requested from the client and uploaded to the Document Portal.",
+      "input": "Document checklist",
+      "output": "Client documents uploaded to portal",
+      "business_rules": "[TBD]",
+      "duration": "[TBD]",
+      "wait_time": "[TBD]",
+      "channel": "[TBD]"
+    },
+    {
+      "id": "PS-ONB-003",
+      "name": "Verify Identity Documents",
+      "owner": "Operations Analyst",
+      "systems": ["SYS-ONB-002", "SYS-ONB-003"],
+      "description": "Identity documents are verified against external databases using the ID Verification System. Document authenticity and validity are checked.",
+      "input": "Client identity documents",
+      "output": "Identity verification result (pass/fail)",
+      "business_rules": "[TBD]",
+      "duration": "[TBD]",
+      "wait_time": "[TBD]",
+      "channel": "[TBD]"
+    },
+    {
+      "id": "PS-ONB-004",
+      "name": "KYC/AML Screening",
+      "owner": "Compliance Officer",
+      "systems": ["SYS-ONB-004"],
+      "description": "Client is screened against sanctions lists, PEP databases, and adverse media. KYC risk profile is generated.",
+      "input": "Verified client identity, client information",
+      "output": "KYC screening result, risk profile",
+      "business_rules": "[TBD]",
+      "duration": "[TBD]",
+      "wait_time": "[TBD]",
+      "channel": "[TBD]"
+    },
+    {
+      "id": "PS-ONB-005",
+      "name": "Risk Assessment & Categorization",
+      "owner": "Compliance Officer",
+      "systems": ["SYS-ONB-004"],
+      "description": "Client risk category is assigned based on KYC screening results, business type, geography, and product complexity.",
+      "input": "KYC screening result",
+      "output": "Client risk category (Low/Medium/High)",
+      "business_rules": "[TBD]",
+      "duration": "[TBD]",
+      "wait_time": "[TBD]",
+      "channel": "[TBD]"
+    },
+    {
+      "id": "PS-ONB-006",
+      "name": "Account Setup & Configuration",
+      "owner": "Operations Analyst",
+      "systems": ["SYS-ONB-005"],
+      "description": "Client account is created in the Core Banking System with appropriate product configuration, limits, and access rights.",
+      "input": "Approved client profile, risk category",
+      "output": "Configured client account",
+      "business_rules": "[TBD]",
+      "duration": "[TBD]",
+      "wait_time": "[TBD]",
+      "channel": "[TBD]"
+    },
+    {
+      "id": "PS-ONB-007",
+      "name": "Welcome Pack & Access Provisioning",
+      "owner": "IT Support, Relationship Manager",
+      "systems": ["SYS-ONB-005"],
+      "description": "Client receives welcome documentation, login credentials, and access to digital banking channels is provisioned.",
+      "input": "Configured account",
+      "output": "Welcome pack sent, access credentials provisioned",
+      "business_rules": "[TBD]",
+      "duration": "[TBD]",
+      "wait_time": "[TBD]",
+      "channel": "[TBD]"
+    },
+    {
+      "id": "PS-ONB-008",
+      "name": "Account Activation & Go-Live",
+      "owner": "Relationship Manager",
+      "systems": ["SYS-ONB-001", "SYS-ONB-005"],
+      "description": "Relationship Manager confirms client readiness, activates the account, and logs go-live in CRM.",
+      "input": "Welcome pack acknowledged, credentials tested",
+      "output": "Active client account, onboarding complete",
+      "business_rules": "[TBD]",
+      "duration": "[TBD]",
+      "wait_time": "[TBD]",
+      "channel": "[TBD]"
+    }
+  ],
+  "process_exceptions": [],
+  "pain_points": [],
+  "controls": [
+    {
+      "id": "CP-ONB-001",
+      "title": "Identity Verification Check",
+      "control_type": "Preventive",
+      "at_step": "PS-ONB-003",
+      "description": "Identity documents verified against external databases before proceeding",
+      "evidence": "[TBD]"
+    },
+    {
+      "id": "CP-ONB-002",
+      "title": "KYC/AML Screening Gate",
+      "control_type": "Preventive",
+      "at_step": "PS-ONB-004",
+      "description": "Client must pass KYC/AML screening before account can be created",
+      "evidence": "[TBD]"
+    },
+    {
+      "id": "CP-ONB-003",
+      "title": "Risk Categorization Approval",
+      "control_type": "Detective",
+      "at_step": "PS-ONB-005",
+      "description": "Risk category assignment reviewed — high-risk clients require senior approval",
+      "evidence": "[TBD]"
+    }
+  ],
+  "systems": [
+    {
+      "id": "SYS-ONB-001",
+      "name": "Salesforce CRM",
+      "system_type": "CRM",
+      "used_in_steps": ["PS-ONB-001", "PS-ONB-008"],
+      "purpose": "Client relationship management, inquiry tracking, onboarding status"
+    },
+    {
+      "id": "SYS-ONB-002",
+      "name": "Document Portal",
+      "system_type": "Document Management",
+      "used_in_steps": ["PS-ONB-002", "PS-ONB-003"],
+      "purpose": "Secure document upload, storage, and retrieval for client onboarding documents"
+    },
+    {
+      "id": "SYS-ONB-003",
+      "name": "ID Verification System",
+      "system_type": "External",
+      "used_in_steps": ["PS-ONB-003"],
+      "purpose": "Third-party identity verification against government databases and watchlists"
+    },
+    {
+      "id": "SYS-ONB-004",
+      "name": "KYC Platform",
+      "system_type": "Other",
+      "used_in_steps": ["PS-ONB-004", "PS-ONB-005"],
+      "purpose": "KYC/AML screening, sanctions checking, PEP screening, risk profiling"
+    },
+    {
+      "id": "SYS-ONB-005",
+      "name": "Core Banking System",
+      "system_type": "Core Banking",
+      "used_in_steps": ["PS-ONB-006", "PS-ONB-007", "PS-ONB-008"],
+      "purpose": "Account creation, configuration, product setup, and activation"
+    }
+  ],
+  "validation": {
+    "status": "DRAFT",
+    "completed_at": null
+  },
+  "discrepancies": [
+    {
+      "id": "DISC-001",
+      "scope": "intra-document",
+      "type": "missing",
+      "source_section": "process_steps",
+      "target_section": "process_steps",
+      "description": "Duration, wait time, and channel fields are missing for all 8 process steps — flowchart did not include timing data",
+      "status": "open",
+      "found_in_step": 2,
+      "resolved_in_step": null
+    },
+    {
+      "id": "DISC-002",
+      "scope": "intra-document",
+      "type": "missing",
+      "source_section": "process_steps",
+      "target_section": "exceptions",
+      "description": "Flowchart shows KYC fail path and Enhanced Due Diligence branch but no exception details were provided — EX# items needed",
+      "status": "open",
+      "found_in_step": 2,
+      "resolved_in_step": null
+    },
+    {
+      "id": "DISC-003",
+      "scope": "intra-document",
+      "type": "missing",
+      "source_section": "process_steps",
+      "target_section": "pain_points",
+      "description": "No pain points captured — flowchart does not surface pain points (expected from SME interview)",
+      "status": "open",
+      "found_in_step": 2,
+      "resolved_in_step": null
+    },
+    {
+      "id": "DISC-004",
+      "scope": "intra-document",
+      "type": "missing",
+      "source_section": "control_points",
+      "target_section": "control_points",
+      "description": "Control evidence fields are empty for all 3 controls — need to capture what artifact proves each control executed",
+      "status": "open",
+      "found_in_step": 2,
+      "resolved_in_step": null
+    }
+  ]
+}

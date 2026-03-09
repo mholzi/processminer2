@@ -9,9 +9,8 @@
   "status": "draft",
   "sections": {
     "executive_summary": {
-      "status": "not_started",
-      "confidence": 0,
-      "content": null
+      "status": "draft",
+      "confidence": 72
     },
     "innovation_overview": {
       "status": "draft",

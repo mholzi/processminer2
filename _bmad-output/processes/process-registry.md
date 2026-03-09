@@ -11,6 +11,7 @@ Central registry of all documented processes with sequential numbering.
 | 003 | 003 | Funds Release | DRAFT | 2026-02-06 | 2026-02-06 |
 | 004 | 004 | Loan Disbursement | DRAFT | 2026-02-06 | 2026-02-06 |
 | 005 | 005 | KYC | DRAFT | 2026-02-09 | 2026-02-09 |
+| 006 | 006 | Client Onboarding | DRAFT | 2026-03-03 | 2026-03-03 |
 
 ---
 
@@ -28,7 +29,7 @@ Archived processes no longer active in the workflow.
 ## Registry Notes
 
 - **Folder Pattern**: `{###}-{PROCESS_NAME}` (e.g., `001-onboarding`, `002-loan-origination`)
-- **Next Number**: 6
+- **Next Number**: 7
 - **Status Values**: `DRAFT`, `IN_PROGRESS`, `REVIEW`, `APPROVED`, `ARCHIVED`
 
 ---
@@ -46,6 +47,7 @@ Archived processes no longer active in the workflow.
 
 | Date | Contributor | Role | Changes |
 |------|-------------|------|---------|
+| 2026-03-03 | Markus | CEO | Created 006 - Client Onboarding |
 | 2026-02-09 | Markus | CEO | Created 005 - KYC |
 | 2026-02-09 | Markus | CEO | Discontinued 002 - KYC Review (Reason: Duplicate) |
 | 2026-02-06 | Markus | CEO | Created 004 - Loan Disbursement |
